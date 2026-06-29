@@ -16,6 +16,9 @@
           <span class="terminal-cursor" id="terminal-cursor"></span>
         </div>
       </div>
+      <div class="terminal-tap-hint" id="terminal-tap-hint">
+        <i class="fa-regular fa-hand-pointer"></i> Tap to type
+      </div>
     </div>
     <div class="terminal-statusbar" id="terminal-statusbar">
       <div class="statusbar-left">
@@ -31,15 +34,19 @@
   .terminal-wrapper { width: 100%; max-width: 100%; }
 
   .terminal-container {
-    background: #030306;
+    background: color-mix(in srgb, var(--bg) 98%, var(--ac) 2%);
     border: 1px solid var(--bd);
     overflow: hidden;
-    box-shadow: 0 24px 80px rgba(0,0,0,.65), 0 0 0 1px rgba(255,255,255,.03);
+    box-shadow: 0 8px 32px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.03);
     transition: border-color .3s var(--ease);
     position: relative;
   }
-  .terminal-container:hover { border-color: var(--bd-ac); }
-  .terminal-container:focus-within { border-color: var(--bd-ac); }
+  .terminal-container:hover { 
+    border-color: var(--bd-ac); 
+  }
+  .terminal-container:focus-within { 
+    border-color: var(--bd-ac); 
+  }
 
   @media (max-width: 768px) {
     .terminal-container::before {
@@ -52,7 +59,7 @@
       letter-spacing: .12em;
       color: var(--ac-dim);
       border-bottom: 1px solid var(--bd);
-      background: rgba(0,0,0,.4);
+      background: color-mix(in srgb, var(--bg) 96%, transparent);
     }
   }
 
@@ -61,8 +68,8 @@
     justify-content: space-between;
     align-items: center;
     height: 18px;
-    background: #06060c;
-    border-top: 1px solid rgba(255, 255, 255, 0.04);
+    background: color-mix(in srgb, var(--bg) 97%, black);
+    border-top: 1px solid var(--bd);
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.52rem;
     color: var(--tx-2);
@@ -83,8 +90,8 @@
     font-weight: 700;
     font-size: 0.48rem;
     letter-spacing: 0.04em;
-    background: rgba(254, 188, 46, 0.08);
-    color: #febc2e;
+    background: color-mix(in srgb, var(--term-yellow) 8%, transparent);
+    color: var(--term-yellow);
     padding: 0 0.55rem;
     height: 100%;
     display: inline-flex;
@@ -92,13 +99,13 @@
     gap: 4px;
     text-transform: uppercase;
     transition: all 0.3s ease;
-    border-right: 1px solid rgba(254, 188, 46, 0.15);
+    border-right: 1px solid color-mix(in srgb, var(--term-yellow) 15%, transparent);
   }
 
   .statusbar-mode.interactive {
-    background: rgba(40, 200, 64, 0.08);
-    color: #28c840;
-    border-right: 1px solid rgba(40, 200, 64, 0.15);
+    background: color-mix(in srgb, var(--term-green) 8%, transparent);
+    color: var(--term-green);
+    border-right: 1px solid color-mix(in srgb, var(--term-green) 15%, transparent);
   }
 
   .statusbar-middle {
@@ -119,37 +126,38 @@
 
   .terminal-body {
     padding: 1.4rem 1.5rem 1.2rem;
-    height: 580px;
+    height: 640px;
     overflow-y: auto;
     font-family: 'JetBrains Mono', monospace;
-    font-size: .78rem;
+    font-size: .8rem;
     line-height: 1.72;
     cursor: text;
-    color: #b0ada7;
+    color: var(--tx-2);
     -webkit-overflow-scrolling: touch;
+    position: relative;
   }
 
   @media (max-width: 900px) {
-    .terminal-body { height: 480px; }
+    .terminal-body { height: 520px; }
   }
 
   @media (max-width: 600px) {
     .terminal-body {
-      height: 460px;
+      height: 480px;
       padding: 1.1rem 1rem 1rem;
-      font-size: .74rem;
+      font-size: .75rem;
     }
   }
 
   @media (max-width: 400px) {
     .terminal-body {
-      height: 420px;
-      font-size: .7rem;
+      height: 440px;
+      font-size: .71rem;
     }
   }
 
   .terminal-body::-webkit-scrollbar { width: 3px; }
-  .terminal-body::-webkit-scrollbar-thumb { background: rgba(201,169,110,.15); }
+  .terminal-body::-webkit-scrollbar-thumb { background: var(--ac-dim); }
 
   .terminal-output { margin-bottom: .55rem; white-space: pre-wrap; word-break: break-word; }
 
@@ -166,12 +174,12 @@
     .terminal-prompt { font-size: .65rem; }
   }
 
-  .term-green  { color: #28c840; }
+  .term-green  { color: var(--term-green); }
   .term-gray   { color: var(--tx-2); }
   .term-cyan   { color: var(--hi); }
   .term-indigo { color: var(--ac); }
-  .term-yellow { color: #febc2e; }
-  .term-red    { color: #ff5f57; }
+  .term-yellow { color: var(--term-yellow); }
+  .term-red    { color: var(--term-red); }
 
   .terminal-input-wrapper {
     position: relative;
@@ -200,7 +208,7 @@
   }
 
   .terminal-input-display {
-    color: #b0ada7;
+    color: var(--tx-2);
     font-family: inherit;
     font-size: inherit;
     white-space: pre-wrap;
@@ -231,4 +239,37 @@
   }
 
   @keyframes blink { 50% { opacity: 0; } }
+
+  /* ── Tap hint (mobile only) ────────────────────────────────── */
+  .terminal-tap-hint {
+    display: none;
+  }
+
+  @media (hover: none), (pointer: coarse) {
+    .terminal-tap-hint {
+      display: flex;
+      align-items: center;
+      gap: .45rem;
+      position: absolute;
+      bottom: 2.8rem; /* above statusbar */
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: .6rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--ac-dim);
+      pointer-events: none;
+      animation: tap-hint-pulse 2.2s ease-in-out infinite;
+      white-space: nowrap;
+    }
+    .terminal-tap-hint.hidden {
+      display: none;
+    }
+  }
+
+  @keyframes tap-hint-pulse {
+    0%, 100% { opacity: .55; }
+    50%       { opacity: .18; }
+  }
 </style>

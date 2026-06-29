@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }).catch(() => { });
     });
   };
-  setupCopy('copy-email-btn', 'mathewsshaji@gmail.com');
+  setupCopy('copy-email-btn', 'mathewshaji96@gmail.com');
   setupCopy('copy-loc-btn', 'Kochi, Kerala, India');
 
   /* ── 6. MOBILE MENU (bottom sheet) ─────────────────────── */
@@ -232,14 +232,29 @@ document.addEventListener('DOMContentLoaded', () => {
       if (lastActiveKey === key) return;
       lastActiveKey = key;
       sidebarItems.forEach(i => i.classList.toggle('active', i.dataset.exp === key));
-      details.forEach(d => d.classList.toggle('active', d.id === `exp-${key}`));
+      details.forEach(d => {
+        const isActive = d.id === `exp-${key}`;
+        d.classList.toggle('active', isActive);
+        if (isActive) d.scrollTop = 0;
+      });
     };
 
-    sidebarItems.forEach(item => {
-      item.addEventListener('click', () => showExp(item.dataset.exp));
-    });
+    const keys = ['adfolks', 'exotic', 'cp', 'infra', 'xmig', 'intern'];
 
-    const keys = ['exotic', 'cp', 'xmig', 'intern'];
+    sidebarItems.forEach((item, idx) => {
+      item.addEventListener('click', () => {
+        const rect = expDesktop.getBoundingClientRect();
+        const expTop = rect.top + window.scrollY;
+        const total = expDesktop.offsetHeight - window.innerHeight;
+        const targetPct = idx / (keys.length - 1);
+        const targetScrollY = expTop + (targetPct * total);
+
+        window.scrollTo({
+          top: targetScrollY,
+          behavior: 'smooth'
+        });
+      });
+    });
     const onScroll = () => {
       const rect   = expDesktop.getBoundingClientRect();
       const total  = expDesktop.offsetHeight - window.innerHeight;
@@ -252,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
       showExp(keys[idx]);
     };
 
-    expDesktop.style.height = '400vh';
+    expDesktop.style.height = '600vh';
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
   }
@@ -369,4 +384,320 @@ document.addEventListener('DOMContentLoaded', () => {
   // Spark/crack effects on click
   initCracks();
 
+  /* ── 13. EASTER EGGS ───────────────────────────────────── */
+  
+  // A. Console welcome message & theme unlock
+  const initConsolePuzzle = () => {
+    window.unlockSecret = () => {
+      const currentTheme = document.documentElement.getAttribute('data-theme');
+      if (currentTheme === 'hacker') {
+        document.documentElement.setAttribute('data-theme', 'mint');
+        try { localStorage.setItem('ms-portfolio-theme', 'mint'); } catch(_) {}
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === 'mint'));
+        console.log("%cTheme restored to mint. Operational parameters nominal.", "color: #28c840; font-weight: bold;");
+        return "Theme restored to mint.";
+      } else {
+        document.documentElement.setAttribute('data-theme', 'hacker');
+        try { localStorage.setItem('ms-portfolio-theme', 'hacker'); } catch(_) {}
+        document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === 'hacker'));
+        console.log("%c[SUCCESS] Secret theme activated. Welcome to the Matrix, Operator.", "color: #00ff66; font-weight: bold; background: #000; padding: 4px;");
+        return "Hacker theme activated!";
+      }
+    };
+    
+    console.log(
+      "%c💻 MATHEWS SHAJI | FULL-STACK DEVELOPER", 
+      "color: #00ff66; font-size: 18px; font-weight: bold; background: #030306; padding: 8px 12px; border-radius: 4px; border: 1px solid #00ff66; font-family: monospace;"
+    );
+    console.log(
+      "%cInspect-savvy developers detected! Try running unlockSecret() in this console or typing 'hack' in the homepage interactive terminal.",
+      "color: #7ba7c2; font-size: 12px;"
+    );
+  };
+
+  // B. Konami Code (Matrix code rain)
+  let matrixCanvas = null;
+  let matrixAnimFrame = null;
+  
+  const triggerMatrixRain = () => {
+    if (matrixCanvas) return;
+    
+    matrixCanvas = document.createElement('canvas');
+    matrixCanvas.style.position = 'fixed';
+    matrixCanvas.style.inset = '0';
+    matrixCanvas.style.zIndex = '9998';
+    matrixCanvas.style.background = 'rgba(0, 0, 0, 0.92)';
+    matrixCanvas.style.cursor = 'none';
+    document.body.appendChild(matrixCanvas);
+    
+    const ctx = matrixCanvas.getContext('2d');
+    
+    const resizeCanvas = () => {
+      matrixCanvas.width = window.innerWidth;
+      matrixCanvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', resizeCanvas, { passive: true });
+    resizeCanvas();
+    
+    const chars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍｦｲｸｺｿﾁﾄﾉﾌﾔﾖﾙﾚ";
+    const charArr = chars.split("");
+    const fontSize = 14;
+    const columns = matrixCanvas.width / fontSize;
+    const drops = [];
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.random() * -100;
+    }
+    
+    const draw = () => {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+      ctx.fillRect(0, 0, matrixCanvas.width, matrixCanvas.height);
+      
+      ctx.fillStyle = "#00ff66";
+      ctx.font = fontSize + "px monospace";
+      
+      for (let i = 0; i < drops.length; i++) {
+        const text = charArr[Math.floor(Math.random() * charArr.length)];
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        
+        ctx.fillText(text, x, y);
+        
+        if (y > matrixCanvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+      matrixAnimFrame = requestAnimationFrame(draw);
+    };
+    
+    draw();
+    
+    const terminalBody = document.getElementById('terminal-body');
+    const terminalInput = document.getElementById('terminal-input');
+    if (terminalBody && terminalInput) {
+      const activeLine = terminalInput.closest('.terminal-line');
+      const div = document.createElement('div');
+      div.className = 'terminal-output-row';
+      div.innerHTML = `<span class="term-green" style="font-weight:bold">MATRIX CODE RAIN ACTIVE. ESC or Click to exit.</span>`;
+      terminalBody.insertBefore(div, activeLine);
+      terminalBody.scrollTop = terminalBody.scrollHeight;
+    }
+    
+    const exitMatrix = (e) => {
+      if (e.type === 'click' || (e.type === 'keydown' && e.key === 'Escape')) {
+        cancelAnimationFrame(matrixAnimFrame);
+        window.removeEventListener('resize', resizeCanvas);
+        matrixCanvas.remove();
+        matrixCanvas = null;
+        document.removeEventListener('keydown', exitMatrix);
+        document.removeEventListener('click', exitMatrix);
+      }
+    };
+    
+    setTimeout(() => {
+      document.addEventListener('keydown', exitMatrix);
+      document.addEventListener('click', exitMatrix);
+    }, 100);
+  };
+
+  const initKonami = () => {
+    const konamiCode = [
+      'ArrowUp', 'ArrowUp', 
+      'ArrowDown', 'ArrowDown', 
+      'ArrowLeft', 'ArrowRight', 
+      'ArrowLeft', 'ArrowRight', 
+      'b', 'a'
+    ];
+    let konamiIndex = 0;
+    
+    document.addEventListener('keydown', (e) => {
+      const key = e.key;
+      const matchKey = (key.toLowerCase() === konamiCode[konamiIndex].toLowerCase());
+      
+      if (matchKey) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+          triggerMatrixRain();
+          konamiIndex = 0;
+        }
+      } else {
+        konamiIndex = 0;
+      }
+    });
+  };
+
+  // C. Caffeine Rush trigger
+  const initCaffeine = () => {
+    const coffeeBtn = document.getElementById('coffee-egg-btn');
+    if (!coffeeBtn) return;
+    
+    let coffeeClicks = 0;
+    let rushTimeout = null;
+    
+    coffeeBtn.addEventListener('click', () => {
+      coffeeClicks++;
+      coffeeBtn.style.transform = 'scale(1.35)';
+      setTimeout(() => { coffeeBtn.style.transform = ''; }, 150);
+      
+      if (coffeeClicks === 5) {
+        triggerCaffeineRush();
+        coffeeClicks = 0;
+      }
+    });
+    
+    const triggerCaffeineRush = () => {
+      document.documentElement.classList.add('caffeine-rush');
+      
+      // Speed scramble on elements
+      document.querySelectorAll('#shuffle-name, .metric-number, .project-title, .nav-link span').forEach(el => {
+        el.dispatchEvent(new Event('mouseenter'));
+        el.dispatchEvent(new Event('dblclick'));
+      });
+      
+      const terminalBody = document.getElementById('terminal-body');
+      const terminalInput = document.getElementById('terminal-input');
+      if (terminalBody && terminalInput) {
+        const activeLine = terminalInput.closest('.terminal-line');
+        const div = document.createElement('div');
+        div.className = 'terminal-output-row';
+        div.innerHTML = `<span class="term-red" style="font-weight:bold;animation:blink 0.5s infinite">⚠️ WARNING: SYSTEM DETECTED CAFFEINE OVERDOSAGE. INITIATING HIGH-FREQUENCY CPU CLOCK RUSH.</span>`;
+        terminalBody.insertBefore(div, activeLine);
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+      }
+      
+      if (rushTimeout) clearTimeout(rushTimeout);
+      
+      rushTimeout = setTimeout(() => {
+        document.documentElement.classList.remove('caffeine-rush');
+        
+        if (terminalBody && terminalInput) {
+          const activeLine = terminalInput.closest('.terminal-line');
+          const div = document.createElement('div');
+          div.className = 'terminal-output-row';
+          div.innerHTML = `<span class="term-gray">Caffeine rush fading. Operating rates normalized.</span>`;
+          terminalBody.insertBefore(div, activeLine);
+          terminalBody.scrollTop = terminalBody.scrollHeight;
+        }
+      }, 15000);
+    };
+  };
+
+  // D. Glitch Mode trigger
+  const initGlitchMode = () => {
+    let glitchInterval = null;
+    let isGlitching = false;
+    let glitchTimeout = null;
+
+    const playGlitchSound = () => {
+      try {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        const audioCtx = new AudioContext();
+        
+        // Play rapid warning sweeps
+        for (let i = 0; i < 6; i++) {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(80 + i * 220, audioCtx.currentTime + i * 0.06);
+          gain.gain.setValueAtTime(0.02, audioCtx.currentTime + i * 0.06);
+          gain.gain.exponentialRampToValueAtTime(0.0001, audioCtx.currentTime + i * 0.06 + 0.05);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(audioCtx.currentTime + i * 0.06);
+          osc.stop(audioCtx.currentTime + i * 0.06 + 0.05);
+        }
+      } catch (_) {}
+    };
+
+    const scrambleTextNodes = () => {
+      const textNodes = Array.from(document.querySelectorAll('h1, h2, h3, h4, h5, p, span, a, button, li'))
+        .filter(n => n.children.length === 0 && n.textContent && n.textContent.trim() && !n.closest('#panic-overlay') && !n.closest('.terminal-body'));
+      
+      glitchInterval = setInterval(() => {
+        if (textNodes.length === 0) return;
+        
+        // Scramble 4 random page elements at a time
+        for (let i = 0; i < 4; i++) {
+          const node = textNodes[Math.floor(Math.random() * textNodes.length)];
+          const text = node.textContent;
+          if (!text || text.length < 3) continue;
+
+          if (!node.hasAttribute('data-orig-text')) {
+            node.setAttribute('data-orig-text', text);
+          }
+
+          const chars = text.split('');
+          const scrambleCount = Math.ceil(chars.length * 0.2);
+          const hexChars = "0123456789ABCDEF$#@%&*[]{}";
+
+          for (let k = 0; k < scrambleCount; k++) {
+            const idx = Math.floor(Math.random() * chars.length);
+            if (chars[idx] !== ' ' && chars[idx] !== '\n') {
+              chars[idx] = hexChars[Math.floor(Math.random() * hexChars.length)];
+            }
+          }
+          node.textContent = chars.join('');
+        }
+      }, 70);
+    };
+
+    const restoreTextNodes = () => {
+      document.querySelectorAll('[data-orig-text]').forEach(el => {
+        const orig = el.getAttribute('data-orig-text');
+        if (orig) {
+          el.textContent = orig;
+          el.removeAttribute('data-orig-text');
+        }
+      });
+    };
+
+    window.triggerGlitchMode = () => {
+      if (isGlitching) return;
+      isGlitching = true;
+      playGlitchSound();
+      document.body.classList.add('glitch-active');
+      scrambleTextNodes();
+
+      if (glitchTimeout) clearTimeout(glitchTimeout);
+      
+      glitchTimeout = setTimeout(() => {
+        document.body.classList.remove('glitch-active');
+        clearInterval(glitchInterval);
+        restoreTextNodes();
+        isGlitching = false;
+      }, 4000);
+    };
+
+    // Keyboard trigger (typing "glitch" anywhere)
+    const targetWord = 'glitch';
+    let typedBuffer = '';
+
+    document.addEventListener('keydown', (e) => {
+      // Ignore key events if the user is typing in inputs or textareas (like terminal input)
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+        return;
+      }
+
+      // Add to buffer
+      typedBuffer += e.key.toLowerCase();
+      
+      // Limit size of buffer to match target word length
+      if (typedBuffer.length > targetWord.length) {
+        typedBuffer = typedBuffer.substring(typedBuffer.length - targetWord.length);
+      }
+
+      if (typedBuffer === targetWord) {
+        window.triggerGlitchMode();
+        typedBuffer = '';
+      }
+    });
+  };
+
+  initConsolePuzzle();
+  initKonami();
+  initCaffeine();
+  initGlitchMode();
+
 });
+

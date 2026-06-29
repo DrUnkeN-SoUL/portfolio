@@ -39,15 +39,25 @@
 
         <div class="exp-content-row">
           <div class="exp-sidebar">
-            <div class="exp-sidebar-item active" data-exp="exotic" id="esb-exotic">
-              <div class="exp-sidebar-year">2024 — Present</div>
+            <div class="exp-sidebar-item active" data-exp="adfolks" id="esb-adfolks">
+              <div class="exp-sidebar-year">Dec 2025</div>
+              <div class="exp-sidebar-role">Full-Stack Dev (Contract)</div>
+              <div class="exp-sidebar-co">Thoughtroutes · Dubai CDA</div>
+            </div>
+            <div class="exp-sidebar-item" data-exp="exotic" id="esb-exotic">
+              <div class="exp-sidebar-year">2024</div>
               <div class="exp-sidebar-role">Contract Full-Stack Dev</div>
               <div class="exp-sidebar-co">Exotic Green · Austria</div>
             </div>
             <div class="exp-sidebar-item" data-exp="cp" id="esb-cp">
               <div class="exp-sidebar-year">Nov 2023 — Present</div>
-              <div class="exp-sidebar-role">Backend Engineer</div>
-              <div class="exp-sidebar-co">CloudPositive</div>
+              <div class="exp-sidebar-role">Full-Stack Developer</div>
+              <div class="exp-sidebar-co">Thoughtroutes · CloudPositive</div>
+            </div>
+            <div class="exp-sidebar-item" data-exp="infra" id="esb-infra">
+              <div class="exp-sidebar-year">2024 — Present</div>
+              <div class="exp-sidebar-role">Observability Engineer</div>
+              <div class="exp-sidebar-co">Thoughtroutes · Clients</div>
             </div>
             <div class="exp-sidebar-item" data-exp="xmig" id="esb-xmig">
               <div class="exp-sidebar-year">Jun 2023 — Nov 2023</div>
@@ -62,61 +72,103 @@
           </div>
 
           <div class="exp-main-wrap">
-            <div class="exp-detail active" id="exp-exotic">
-              <p class="exp-detail-quote">“Sole developer. Zero hand-holding. Full ownership from database schema to CI/CD pipeline — and a production rewrite in Next.js 16 mid-contract.”</p>
+            <div class="exp-detail active" id="exp-adfolks">
+              <p class="exp-detail-quote">"Built and deployed the official CDA platform (dcsl.cda.gov.ae) that earned a Guinness World Record for highest online member participation."</p>
               <div class="exp-detail-header">
-                <div class="exp-detail-role">Contract Full-Stack Developer <span class="exp-now-badge">NOW</span></div>
+                <div class="exp-detail-role">Full-Stack Developer (Contract)</div>
                 <div class="exp-detail-meta">
-                  <span class="exp-detail-co">Exotic Green — Austria</span>
-                  <span class="exp-detail-date">2024 – Present</span>
-                  <span class="exp-detail-type">Remote · Contract · Sole Developer</span>
+                  <span class="exp-detail-co">Thoughtroutes · CDA, Dubai Government</span>
+                  <span class="exp-detail-date">Dec 2025</span>
+                  <span class="exp-detail-type">Remote · Contract</span>
                 </div>
               </div>
               <ul class="exp-list">
-                <li>Sole developer for a full-stack warehouse management platform built for an Austrian supermarket chain.</li>
-                <li>FastAPI backend with inventory management, batch/best-before tracking, compliance protocols, and APScheduler-based auto-logger (cron, exponential backoff, Austrian timezone, graceful degradation).</li>
-                <li>Next.js 14 frontend with webcam barcode scanning (zxing), PDF report generation, and AWS Cognito OAuth2 + email/password auth with role-based route protection.</li>
-                <li>Led complete v2 redesign in Next.js 16 — introduced Vitest unit tests, Playwright E2E suites, and web-vitals monitoring (LCP, FID, CLS, FCP, TTFB) from scratch.</li>
-                <li>Containerised full platform (FastAPI, Next.js, PostgreSQL, Redis) with Docker Compose for dev and production.</li>
+                <li>Built and deployed the official CDA platform (<a href="https://dcsl.cda.gov.ae/en" target="_blank" rel="noopener" style="color:var(--ac)">dcsl.cda.gov.ae</a>) that earned a Guinness World Record for highest online member participation.</li>
+                <li>Developed and Dockerised Next.js 15 app with multi-stage builds for Azure; implemented full i18n (English/Arabic RTL), passwordless magic-link auth, and PostgreSQL schema with audit logging.</li>
               </ul>
               <div class="tech-badges">
-                <span class="tech-badge">Python</span><span class="tech-badge">FastAPI</span>
-                <span class="tech-badge">Next.js 14/16</span><span class="tech-badge">TypeScript</span>
-                <span class="tech-badge">PostgreSQL</span><span class="tech-badge">Redis</span>
-                <span class="tech-badge">AWS Cognito</span><span class="tech-badge">shadcn/ui</span>
-                <span class="tech-badge">Tailwind CSS</span><span class="tech-badge">Docker</span>
-                <span class="tech-badge">Vitest</span><span class="tech-badge">Playwright</span>
+                <span class="tech-badge">Next.js</span><span class="tech-badge">PostgreSQL</span>
+                <span class="tech-badge">SendGrid</span><span class="tech-badge">reCAPTCHA v2</span>
+                <span class="tech-badge">Headless Chrome</span><span class="tech-badge">Azure</span>
+                <span class="tech-badge">Docker</span>
+              </div>
+            </div>
+
+            <div class="exp-detail" id="exp-exotic">
+              <p class="exp-detail-quote">“Sole developer for a full-stack warehouse management system, executing a full-stack migration across multiple phases.”</p>
+              <div class="exp-detail-header">
+                <div class="exp-detail-role">Contract Full-Stack Developer</div>
+                <div class="exp-detail-meta">
+                  <span class="exp-detail-co">Exotic Green — Austria</span>
+                  <span class="exp-detail-date">2024</span>
+                  <span class="exp-detail-type">Remote · Part-time Contract</span>
+                </div>
+              </div>
+              <ul class="exp-list">
+                <li>Designed and built a full warehouse management system, executing a full-stack migration across multiple phases.</li>
+                <li>Phase 1: Developed a FastAPI backend (SQLAlchemy, Alembic, JWT) with AWS Cognito, and a Next.js 14 frontend using NextAuth v5 (beta) and Google Sign-On.</li>
+                <li>Phase 2: Added webcam barcode scanning integration via ZXing-JS, Zod schema validation, and redesigned UI with React & shadcn.</li>
+                <li>Frappe Migration: Led transition of the entire codebase to the Frappe framework, deploying with Neon DB (Serverless Postgres), Redis, Nginx, and Frappe's native cookie-based authentication.</li>
+              </ul>
+              <div class="tech-badges">
+                <span class="tech-badge">Frappe</span><span class="tech-badge">FastAPI</span>
+                <span class="tech-badge">Next.js 14-16</span><span class="tech-badge">Neon DB</span>
+                <span class="tech-badge">Redis</span><span class="tech-badge">AWS Cognito</span>
+                <span class="tech-badge">Nginx</span><span class="tech-badge">Zod</span>
+                <span class="tech-badge">ZXing-JS</span>
               </div>
             </div>
 
             <div class="exp-detail" id="exp-cp">
-              <p class="exp-detail-quote">“Owned the entire backend of a multi-cloud cost governance SaaS — 20+ ingestion pipelines, secretless onboarding across AWS, GCP, and Azure, and an AI cost-estimation proof of concept.”</p>
+              <p class="exp-detail-quote">“Owned the entire backend of a multi-cloud cost governance SaaS — 20+ ingestion pipelines, secretless onboarding across AWS, GCP, and Azure, and an AI cost-estimation/prediction tool.”</p>
               <div class="exp-detail-header">
-                <div class="exp-detail-role">Backend Engineer <span class="exp-now-badge">NOW</span></div>
+                <div class="exp-detail-role">Full-Stack Developer <span class="exp-now-badge">NOW</span></div>
                 <div class="exp-detail-meta">
-                  <span class="exp-detail-co">CloudPositive — Pre-Launch Startup</span>
+                  <span class="exp-detail-co">Thoughtroutes · CloudPositive</span>
                   <span class="exp-detail-date">Nov 2023 – Present</span>
-                  <span class="exp-detail-type">Remote</span>
+                  <span class="exp-detail-type">Remote · Full-time</span>
                 </div>
               </div>
               <ul class="exp-list">
-                <li>Architected multi-tenant FastAPI backend with dynamic per-tenant MySQL schema isolation and role-specific dashboards.</li>
-                <li>Designed a data ingestion engine with 20+ modular pipelines (AWS Cost Explorer, GCP BigQuery, Azure Cost Management) orchestrated via SQS.</li>
-                <li>Engineered secretless multi-cloud onboarding: IAM trust roles (AWS), minimal service accounts (GCP), Azure AD OAuth consent flows generating service principals via ARM templates.</li>
-                <li>Built multi-cloud account validation service (AWS, GCP BigQuery, Azure RBAC) deployed with Docker and Terraform.</li>
-                <li>Real-time alerting module with OpenSearch monitors, configurable thresholds, and Slack/Webhook channels.</li>
-                <li>GCP pre-onboarding validator deployed on Kubernetes with Helm chart.</li>
-                <li>AI cost estimation API using OpenAI GPT-4o-mini with structured JSON, multi-step pipeline (QueryParser → Validator → PromptEnhancer → OutputValidator).</li>
-                <li>Microservices on AWS ECS with RDS MySQL, SQS, and OpenSearch; provisioned with Terraform and Ansible playbooks.</li>
+                <li>Architected multi-tenant FastAPI backend with dynamic per-tenant MySQL schema isolation and role-specific dashboards for finance, BU leader, and executive personas.</li>
+                <li>Designed and built a data ingestion engine with 20+ modular pipelines covering AWS (Cost Explorer, Trusted Advisor, Compute Optimiser), GCP (BigQuery billing export), and Azure Cost Management, orchestrated via AWS SQS.</li>
+                <li>Engineered secretless multi-cloud onboarding across all three clouds: AWS (IAM roles, no stored credentials), GCP (service account BigQuery billing export with minimal IAM), and Azure (multi-tenant app registration with admin consent flow — generates a service principal in the client tenant, used in an ARM template to provision necessary resources for cost data access).</li>
+                <li>Built multi-cloud account validation service — AWS checks, GCP BigQuery, and Azure (RBAC, Cost Management, Blob) — deployed with Docker and Terraform.</li>
+                <li>Developed real-time alerting module with OpenSearch monitors, configurable thresholds, and webhook notification channels.</li>
+                <li>Implemented GCP pre-onboarding validator verifying BigQuery billing export access across projects; deployed on Kubernetes with Helm chart.</li>
+                <li>Built proof-of-concept AI cost estimation API using OpenAI GPT-4o-mini with structured JSON output and a multi-step pipeline (QueryParser → ParameterValidator → PromptEnhancer → OutputValidator).</li>
+                <li>Deployed microservices on AWS ECS with RDS MySQL, SQS, and OpenSearch integration; authored provisioning scripts and Ansible playbooks.</li>
+                <li>Managed server infrastructure (AWS EC2 & GCP Compute Engine) using Auto Scaling Groups, Grafana, Loki, and Prometheus.</li>
               </ul>
               <div class="tech-badges">
-                <span class="tech-badge">Python</span><span class="tech-badge">FastAPI</span>
-                <span class="tech-badge">SQLAlchemy</span><span class="tech-badge">AWS ECS/SQS/Lambda</span>
-                <span class="tech-badge">GCP BigQuery</span><span class="tech-badge">Azure ARM</span>
-                <span class="tech-badge">MySQL</span><span class="tech-badge">OpenSearch</span>
-                <span class="tech-badge">Terraform</span><span class="tech-badge">Kubernetes</span>
-                <span class="tech-badge">Helm</span><span class="tech-badge">Ansible</span>
-                <span class="tech-badge">OpenAI SDK</span>
+                <span class="tech-badge">FastAPI</span><span class="tech-badge">SQLAlchemy</span>
+                <span class="tech-badge">AWS (ECS/RDS/Cognito/Lambda/SQS/Athena/OpenSearch)</span>
+                <span class="tech-badge">GCP (BigQuery/IAM/GKE)</span><span class="tech-badge">Azure (Cost Mgmt/ARM)</span>
+                <span class="tech-badge">MySQL</span><span class="tech-badge">Docker</span>
+                <span class="tech-badge">Terraform</span><span class="tech-badge">Kubernetes/Helm</span>
+                <span class="tech-badge">OpenAI</span><span class="tech-badge">Grafana/Loki/Prometheus</span>
+              </div>
+            </div>
+
+            <div class="exp-detail" id="exp-infra">
+              <p class="exp-detail-quote">"Managing end-to-end observability for multiple client environments — Prometheus alerting, Grafana dashboards, Loki log aggregation, and Beyla eBPF auto-instrumentation."</p>
+              <div class="exp-detail-header">
+                <div class="exp-detail-role">Infrastructure / Observability Engineer</div>
+                <div class="exp-detail-meta">
+                  <span class="exp-detail-co">Thoughtroutes · Client Deployments</span>
+                  <span class="exp-detail-date">2024 – Present</span>
+                  <span class="exp-detail-type">Remote · Full-time</span>
+                </div>
+              </div>
+              <ul class="exp-list">
+                <li>Managing end-to-end observability for multiple client environments: Prometheus alerting, Grafana dashboards, Loki log aggregation, and Beyla eBPF auto-instrumentation (zero-code overhead).</li>
+                <li>Configured Nginx reverse proxy, SSL termination, and load balancing; maintained Node Exporter host-level metrics (CPU, memory, disk, network).</li>
+              </ul>
+              <div class="tech-badges">
+                <span class="tech-badge">Prometheus</span><span class="tech-badge">Grafana</span>
+                <span class="tech-badge">Loki</span><span class="tech-badge">Beyla (eBPF)</span>
+                <span class="tech-badge">Node Exporter</span><span class="tech-badge">Nginx</span>
+                <span class="tech-badge">Linux</span>
               </div>
             </div>
 
@@ -172,47 +224,77 @@
     </div>
 
     <!-- MOBILE: Classic stacked timeline -->
-      <div class="exp-mobile">
+    <div class="exp-mobile">
       <div class="timeline-container">
 
         <div class="timeline-item reveal">
-          <div class="timeline-content glass-card" id="exp-exotic-m">
-            <button class="timeline-toggle" aria-expanded="false" aria-controls="exp-exotic-m-body">
+          <div class="timeline-content glass-card" id="exp-adfolks-m">
+            <button class="timeline-toggle" aria-expanded="false" aria-controls="exp-adfolks-m-body">
               <div class="timeline-toggle-left">
-                <h3 class="timeline-role">Contract Full-Stack Developer</h3>
-                <div class="timeline-company">Exotic Green — Austria (Remote)</div>
-                <div class="timeline-preview-quote">“Sole developer. Zero hand-holding. Production Next.js 16 rewrite.”</div>
+                <h3 class="timeline-role">Full-Stack Developer (Contract)</h3>
+                <div class="timeline-company">Thoughtroutes · CDA, Dubai Government</div>
+                <div class="timeline-preview-quote">“Built CDA platform — Guinness World Record.”</div>
               </div>
               <div class="timeline-toggle-right">
                 <div class="timeline-meta">
-                  <div class="timeline-date">2024 – Present</div>
-                  <div class="timeline-loc">Sole Developer</div>
+                  <div class="timeline-date">Dec 2025</div>
+                  <div class="timeline-loc">Contract</div>
                 </div>
                 <svg class="timeline-chevron" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg>
               </div>
             </button>
-            <div class="timeline-body" id="exp-exotic-m-body">
+            <div class="timeline-body" id="exp-adfolks-m-body">
               <ul class="timeline-list">
-                <li>Sole developer for a comprehensive warehouse management platform built for an Austrian supermarket chain.</li>
-                <li>FastAPI backend with APScheduler auto-compliance logger, exponential backoff, Austrian timezone handling.</li>
-                <li>Next.js 14 frontend with webcam barcode scanning, PDF reports, AWS Cognito auth; v2 in Next.js 16 with Vitest + Playwright.</li>
+                <li>Built and deployed the official CDA platform (dcsl.cda.gov.ae) that earned a Guinness World Record for highest online member participation.</li>
+                <li>Developed and Dockerised Next.js 15 app with multi-stage builds for Azure; implemented full i18n (English/Arabic RTL), passwordless magic-link auth, and PostgreSQL schema with audit logging.</li>
               </ul>
               <div class="tech-badges">
-                <span class="tech-badge">FastAPI</span><span class="tech-badge">Next.js 16</span>
-                <span class="tech-badge">PostgreSQL</span><span class="tech-badge">Redis</span>
-                <span class="tech-badge">AWS Cognito</span><span class="tech-badge">Docker</span>
+                <span class="tech-badge">Next.js 15</span><span class="tech-badge">PostgreSQL</span>
+                <span class="tech-badge">Docker</span><span class="tech-badge">Azure</span>
+                <span class="tech-badge">SendGrid</span><span class="tech-badge">reCAPTCHA</span>
               </div>
             </div>
           </div>
         </div>
 
         <div class="timeline-item reveal reveal-d1">
+          <div class="timeline-content glass-card" id="exp-exotic-m">
+            <button class="timeline-toggle" aria-expanded="false" aria-controls="exp-exotic-m-body">
+              <div class="timeline-toggle-left">
+                <h3 class="timeline-role">Contract Full-Stack Developer</h3>
+                <div class="timeline-company">Exotic Green — Austria (Remote)</div>
+                <div class="timeline-preview-quote">“Sole WMS developer. Led multi-phase migration & Frappe rewrite.”</div>
+              </div>
+              <div class="timeline-toggle-right">
+                <div class="timeline-meta">
+                  <div class="timeline-date">2024</div>
+                  <div class="timeline-loc">Part-time Contract</div>
+                </div>
+                <svg class="timeline-chevron" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg>
+              </div>
+            </button>
+            <div class="timeline-body" id="exp-exotic-m-body">
+              <ul class="timeline-list">
+                <li>Designed and built a warehouse WMS, executing full-stack migration across multiple phases.</li>
+                <li>FastAPI and Next.js 14 stack with barcode scanner (ZXing-JS) and Zod validation.</li>
+                <li>Rewrote entire codebase to Frappe, deploying on Neon DB (serverless Postgres), Redis, and Nginx.</li>
+              </ul>
+              <div class="tech-badges">
+                <span class="tech-badge">Frappe</span><span class="tech-badge">FastAPI</span>
+                <span class="tech-badge">Next.js 16</span><span class="tech-badge">Neon DB</span>
+                <span class="tech-badge">Redis</span><span class="tech-badge">Nginx</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal reveal-d2">
           <div class="timeline-content glass-card" id="exp-cp-m">
             <button class="timeline-toggle" aria-expanded="false" aria-controls="exp-cp-m-body">
               <div class="timeline-toggle-left">
-                <h3 class="timeline-role">Backend Engineer</h3>
-                <div class="timeline-company">CloudPositive — Pre-Launch Startup</div>
-                <div class="timeline-preview-quote">“Owned backend of multi-cloud cost governance SaaS.”</div>
+                <h3 class="timeline-role">Full-Stack Developer</h3>
+                <div class="timeline-company">Thoughtroutes · CloudPositive</div>
+                <div class="timeline-preview-quote">"Owned backend of multi-cloud cost governance SaaS."</div>
               </div>
               <div class="timeline-toggle-right">
                 <div class="timeline-meta">
@@ -235,7 +317,36 @@
           </div>
         </div>
 
-        <div class="timeline-item reveal reveal-d2">
+        <div class="timeline-item reveal reveal-d3">
+          <div class="timeline-content glass-card" id="exp-infra-m">
+            <button class="timeline-toggle" aria-expanded="false" aria-controls="exp-infra-m-body">
+              <div class="timeline-toggle-left">
+                <h3 class="timeline-role">Observability Engineer</h3>
+                <div class="timeline-company">Thoughtroutes · Client Deployments</div>
+                <div class="timeline-preview-quote">"End-to-end observability for multiple client environments."</div>
+              </div>
+              <div class="timeline-toggle-right">
+                <div class="timeline-meta">
+                  <div class="timeline-date">2024 – Present</div>
+                </div>
+                <svg class="timeline-chevron" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="square"/></svg>
+              </div>
+            </button>
+            <div class="timeline-body" id="exp-infra-m-body">
+              <ul class="timeline-list">
+                <li>Prometheus alerting, Grafana dashboards, Loki log aggregation, and Beyla eBPF auto-instrumentation (zero-code overhead).</li>
+                <li>Configured Nginx reverse proxy, SSL termination, load balancing; maintained Node Exporter host-level metrics.</li>
+              </ul>
+              <div class="tech-badges">
+                <span class="tech-badge">Prometheus</span><span class="tech-badge">Grafana</span>
+                <span class="tech-badge">Loki</span><span class="tech-badge">Beyla (eBPF)</span>
+                <span class="tech-badge">Nginx</span><span class="tech-badge">Linux</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="timeline-item reveal reveal-d4">
           <div class="timeline-content glass-card">
             <button class="timeline-toggle" aria-expanded="false" aria-controls="exp-xmig-m-body">
               <div class="timeline-toggle-left">
@@ -262,7 +373,7 @@
           </div>
         </div>
 
-        <div class="timeline-item reveal reveal-d3">
+        <div class="timeline-item reveal reveal-d4">
           <div class="timeline-content glass-card">
             <button class="timeline-toggle" aria-expanded="false" aria-controls="exp-intern-m-body">
               <div class="timeline-toggle-left">
@@ -406,6 +517,7 @@
     overflow-y: auto;
     display: none;
     -webkit-overflow-scrolling: touch;
+    flex-direction: column;
   }
 
   @keyframes expFadeIn {
@@ -413,8 +525,12 @@
     to   { opacity: 1; transform: translateY(0); }
   }
   .exp-detail.active {
-    display: block;
+    display: flex;
     animation: expFadeIn .3s var(--ease) forwards;
+  }
+
+  .exp-detail .tech-badges {
+    margin-top: auto;
   }
 
   .exp-detail-quote {
@@ -563,7 +679,7 @@
     min-height: 56px;
   }
  
-  .timeline-toggle:hover { background: rgba(255,255,255,.02); }
+  .timeline-toggle:hover { background: var(--ac-10); }
   .timeline-toggle:active { transform: scale(0.985); }
   .timeline-toggle[aria-expanded="true"] { background: var(--ac-10); }
  

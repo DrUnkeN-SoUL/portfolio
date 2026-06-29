@@ -33,7 +33,7 @@
             </div>
           </div>
           <div class="project-card-title-row">
-            <span class="project-client">Enterprise Cost SaaS</span>
+            <span class="project-client">Thoughtroutes · Enterprise Cost SaaS</span>
             <h3 class="project-title">CloudPositive Cost Governance</h3>
             <div class="project-preview-tech">FastAPI · React · SQS · OpenAI</div>
           </div>
@@ -98,7 +98,7 @@
         </button>
         <div class="project-card-collapsible" id="pc-body-3">
           <div class="project-card-body">
-            <p class="project-desc">Full warehouse inventory tracker with batch tracking, compliance reports, webcam barcode scanner, and an automated timezone-aware compliance cron logger. Next.js 16 with Vitest, Playwright, and Web Vitals.</p>
+            <p class="project-desc">Full warehouse inventory tracker for an Austrian supermarket chain. FastAPI backend with batch tracking, compliance reports, APScheduler auto-logger, and webcam barcode scanner. Next.js 14→16 rebuild with Vitest, Playwright, and Web Vitals monitoring.</p>
           </div>
           <div class="project-card-footer">
             <span class="project-tag">FastAPI</span><span class="project-tag">Next.js 16</span>
@@ -120,19 +120,21 @@
             </div>
           </div>
           <div class="project-card-title-row">
-            <span class="project-client">Dubai Govt. CDA</span>
+            <span class="project-client">Thoughtroutes · Dubai Govt. CDA</span>
             <h3 class="project-title">Sign Language Platform</h3>
-            <div class="project-preview-tech">Next.js 15 · Azure · PostgreSQL</div>
+            <div class="project-preview-tech">Next.js 15 · PostgreSQL · Docker · Azure</div>
           </div>
         </button>
         <div class="project-card-collapsible" id="pc-body-4">
           <div class="project-card-body">
-            <p class="project-desc">Official government multilingual event &amp; quiz management system supporting the Guinness World Record Emirati Sign Language initiative. Passwordless magic-link auth, English/Arabic RTL, reCAPTCHA, soft-delete logs.</p>
+            <p class="project-desc">Official government platform (<a href="https://dcsl.cda.gov.ae" target="_blank" rel="noopener" style="color:var(--ac)">dcsl.cda.gov.ae</a>) that earned a Guinness World Record for highest online member participation. Bilingual (English/Arabic RTL), passwordless auth, event/quiz management, PostgreSQL schema with audit logging, Dockerised on Azure.</p>
           </div>
           <div class="project-card-footer">
-            <span class="project-tag">Next.js 15</span><span class="project-tag">PostgreSQL</span>
-            <span class="project-tag">i18n</span><span class="project-tag">SendGrid</span>
-            <span class="project-tag">Azure</span><span class="project-tag">Docker</span>
+            <span class="project-tag">Next.js 15</span><span class="project-tag">TypeScript</span>
+            <span class="project-tag">PostgreSQL</span><span class="project-tag">Tailwind CSS</span>
+            <span class="project-tag">next-intl</span><span class="project-tag">SendGrid</span>
+            <span class="project-tag">reCAPTCHA v2</span><span class="project-tag">Azure</span>
+            <span class="project-tag">Docker</span>
           </div>
         </div>
       </div>
@@ -217,7 +219,7 @@
     font-weight: 500;
     text-transform: uppercase;
     letter-spacing: .12em;
-    color: var(--tx-3);
+    color: var(--tx-2);
     background: transparent;
     border: 1px solid transparent;
     padding: .38rem .85rem;
@@ -227,7 +229,7 @@
     display: inline-flex;
     align-items: center;
   }
-  .filter-btn:hover  { color: var(--tx-2); border-color: var(--bd); }
+  .filter-btn:hover  { color: var(--tx-1); border-color: var(--bd); }
   .filter-btn.active { color: var(--ac); border-color: var(--bd-ac); background: var(--ac-10); }
 
   @media (max-width: 480px) {
@@ -435,26 +437,13 @@
   .project-card-footer {
     padding: .85rem 1.65rem;
     border-top: 1px solid var(--bd);
-    background: rgba(0,0,0,.2);
+    background: color-mix(in srgb, var(--bg) 80%, transparent);
     display: flex;
     flex-wrap: wrap;
     gap: .3rem;
   }
 
-  .project-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: .56rem;
-    color: #5c5a56;
-    padding: .1rem .36rem;
-    border: 1px solid rgba(255,255,255,.04);
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    transition: color .2s, border-color .2s;
-    min-height: 24px;
-    display: inline-flex;
-    align-items: center;
-  }
-  .project-tag:hover { color: var(--ac); border-color: var(--bd-ac); }
+
 
   .project-card.inactive {
     opacity: 0.12;

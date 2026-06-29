@@ -4,7 +4,10 @@
 <footer class="footer">
   <div class="container footer-container">
     <div class="footer-copy">&copy; 2026 Mathews Shaji. All rights reserved.</div>
-    <div class="footer-meta">system_uptime: active — Kochi, IN</div>
+    <div class="footer-meta">
+      system_uptime: active — Kochi, IN
+      <button class="coffee-egg-btn" id="coffee-egg-btn" aria-label="Coffee cup">☕</button>
+    </div>
   </div>
 </footer>
 
@@ -37,5 +40,25 @@
     color: var(--tx-2);
     letter-spacing: .1em;
     text-transform: uppercase;
+    display: flex;
+    align-items: center;
+  }
+
+  .coffee-egg-btn {
+    background: none;
+    border: none;
+    cursor: none;
+    font-size: 0.8rem;
+    opacity: 0.35;
+    transition: opacity 0.2s, transform 0.15s var(--ease);
+    margin-left: 8px;
+    padding: 2px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .coffee-egg-btn:hover {
+    opacity: 1;
   }
 </style>

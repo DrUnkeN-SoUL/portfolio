@@ -11,6 +11,14 @@ export function initParticles() {
     return;
   }
 
+  const hexToRgb = (hex) => {
+    const h = hex.replace('#', '');
+    const r = parseInt(h.substring(0, 2), 16);
+    const g = parseInt(h.substring(2, 4), 16);
+    const b = parseInt(h.substring(4, 6), 16);
+    return `${r},${g},${b}`;
+  };
+
   const ctx = canvas.getContext('2d');
   let particles = [];
   let rafId = null;
@@ -32,8 +40,11 @@ export function initParticles() {
       this.y  = Math.random() * canvas.height;
       this.vx = (Math.random() - .5) * .35;
       this.vy = (Math.random() - .5) * .35;
-      this.r  = Math.random() * 1.5 + .5;
-      const cs = ['rgba(201,169,110,.3)', 'rgba(123,167,194,.25)', 'rgba(201,169,110,.18)'];
+      this.r  = Math.random() * 2 + 1;
+      const style = getComputedStyle(document.documentElement);
+      const ac20 = style.getPropertyValue('--ac-20').trim() || 'rgba(201,169,110,.16)';
+      const hi10 = style.getPropertyValue('--hi-10').trim() || 'rgba(123,167,194,.08)';
+      const cs = [ac20, hi10, ac20];
       this.c = cs[Math.floor(Math.random() * cs.length)];
     }
     update() {
@@ -68,13 +79,16 @@ export function initParticles() {
   };
 
   const drawEdges = () => {
+    const style = getComputedStyle(document.documentElement);
+    const acHex = style.getPropertyValue('--ac').trim() || '#c9a96e';
+    const ac = hexToRgb(acHex);
     for (let i = 0; i < particles.length; i++) {
       const p = particles[i];
       if (mouse.x !== null) {
         const d = Math.hypot(p.x - mouse.x, p.y - mouse.y);
         if (d < mouse.r) {
-          ctx.strokeStyle = `rgba(201,169,110,${(1 - d / mouse.r) * .12})`;
-          ctx.lineWidth = .8;
+          ctx.strokeStyle = `rgba(${ac},${(1 - d / mouse.r) * .25})`;
+          ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(p.x, p.y);
           ctx.lineTo(mouse.x, mouse.y);
@@ -85,8 +99,8 @@ export function initParticles() {
         const q = particles[j];
         const d = Math.hypot(p.x - q.x, p.y - q.y);
         if (d < 110) {
-          ctx.strokeStyle = `rgba(201,169,110,${(1 - d / 110) * .06})`;
-          ctx.lineWidth = .6;
+          ctx.strokeStyle = `rgba(${ac},${(1 - d / 110) * .15})`;
+          ctx.lineWidth = .8;
           ctx.beginPath();
           ctx.moveTo(p.x, p.y); ctx.lineTo(q.x, q.y);
           ctx.stroke();
