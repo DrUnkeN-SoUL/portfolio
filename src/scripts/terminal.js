@@ -366,11 +366,10 @@ for clients in Dubai and Austria on the side.
         const sep = this.divider('━');
         const sepDash = this.divider('─');
         const cols = this.getTerminalCols();
-        // Box width fits terminal, min 55
         const boxW = Math.min(Math.max(cols - 2, 55), 78);
-        const inner = boxW - 2; // inside the box borders
+        const inner = boxW - 2;
         const line1 = ' mathewshaji96@gmail.com    github.com/DrUnkeN-SoUL';
-        const line2 = ' Kochi, Kerala  IST+5:30   linkedin.com/in/mathews-shaji';
+        const line2 = ' Kochi, Kerala, India         linkedin.com/in/mathews-shaji';
         const pad1 = Math.max(inner - line1.length, 0);
         const pad2 = Math.max(inner - line2.length, 0);
         const top    = '┌' + '─'.repeat(boxW - 2) + '┐';
@@ -378,7 +377,7 @@ for clients in Dubai and Austria on the side.
         const r1     = '│' + line1 + ' '.repeat(pad1) + '│';
         const r2     = '│' + line2 + ' '.repeat(pad2) + '│';
         return `
-<span class="term-indigo">◍  Mathews Shaji — Resume</span>
+<span class="term-indigo">◍  Mathews Shaji — Developer Resume</span>
 <span class="term-gray">${top}
 ${r1}
 ${r2}
@@ -386,45 +385,78 @@ ${bot}</span>
 
 <span class="term-yellow">── Experience ${this.divider('─', 14)}</span>
 
-<span class="term-indigo">Full-Stack Developer (Contract)</span>  <span class="term-gray">Dec 2025</span>
-<span class="term-gray">Adfolks · Dubai Govt CDA Client</span>
-  ▸ Next.js bilingual event, quiz &amp; certificate portal
-  ▸ reCAPTCHA v2, admin panel, magic-link auth
-  ▸ Headless Chrome serverless PDF certificate generation
+<span class="term-indigo">Full-Stack Developer</span>              <span class="term-gray">Nov 2023 – Present</span>
+<span class="term-gray">Thoughtroutes (Remote)</span>
+
+  <span class="term-yellow">CloudPositive — Multi-Cloud Cost Management Platform</span>
+  <span class="term-gray">Nov 2023 – Present</span>
+  ▸ Architected multi-tenant FastAPI backend with per-tenant MySQL schema isolation
+  ▸ 20+ modular SQS pipelines: AWS Cost Explorer, GCP BigQuery, Azure Cost Mgmt
+  ▸ Secretless onboarding: AWS IAM roles, GCP service accounts, Azure AD consent
+  ▸ Multi-cloud validation service (AWS, GCP BigQuery, Azure RBAC) on Docker/Terraform
+  ▸ Real-time alerting: OpenSearch monitors, thresholds, webhook channels
+  ▸ GCP pre-onboarding validator on Kubernetes with Helm chart
+  ▸ AI cost estimation API: GPT-4o-mini, structured JSON, multi-step pipeline
+  ▸ Microservices on AWS ECS: RDS MySQL, SQS, OpenSearch; Ansible playbooks
+  <span class="term-gray">Stack: Python, FastAPI, SQLAlchemy, AWS (ECS, RDS, Cognito, Lambda, SQS, Athena, OpenSearch),
+  GCP (BigQuery, IAM, GKE), Azure (Cost Mgmt, ARM), MySQL, Docker, Terraform, K8s, Helm, OpenAI</span>
+
+  <span class="term-yellow">Client Infrastructure Monitoring</span>  <span class="term-gray">2024 – Present</span>
+  ▸ End-to-end observability: Prometheus alerting, Grafana, Loki, Beyla eBPF
+  ▸ Nginx reverse proxy, SSL termination, load balancing, Node Exporter metrics
+  <span class="term-gray">Stack: Prometheus, Grafana, Loki, Node Exporter, Beyla (eBPF), Nginx, Linux</span>
+
+<span class="term-indigo">Full-Stack Developer</span>              <span class="term-gray">Dec 2025</span>
+<span class="term-gray">Thoughtroutes · CDA, Dubai Government (Remote)</span>
+  ▸ Built dcsl.cda.gov.ae — <span class="term-green">Guinness World Record</span> for highest online participation
+  ▸ Dockerised Next.js 15 with multi-stage Azure builds
+  ▸ Full i18n (English/Arabic RTL), passwordless magic-link auth, PostgreSQL + audit logging
+  <span class="term-gray">Stack: Next.js 15, TypeScript, PostgreSQL, Docker, Azure, SendGrid, next-intl, reCAPTCHA</span>
 
 <span class="term-indigo">Contract Full-Stack Developer</span>    <span class="term-gray">2024</span>
-<span class="term-gray">Exotic Green · Austria (Remote)</span>
-  ▸ Full WMS: FastAPI + Next.js 14–16, multi-phase Frappe migration
-  ▸ Neon DB (serverless Postgres), Redis, Nginx reverse proxy
-  ▸ ZXing-JS barcode scanner, Zod validation, shadcn/ui
-
-<span class="term-indigo">Backend Engineer</span>                  <span class="term-gray">Nov 2023 – Present</span>
-<span class="term-gray">CloudPositive · Pre-Launch SaaS Startup (Remote)</span>
-  ▸ Multi-tenant event-driven FastAPI, SQS ingestion pipelines
-  ▸ Credential-less AWS/GCP/Azure onboarding (CF, BigQuery, ARM)
-  ▸ AWS CUR analysis via Glue &amp; Athena, AssumeRole trust chains
-  ▸ Grafana/Loki/Prometheus infra · LangChain AI cost checks
+<span class="term-gray">Exotic Green — Austria (Remote · Sole Developer)</span>
+  ▸ Sole developer: full-stack warehouse management platform
+  ▸ FastAPI backend: inventory, batch/expiry tracking, APScheduler compliance cron
+  ▸ Next.js 14 frontend: webcam barcode (zxing), PDF reports, AWS Cognito auth
+  ▸ v2 redesign in Next.js 16: Vitest, Playwright E2E, Web Vitals monitoring
+  ▸ Dockerised platform (FastAPI, Next.js, PostgreSQL, Redis) for dev &amp; production
+  <span class="term-gray">Stack: Python, FastAPI, Next.js 14/16, TypeScript, PostgreSQL, Redis, AWS Cognito, shadcn/ui, Docker</span>
 
 <span class="term-indigo">Full-Stack Developer</span>              <span class="term-gray">Jun 2023 – Nov 2023</span>
 <span class="term-gray">Xmigrate (Remote)</span>
-  ▸ FastAPI (27+ modules), Keycloak SSO, React Flow topology
-  ▸ Next.js 14 dashboard · Radix UI · Cloudflare deployment
+  ▸ FastAPI backend: org/project/blueprint mgmt, cloud config (AWS/Azure/GCP/OCI)
+  ▸ Keycloak SSO: OAuth2/OIDC, custom themes, token exchange on ECS Fargate
+  ▸ Next.js 14 dashboard: React Flow topology, ApexCharts, Radix UI, PDF invoicing
+  ▸ Validated live VM migration workflows across cloud environments
+  <span class="term-gray">Stack: Python, FastAPI, Next.js 14, Keycloak, PostgreSQL, AWS ECS Fargate, Cloudflare</span>
 
 <span class="term-indigo">Web Developer Intern</span>              <span class="term-gray">May 2023 – Jun 2023</span>
 <span class="term-gray">Xmigrate (Remote)</span>
-  ▸ REST endpoints, relational data models, integration testing
+  ▸ FastAPI endpoints for cloud migration backend, API integration, data flow validation
+
+<span class="term-yellow">── Education ${this.divider('─', 13)}</span>
+<span class="term-indigo">Bachelor of Computer Application (BCA)</span>  <span class="term-gray">2020 – 2023</span>
+<span class="term-gray">Mahatma Gandhi University · Ernakulam, Kerala, India</span>
 
 <span class="term-yellow">── Stack ${this.divider('─', 9)}</span>
-<span class="term-gray">Backend:</span>   Python / FastAPI / Flask · Go / Gin · Node.js
-<span class="term-gray">Cloud:</span>     AWS (ECS·SQS·Lambda·Cognito) · GCP (BigQuery·GKE) · Azure
-<span class="term-gray">IaC:</span>       Terraform · Kubernetes · Helm · Ansible
-<span class="term-gray">DB:</span>        PostgreSQL · MySQL · OpenSearch · Redis · MongoDB
-<span class="term-gray">Frontend:</span>  Next.js 14/15/16 · React · Tailwind · shadcn/ui
-<span class="term-gray">CloudPositive</span>  — Multi-cloud cost governance SaaS
-<span class="term-gray">Xmigrate</span>       — eBPF-based live VM migration replicator
-<span class="term-gray">WMS</span>             — Warehouse mgmt + auto-compliance platform
-<span class="term-gray">CDA</span>             — Dubai Govt. Emirati Sign Language portal
-<span class="term-gray">Medicine Bot</span>   — Serverless Durable Lambda + Bedrock AI
+<span class="term-gray">Backend:</span>     Python / FastAPI / Flask · Go / Gin · Node.js · TypeScript
+<span class="term-gray">Cloud:</span>       AWS (ECS·EKS·RDS·Lambda·S3·Cognito·SQS·OpenSearch·Athena·Glue·ALB·VPC·IAM·ECR·CodePipeline)
+<span class="term-gray">             </span>GCP (BigQuery·IAM·GKE) · Azure (Cost Mgmt·ARM·Multi-tenant App Reg)
+<span class="term-gray">IaC:</span>         Docker · Terraform · Kubernetes · Helm · Ansible · GitHub Actions
+<span class="term-gray">DB:</span>          PostgreSQL · MySQL · SQLAlchemy · MongoDB · OpenSearch · Redis · DynamoDB
+<span class="term-gray">Frontend:</span>    Next.js 14/15/16 · React · Tailwind · shadcn/ui · Radix UI · MUI
+<span class="term-gray">Auth:</span>        OAuth2 · OIDC · JWT · AWS Cognito · Keycloak · Azure AD · RBAC
+<span class="term-gray">AI/ML:</span>       OpenAI (Structured JSON) · Amazon Bedrock · TensorFlow/Keras · OpenCV · LangChain
+
+<span class="term-yellow">── Open Source ${this.divider('─', 14)}</span>
+<span class="term-indigo">blitz</span>             HTTP &amp; WebSocket stress testing CLI (Rust · tokio · reqwest)
+<span class="term-gray">                  Real-time dashboard, RPM config, latency p50/p95/p99, YAML pipelines, JSON reports. MIT.</span>
+<span class="term-indigo">Xmigrate</span>          Open source cross-cloud VM migration platform
+<span class="term-gray">                  FastAPI backend + Go eBPF block-level replication agent.</span>
+<span class="term-indigo">SocialSim</span>         <span class="term-gray">(In dev)</span> Multi-agent social simulation, knowledge graph, CAMEL-AI OASIS
+
+<span class="term-yellow">── Languages ${this.divider('─', 13)}</span>
+<span class="term-gray">English (Fluent) · Malayalam (Native) · Hindi (Conversational)</span>
 
 <span class="term-gray">${sepDash}</span>
 <span class="term-gray">Type </span><span class="term-yellow">contact</span><span class="term-gray"> to reach out · </span><span class="term-yellow">about</span><span class="term-gray"> for summary</span>`;

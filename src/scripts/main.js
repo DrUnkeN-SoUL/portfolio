@@ -413,6 +413,67 @@ document.addEventListener('DOMContentLoaded', () => {
       "%cInspect-savvy developers detected! Try running unlockSecret() in this console or typing 'hack' in the homepage interactive terminal.",
       "color: #7ba7c2; font-size: 12px;"
     );
+
+    // Developer resume — visible in console for recruiters / curious devs
+    console.log(
+      "%c\n" +
+      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
+      "  MATHEWS SHAJI — DEVELOPER RESUME\n" +
+      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
+      "  mathewshaji96@gmail.com    github.com/DrUnkeN-SoUL\n" +
+      "  Kochi, Kerala, India       linkedin.com/in/mathews-shaji\n\n" +
+      "── EXPERIENCE ──────────────────────────────────────────────\n\n" +
+      "  Full-Stack Developer              Nov 2023 – Present\n" +
+      "  Thoughtroutes (Remote)\n\n" +
+      "  CloudPositive — Multi-Cloud Cost Management Platform\n" +
+      "    • Multi-tenant FastAPI backend, per-tenant MySQL schema isolation\n" +
+      "    • 20+ SQS pipelines: AWS Cost Explorer, GCP BigQuery, Azure Cost Mgmt\n" +
+      "    • Secretless onboarding: AWS IAM, GCP service accounts, Azure AD consent\n" +
+      "    • Multi-cloud validation (AWS, GCP BigQuery, Azure RBAC) on Docker/Terraform\n" +
+      "    • OpenSearch alerting, GCP pre-onboarding validator on K8s + Helm\n" +
+      "    • AI cost estimation API: GPT-4o-mini, structured JSON, multi-step pipeline\n" +
+      "    • Microservices on AWS ECS: RDS MySQL, SQS, OpenSearch; Ansible playbooks\n" +
+      "    Stack: Python, FastAPI, SQLAlchemy, AWS, GCP, Azure, MySQL, Docker, Terraform, K8s, Helm, OpenAI\n\n" +
+      "  Client Infrastructure Monitoring   2024 – Present\n" +
+      "    • Prometheus alerting, Grafana dashboards, Loki, Beyla eBPF auto-instrumentation\n" +
+      "    • Nginx reverse proxy, SSL termination, Node Exporter host metrics\n" +
+      "    Stack: Prometheus, Grafana, Loki, Beyla (eBPF), Nginx, Linux\n\n" +
+      "  Full-Stack Developer              Dec 2025\n" +
+      "  Thoughtroutes · CDA, Dubai Government (Remote)\n" +
+      "    • Built dcsl.cda.gov.ae — Guinness World Record for highest online participation\n" +
+      "    • Dockerised Next.js 15, i18n (EN/AR RTL), passwordless auth, PostgreSQL + audit\n" +
+      "    Stack: Next.js 15, TypeScript, PostgreSQL, Docker, Azure, SendGrid, next-intl, reCAPTCHA\n\n" +
+      "  Contract Full-Stack Developer     2024\n" +
+      "  Exotic Green — Austria (Remote · Sole Developer)\n" +
+      "    • Sole developer: full-stack warehouse management platform\n" +
+      "    • FastAPI: inventory, batch/expiry tracking, APScheduler compliance cron\n" +
+      "    • Next.js 14: webcam barcode (zxing), PDF reports, AWS Cognito auth\n" +
+      "    • v2 in Next.js 16: Vitest, Playwright E2E, Web Vitals monitoring\n" +
+      "    Stack: Python, FastAPI, Next.js 14/16, PostgreSQL, Redis, AWS Cognito, shadcn/ui, Docker\n\n" +
+      "  Full-Stack Developer              Jun 2023 – Nov 2023\n" +
+      "  Xmigrate (Remote)\n" +
+      "    • FastAPI backend: org/project/blueprint mgmt, cloud config (AWS/Azure/GCP/OCI)\n" +
+      "    • Keycloak SSO: OAuth2/OIDC, custom themes, token exchange on ECS Fargate\n" +
+      "    • Next.js 14 dashboard: React Flow topology, ApexCharts, Radix UI, PDF invoicing\n" +
+      "    Stack: Python, FastAPI, Next.js 14, Keycloak, PostgreSQL, AWS ECS Fargate, Cloudflare\n\n" +
+      "  Web Developer Intern              May 2023 – Jun 2023\n" +
+      "  Xmigrate (Remote)\n" +
+      "    • FastAPI endpoints for cloud migration backend, API integration\n\n" +
+      "── EDUCATION ───────────────────────────────────────────────\n\n" +
+      "  Bachelor of Computer Application (BCA)   2020 – 2023\n" +
+      "  Mahatma Gandhi University · Ernakulam, Kerala, India\n\n" +
+      "── STACK ───────────────────────────────────────────────────\n\n" +
+      "  Backend:    Python / FastAPI / Flask · Go / Gin · Node.js · TypeScript\n" +
+      "  Cloud:      AWS (ECS·EKS·RDS·Lambda·S3·Cognito·SQS·OpenSearch·Athena·Glue·ALB·VPC·IAM)\n" +
+      "              GCP (BigQuery·IAM·GKE) · Azure (Cost Mgmt·ARM·Multi-tenant App Reg)\n" +
+      "  IaC:        Docker · Terraform · Kubernetes · Helm · Ansible · GitHub Actions\n" +
+      "  DB:         PostgreSQL · MySQL · SQLAlchemy · MongoDB · OpenSearch · Redis · DynamoDB\n" +
+      "  Frontend:   Next.js 14/15/16 · React · Tailwind · shadcn/ui · Radix UI · MUI\n" +
+      "  Auth:       OAuth2 · OIDC · JWT · AWS Cognito · Keycloak · Azure AD · RBAC\n" +
+      "  AI/ML:      OpenAI (Structured JSON) · Amazon Bedrock · TensorFlow/Keras · OpenCV\n\n" +
+      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
+      "color: #7ba7c2; font-size: 11px; font-family: monospace; line-height: 1.4;"
+    );
   };
 
   // B. Konami Code (Matrix code rain)
