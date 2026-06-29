@@ -415,64 +415,141 @@ document.addEventListener('DOMContentLoaded', () => {
     );
 
     // Developer resume — visible in console for recruiters / curious devs
+    const headerStyle = "color: #00ff66; font-weight: bold; font-size: 12px; font-family: monospace; padding-top: 12px; padding-bottom: 2px;";
+    const titleStyle = "color: #ffffff; font-weight: bold; font-family: monospace; font-size: 11px;";
+    const companyStyle = "color: #00d2ff; font-weight: bold; font-family: monospace; font-size: 11px;";
+    const dateStyle = "color: #888888; font-style: italic; font-family: monospace; font-size: 11px;";
+    const projectStyle = "color: #ffd700; font-weight: bold; font-family: monospace; font-size: 11px;";
+    const descStyle = "color: #d1d1d6; font-family: monospace; font-size: 11px; line-height: 1.4;";
+    const techLabelStyle = "color: #888888; font-weight: bold; font-family: monospace; font-size: 11px;";
+    const techValueStyle = "color: #00ff66; font-family: monospace; font-size: 11px;";
+    const contactStyle = "color: #7ba7c2; font-family: monospace; font-size: 11px;";
+
     console.log(
-      "%c\n" +
-      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n" +
-      "  MATHEWS SHAJI — DEVELOPER RESUME\n" +
-      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n\n" +
-      "  mathewshaji96@gmail.com    github.com/DrUnkeN-SoUL\n" +
-      "  Kochi, Kerala, India       linkedin.com/in/mathews-shaji\n\n" +
-      "── EXPERIENCE ──────────────────────────────────────────────\n\n" +
-      "  Full-Stack Developer              Nov 2023 – Present\n" +
-      "  Thoughtroutes (Remote)\n\n" +
-      "  CloudPositive — Multi-Cloud Cost Management Platform\n" +
-      "    • Multi-tenant FastAPI backend, per-tenant MySQL schema isolation\n" +
+      `%c  📧 mathewshaji96@gmail.com    🐙 github.com/DrUnkeN-SoUL\n` +
+      `  📍 Kochi, Kerala, India       🔗 linkedin.com/in/mathews-shaji\n`,
+      contactStyle
+    );
+
+    console.log("%c── EXPERIENCE ──────────────────────────────────────────────", headerStyle);
+
+    console.log(
+      "%c  Full-Stack Developer %c@ %cThoughtroutes (Remote) %c| %cNov 2023 – Present",
+      titleStyle, "color: #888;", companyStyle, "color: #555;", dateStyle
+    );
+    console.log(
+      "%c  ▸ %cCloudPositive — Multi-Cloud Cost Management Platform\n" +
+      "%c    • Multi-tenant FastAPI backend, per-tenant MySQL schema isolation\n" +
       "    • 20+ SQS pipelines: AWS Cost Explorer, GCP BigQuery, Azure Cost Mgmt\n" +
       "    • Secretless onboarding: AWS IAM, GCP service accounts, Azure AD consent\n" +
       "    • Multi-cloud validation (AWS, GCP BigQuery, Azure RBAC) on Docker/Terraform\n" +
       "    • OpenSearch alerting, GCP pre-onboarding validator on K8s + Helm\n" +
       "    • AI cost estimation API: GPT-4o-mini, structured JSON, multi-step pipeline\n" +
-      "    • Microservices on AWS ECS: RDS MySQL, SQS, OpenSearch; Ansible playbooks\n" +
-      "    Stack: Python, FastAPI, SQLAlchemy, AWS, GCP, Azure, MySQL, Docker, Terraform, K8s, Helm, OpenAI\n\n" +
-      "  Client Infrastructure Monitoring   2024 – Present\n" +
-      "    • Prometheus alerting, Grafana dashboards, Loki, Beyla eBPF auto-instrumentation\n" +
-      "    • Nginx reverse proxy, SSL termination, Node Exporter host metrics\n" +
-      "    Stack: Prometheus, Grafana, Loki, Beyla (eBPF), Nginx, Linux\n\n" +
-      "  Full-Stack Developer              Dec 2025\n" +
-      "  Thoughtroutes · CDA, Dubai Government (Remote)\n" +
-      "    • Built dcsl.cda.gov.ae — Guinness World Record for highest online participation\n" +
-      "    • Dockerised Next.js 15, i18n (EN/AR RTL), passwordless auth, PostgreSQL + audit\n" +
-      "    Stack: Next.js 15, TypeScript, PostgreSQL, Docker, Azure, SendGrid, next-intl, reCAPTCHA\n\n" +
-      "  Contract Full-Stack Developer     2024\n" +
-      "  Exotic Green — Austria (Remote · Sole Developer)\n" +
-      "    • Sole developer: full-stack warehouse management platform\n" +
+      "    • Microservices on AWS ECS: RDS MySQL, SQS, OpenSearch; Ansible playbooks",
+      "color: #00ff66; font-weight: bold;", projectStyle,
+      descStyle
+    );
+    console.log(
+      "%c    Stack: %cPython, FastAPI, SQLAlchemy, AWS, GCP, Azure, MySQL, Docker, Terraform, K8s, Helm, OpenAI\n",
+      techLabelStyle, techValueStyle
+    );
+
+    console.log(
+      "%c  Client Infrastructure Monitoring %c| %c2024 – Present",
+      titleStyle, "color: #555;", dateStyle
+    );
+    console.log(
+      "%c    • Prometheus alerting, Grafana dashboards, Loki, Beyla eBPF auto-instrumentation\n" +
+      "    • Nginx reverse proxy, SSL termination, Node Exporter host metrics",
+      descStyle
+    );
+    console.log(
+      "%c    Stack: %cPrometheus, Grafana, Loki, Beyla (eBPF), Nginx, Linux\n",
+      techLabelStyle, techValueStyle
+    );
+
+    console.log(
+      "%c  Full-Stack Developer %c@ %cThoughtroutes · CDA, Dubai Government (Remote) %c| %cDec 2025",
+      titleStyle, "color: #888;", companyStyle, "color: #555;", dateStyle
+    );
+    console.log(
+      "%c    • Built dcsl.cda.gov.ae — Guinness World Record for highest online participation\n" +
+      "    • Dockerised Next.js 15, i18n (EN/AR RTL), passwordless auth, PostgreSQL + audit",
+      descStyle
+    );
+    console.log(
+      "%c    Stack: %cNext.js 15, TypeScript, PostgreSQL, Docker, Azure, SendGrid, next-intl, reCAPTCHA\n",
+      techLabelStyle, techValueStyle
+    );
+
+    console.log(
+      "%c  Contract Full-Stack Developer %c@ %cExotic Green — Austria (Remote) %c| %c2024",
+      titleStyle, "color: #888;", companyStyle, "color: #555;", dateStyle
+    );
+    console.log(
+      "%c    • Sole developer: full-stack warehouse management platform\n" +
       "    • FastAPI: inventory, batch/expiry tracking, APScheduler compliance cron\n" +
       "    • Next.js 14: webcam barcode (zxing), PDF reports, AWS Cognito auth\n" +
-      "    • v2 in Next.js 16: Vitest, Playwright E2E, Web Vitals monitoring\n" +
-      "    Stack: Python, FastAPI, Next.js 14/16, PostgreSQL, Redis, AWS Cognito, shadcn/ui, Docker\n\n" +
-      "  Full-Stack Developer              Jun 2023 – Nov 2023\n" +
-      "  Xmigrate (Remote)\n" +
-      "    • FastAPI backend: org/project/blueprint mgmt, cloud config (AWS/Azure/GCP/OCI)\n" +
+      "    • v2 in Next.js 16: Vitest, Playwright E2E, Web Vitals monitoring",
+      descStyle
+    );
+    console.log(
+      "%c    Stack: %cPython, FastAPI, Next.js 14/16, PostgreSQL, Redis, AWS Cognito, shadcn/ui, Docker\n",
+      techLabelStyle, techValueStyle
+    );
+
+    console.log(
+      "%c  Full-Stack Developer %c@ %cXmigrate (Remote) %c| %cJun 2023 – Nov 2023",
+      titleStyle, "color: #888;", companyStyle, "color: #555;", dateStyle
+    );
+    console.log(
+      "%c    • FastAPI backend: org/project/blueprint mgmt, cloud config (AWS/Azure/GCP/OCI)\n" +
       "    • Keycloak SSO: OAuth2/OIDC, custom themes, token exchange on ECS Fargate\n" +
-      "    • Next.js 14 dashboard: React Flow topology, ApexCharts, Radix UI, PDF invoicing\n" +
-      "    Stack: Python, FastAPI, Next.js 14, Keycloak, PostgreSQL, AWS ECS Fargate, Cloudflare\n\n" +
-      "  Web Developer Intern              May 2023 – Jun 2023\n" +
-      "  Xmigrate (Remote)\n" +
-      "    • FastAPI endpoints for cloud migration backend, API integration\n\n" +
-      "── EDUCATION ───────────────────────────────────────────────\n\n" +
-      "  Bachelor of Computer Application (BCA)   2020 – 2023\n" +
-      "  Mahatma Gandhi University · Ernakulam, Kerala, India\n\n" +
-      "── STACK ───────────────────────────────────────────────────\n\n" +
-      "  Backend:    Python / FastAPI / Flask · Go / Gin · Node.js · TypeScript\n" +
-      "  Cloud:      AWS (ECS·EKS·RDS·Lambda·S3·Cognito·SQS·OpenSearch·Athena·Glue·ALB·VPC·IAM)\n" +
+      "    • Next.js 14 dashboard: React Flow topology, ApexCharts, Radix UI, PDF invoicing",
+      descStyle
+    );
+    console.log(
+      "%c    Stack: %cPython, FastAPI, Next.js 14, Keycloak, PostgreSQL, AWS ECS Fargate, Cloudflare\n",
+      techLabelStyle, techValueStyle
+    );
+
+    console.log(
+      "%c  Web Developer Intern %c@ %cXmigrate (Remote) %c| %cMay 2023 – Jun 2023",
+      titleStyle, "color: #888;", companyStyle, "color: #555;", dateStyle
+    );
+    console.log(
+      "%c    • FastAPI endpoints for cloud migration backend, API integration",
+      descStyle
+    );
+    console.log("");
+
+    console.log("%c── EDUCATION ───────────────────────────────────────────────", headerStyle);
+    console.log(
+      "%c  Bachelor of Computer Application (BCA) %c| %c2020 – 2023",
+      titleStyle, "color: #555;", dateStyle
+    );
+    console.log(
+      "%c  Mahatma Gandhi University · Ernakulam, Kerala, India\n",
+      descStyle
+    );
+
+    console.log("%c── STACK ───────────────────────────────────────────────────", headerStyle);
+    console.log(
+      "%c  Backend:    %cPython / FastAPI / Flask · Go / Gin · Node.js · TypeScript\n" +
+      "%c  Cloud:      %cAWS (ECS·EKS·RDS·Lambda·S3·Cognito·SQS·OpenSearch·Athena·Glue·ALB·VPC·IAM)\n" +
       "              GCP (BigQuery·IAM·GKE) · Azure (Cost Mgmt·ARM·Multi-tenant App Reg)\n" +
-      "  IaC:        Docker · Terraform · Kubernetes · Helm · Ansible · GitHub Actions\n" +
-      "  DB:         PostgreSQL · MySQL · SQLAlchemy · MongoDB · OpenSearch · Redis · DynamoDB\n" +
-      "  Frontend:   Next.js 14/15/16 · React · Tailwind · shadcn/ui · Radix UI · MUI\n" +
-      "  Auth:       OAuth2 · OIDC · JWT · AWS Cognito · Keycloak · Azure AD · RBAC\n" +
-      "  AI/ML:      OpenAI (Structured JSON) · Amazon Bedrock · TensorFlow/Keras · OpenCV\n\n" +
-      "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-      "color: #7ba7c2; font-size: 11px; font-family: monospace; line-height: 1.4;"
+      "%c  IaC:        %cDocker · Terraform · Kubernetes · Helm · Ansible · GitHub Actions\n" +
+      "%c  DB:         %cPostgreSQL · MySQL · SQLAlchemy · MongoDB · OpenSearch · Redis · DynamoDB\n" +
+      "%c  Frontend:   %cNext.js 14/15/16 · React · Tailwind · shadcn/ui · Radix UI · MUI\n" +
+      "%c  Auth:       %cOAuth2 · OIDC · JWT · AWS Cognito · Keycloak · Azure AD · RBAC\n" +
+      "%c  AI/ML:      %cOpenAI (Structured JSON) · Amazon Bedrock · TensorFlow/Keras · OpenCV",
+      techLabelStyle, descStyle,
+      techLabelStyle, descStyle,
+      techLabelStyle, descStyle,
+      techLabelStyle, descStyle,
+      techLabelStyle, descStyle,
+      techLabelStyle, descStyle,
+      techLabelStyle, descStyle
     );
   };
 
