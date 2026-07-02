@@ -134,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }).catch(() => { });
     });
   };
-  setupCopy('copy-email-btn', 'mathewshaji96@gmail.com');
+  setupCopy('copy-email-btn', 'mail@mathewsshaji.com');
   setupCopy('copy-loc-btn', 'Kochi, Kerala, India');
 
   /* ── 6. MOBILE MENU (bottom sheet) ─────────────────────── */
@@ -426,7 +426,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const contactStyle = "color: #7ba7c2; font-family: monospace; font-size: 11px;";
 
     console.log(
-      `%c  📧 mathewshaji96@gmail.com    🐙 github.com/DrUnkeN-SoUL\n` +
+      `%c  📧 mail@mathewsshaji.com    🐙 github.com/DrUnkeN-SoUL\n` +
       `  📍 Kochi, Kerala, India       🔗 linkedin.com/in/mathews-shaji\n`,
       contactStyle
     );

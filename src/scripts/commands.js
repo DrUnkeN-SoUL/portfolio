@@ -253,7 +253,7 @@ for clients in Dubai and Austria on the side.
 <span class="term-indigo">◍  Get in Touch</span>
 <span class="term-gray">${sep}</span>
 
-<span class="term-yellow">Email</span>     <span class="term-indigo">mathewshaji96@gmail.com</span>
+<span class="term-yellow">Email</span>     <span class="term-indigo">mail@mathewsshaji.com</span>
 <span class="term-yellow">LinkedIn</span>  <a href="https://linkedin.com/in/mathews-shaji" target="_blank" rel="noopener noreferrer" style="color:var(--hi)">linkedin.com/in/mathews-shaji</a>
 <span class="term-yellow">GitHub</span>    <a href="https://github.com/DrUnkeN-SoUL" target="_blank" rel="noopener noreferrer" style="color:var(--hi)">github.com/DrUnkeN-SoUL</a>
 <span class="term-yellow">Location</span>  Kochi, Kerala, India  <span class="term-gray">[UTC+5:30]</span>
@@ -275,12 +275,12 @@ for clients in Dubai and Austria on the side.
       headerBlock = `
 <span class="term-indigo">◍  Mathews Shaji — Full-Stack Developer</span>
 <span class="term-gray">${sep}</span>
-<span class="term-yellow">Email</span>   mathewshaji96@gmail.com
+<span class="term-yellow">Email</span>   mail@mathewsshaji.com
 <span class="term-yellow">GitHub</span>  github.com/DrUnkeN-SoUL
 <span class="term-yellow">Based</span>   Kochi, Kerala, India
 <span class="term-yellow">LinkedIn</span> linkedin.com/in/mathews-shaji`;
     } else {
-      const line1 = ' mathewshaji96@gmail.com    github.com/DrUnkeN-SoUL';
+      const line1 = ' mail@mathewsshaji.com      github.com/DrUnkeN-SoUL';
       const line2 = ' Kochi, Kerala, India         linkedin.com/in/mathews-shaji';
       const maxLineLen = Math.max(line1.length, line2.length);
       const minBoxW = maxLineLen + 2;
