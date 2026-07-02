@@ -12,8 +12,14 @@ export class Terminal {
     this.sudoCommands = getSudoCommands(this);
     this.easterEggs = getEasterEggs(this);
     this.isTouchDevice = () => window.matchMedia('(hover: none), (pointer: coarse)').matches;
-    this.isMobile = () => window.innerWidth <= 900;
-    this.isSmallScreen = () => window.innerWidth <= 480;
+    this.isMobile = () => {
+      const w = window.innerWidth || document.documentElement.clientWidth || 0;
+      return w <= 900;
+    };
+    this.isSmallScreen = () => {
+      const w = window.innerWidth || document.documentElement.clientWidth || 0;
+      return w > 0 && w <= 480;
+    };
 
     // Measure terminal character width for dynamic layout
     this._charWidth = null;
@@ -101,7 +107,12 @@ export class Terminal {
   divider(char = '─', reserve = 0) {
     const cols = this.getTerminalCols();
     const len = Math.max(cols - reserve, 20);
-    return char.repeat(len);
+    let drawChar = char;
+    if (this.isMobile()) {
+      if (char === '─') drawChar = '-';
+      if (char === '━') drawChar = '=';
+    }
+    return drawChar.repeat(len);
   }
 
   bindEvents() {
@@ -133,21 +144,17 @@ export class Terminal {
       if (!e.target.closest('a')) this.input.focus();
     });
 
+    // Handle smooth keyboard scrolling when input is focused (regardless of platform)
+    this.input.addEventListener('focus', () => {
+      setTimeout(() => {
+        this.input.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }, 150);
+    });
+
     if (this.isTouchDevice()) {
       // touchstart: instantly stop the auto-demo so the UI feels responsive
       this.body.addEventListener('touchstart', () => {
         markInteracted();
-      }, { passive: true });
-
-      // touchend: focus + scroll so the keyboard doesn't cover the input.
-      // The small timeout lets the browser finish processing the gesture first.
-      this.body.addEventListener('touchend', (e) => {
-        if (!e.target.closest('a') && e.target !== this.input) {
-          setTimeout(() => {
-            this.input.focus();
-            this.input.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-          }, 60);
-        }
       }, { passive: true });
 
       // Show / hide the tap hint
@@ -641,8 +648,16 @@ export class Terminal {
 
   autoRunHelp() {
     const delay = this.isTouchDevice() ? 800 : 1500;
-    setTimeout(() => {
+    
+    const run = () => {
       if (this.hasInteracted) return;
+
+      const w = window.innerWidth || document.documentElement.clientWidth || 0;
+      if (w === 0) {
+        // Viewport width not yet resolved (can happen on fast reload), check again shortly
+        setTimeout(run, 50);
+        return;
+      }
 
       // Clear terminal prior to running initial command
       const active = this.input.closest('.terminal-line');
@@ -659,7 +674,9 @@ export class Terminal {
       this.body.scrollTop = this.body.scrollHeight;
 
       this.startAutomatedDemo(initCmd);
-    }, delay);
+    };
+
+    setTimeout(run, delay);
   }
 
   resetIdleTimer() {

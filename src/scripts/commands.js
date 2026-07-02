@@ -276,10 +276,18 @@ for clients in Dubai and Austria on the side.
     const inner = boxW - 2;
     const pad1 = Math.max(inner - line1.length, 0);
     const pad2 = Math.max(inner - line2.length, 0);
-    const top    = '┌' + '─'.repeat(inner) + '┐';
-    const bot    = '└' + '─'.repeat(inner) + '┘';
-    const r1     = '│' + line1 + ' '.repeat(pad1) + '│';
-    const r2     = '│' + line2 + ' '.repeat(pad2) + '│';
+    let top, bot, r1, r2;
+    if (terminal.isMobile()) {
+      top  = '+' + '-'.repeat(inner) + '+';
+      bot  = '+' + '-'.repeat(inner) + '+';
+      r1   = '|' + line1 + ' '.repeat(pad1) + '|';
+      r2   = '|' + line2 + ' '.repeat(pad2) + '|';
+    } else {
+      top  = '┌' + '─'.repeat(inner) + '┐';
+      bot  = '└' + '─'.repeat(inner) + '┘';
+      r1   = '│' + line1 + ' '.repeat(pad1) + '│';
+      r2   = '│' + line2 + ' '.repeat(pad2) + '│';
+    }
     return `
 <span class="term-indigo">◍  Mathews Shaji — Full-Stack Developer</span>
 <span class="term-gray">${top}</span>
@@ -858,52 +866,54 @@ export const getSudoCommands = (terminal) => ({
   }
 });
 
-export const getEasterEggs = (terminal) => ({
-  cloudpositive: `<span class="term-indigo">CloudPositive</span>  <span class="term-gray">// Thoughtroutes · access granted</span>
-<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+export const getEasterEggs = (terminal) => {
+  const sep = terminal.divider('━');
+  return {
+    cloudpositive: `<span class="term-indigo">CloudPositive</span>  <span class="term-gray">// Thoughtroutes · access granted</span>
+<span class="term-gray">${sep}</span>
 Multi-tenant cost governance SaaS — production.
 Dynamic schema isolation: <span class="term-green">✓</span>  20+ SQS pipelines: <span class="term-green">✓</span>
 Secretless onboarding: AWS/GCP/Azure  AI cost estimation: <span class="term-green">✓</span>
 <span class="term-gray">Grafana/Loki: </span><span class="term-green">● healthy</span>  <span class="term-gray">ECS autoscaling: </span><span class="term-green">● nominal</span>`,
 
   xmigrate: `<span class="term-indigo">Xmigrate</span>  <span class="term-gray">// eBPF hook verified</span>
-<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="term-gray">${sep}</span>
 Block-layer dispatcher: <span class="term-green">● running</span>  WS channels: open
 Migration agent: registered  Keycloak SSO: <span class="term-green">✓</span>
 <span class="term-gray">React Flow topology: rendered  PDF invoicing: ready</span>`,
 
   wms: `<span class="term-indigo">WMS</span>  <span class="term-gray">// Exotic Green · Austria</span>
-<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="term-gray">${sep}</span>
 Frappe instance: <span class="term-green">● online</span>  Neon DB connection: pooled
 Auto-compliance cron: <span class="term-green">● running</span>  <span class="term-gray">[AT timezone]</span>
 ZXing barcode scanner: ready  Redis cache: warm`,
 
   exoticgreen: `<span class="term-indigo">WMS</span>  <span class="term-gray">// Exotic Green · Austria</span>
-<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="term-gray">${sep}</span>
 Frappe instance: <span class="term-green">● online</span>  Neon DB connection: pooled
 Auto-compliance cron: <span class="term-green">● running</span>  <span class="term-gray">[AT timezone]</span>
 ZXing barcode scanner: ready  Redis cache: warm`,
 
   cda: `<span class="term-indigo">CDA Platform</span>  <span class="term-gray">// Thoughtroutes · Dubai Govt</span>
-<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="term-gray">${sep}</span>
 EN/AR RTL: <span class="term-green">✓</span>  Passwordless auth: <span class="term-green">✓</span>  reCAPTCHA: <span class="term-green">✓</span>
 Dockerised on Azure: <span class="term-green">✓</span>  Guinness World Record: <span class="term-green">✓</span>
 <span class="term-gray">Live: </span><span class="term-cyan">dcsl.cda.gov.ae</span>`,
 
   dcsl: `<span class="term-indigo">CDA Platform</span>  <span class="term-gray">// Thoughtroutes · Dubai Govt</span>
-<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="term-gray">${sep}</span>
 EN/AR RTL: <span class="term-green">✓</span>  Passwordless auth: <span class="term-green">✓</span>  reCAPTCHA: <span class="term-green">✓</span>
 Dockerised on Azure: <span class="term-green">✓</span>  Guinness World Record: <span class="term-green">✓</span>
 <span class="term-gray">Live: </span><span class="term-cyan">dcsl.cda.gov.ae</span>`,
 
   medicine: `<span class="term-indigo">Medicine Bot</span>  <span class="term-gray">// Durable Lambda + Bedrock</span>
-<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="term-gray">${sep}</span>
 Durable state machine: replay-ready  No external DB
 Bedrock Nova Lite multimodal parser: <span class="term-green">● active</span>
 <span class="term-gray">Prescription photo → structured JSON: </span><span class="term-green">✓</span>`,
 
   matrix: `<span class="term-indigo">Wake up, Neo…</span>
-<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="term-gray">${sep}</span>
 The Matrix has you.
 
 <span class="term-yellow">Follow the white rabbit. 🐇</span>
@@ -912,7 +922,7 @@ The Matrix has you.
 <span class="term-gray">Spoiler: it ends in a FastAPI endpoint on AWS Lambda.</span>`,
 
   vim: `<span class="term-indigo">vim</span>  <span class="term-gray">// opening editor… just kidding.</span>
-<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
+<span class="term-gray">${sep}</span>
 Here’s how to escape if you ever get trapped:
   <span class="term-yellow">:wq</span>   write and quit
   <span class="term-yellow">:q!</span>   quit without saving  <span class="term-gray">(panic mode)</span>
@@ -1453,4 +1463,5 @@ Here’s how to escape if you ever get trapped:
   },
 
   rebuild: () => terminal.easterEggs.restore()
-});
+  };
+};
