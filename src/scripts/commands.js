@@ -927,13 +927,38 @@ The Matrix has you.
 <span class="term-gray">You took the red pill — now you see how deep it goes.</span>
 <span class="term-gray">Spoiler: it ends in a FastAPI endpoint on AWS Lambda.</span>`,
 
-  vim: `<span class="term-indigo">vim</span>  <span class="term-gray">// opening editor… just kidding.</span>
-<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
-Here’s how to escape if you ever get trapped:
-  <span class="term-yellow">:wq</span>   write and quit
-  <span class="term-yellow">:q!</span>   quit without saving  <span class="term-gray">(panic mode)</span>
-  <span class="term-yellow">:qa!</span>  quit all buffers
-<span class="term-gray">You’re welcome. 😊</span>`,
+  vim: () => {
+    const uid = Date.now();
+    const runVimSequence = () => {
+      const loader = document.getElementById(`vim-loader-${uid}`);
+      const bodyEl = document.getElementById('terminal-body');
+      const inputEl = document.getElementById('terminal-input');
+      if (!bodyEl || !inputEl || !loader) return;
+
+      const activeLine = inputEl.closest('.terminal-line');
+      let step = 0;
+      const nextStep = () => {
+        if (step === 0 || step === 1) {
+          loader.innerHTML += '.';
+          step++;
+          setTimeout(nextStep, 600);
+        } else if (step === 2) {
+          loader.innerHTML += '. just kidding.';
+          step++;
+          setTimeout(nextStep, 500);
+        } else if (step === 3) {
+          const banner = document.createElement('div');
+          banner.className = 'terminal-output-row';
+          banner.innerHTML = `<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>\nHere’s how to escape if you ever get trapped:\n  <span class="term-yellow">:wq</span>   write and quit\n  <span class="term-yellow">:q!</span>   quit without saving  <span class="term-gray">(panic mode)</span>\n  <span class="term-yellow">:qa!</span>  quit all buffers\n<span class="term-gray">You’re welcome. 😊</span>`;
+          bodyEl.insertBefore(banner, activeLine);
+          bodyEl.scrollTop = bodyEl.scrollHeight;
+        }
+      };
+      setTimeout(nextStep, 600);
+    };
+    setTimeout(runVimSequence, 10);
+    return `<span class="term-indigo">vim</span>  <span class="term-gray" id="vim-loader-${uid}">// opening editor</span>`;
+  },
 
   ls: `<span class="term-indigo">drwxr-xr-x</span>  <span class="term-yellow">about/</span>          <span class="term-gray">who I am</span>
 <span class="term-indigo">drwxr-xr-x</span>  <span class="term-yellow">projects/</span>       <span class="term-gray">things I built</span>

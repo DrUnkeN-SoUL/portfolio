@@ -644,11 +644,11 @@ export class Terminal {
     }, 60);
 
     return `<span class="term-indigo">Mathews Shaji — Backend-Leaning Full-Stack Engineer</span>
-<span class="term-gray">──────────────────────────────────────────────────</span>
+<span class="term-gray">${this.divider('─')}</span>
 <span class="term-gray">Role:    </span>Backend-Leaning Full-Stack Developer
 <span class="term-gray">Stack:   </span>Python · Go · TypeScript · AWS · GCP · Azure
 <span class="term-gray">Bio:     </span>Building high-performance distributed systems.
-<span class="term-gray">──────────────────────────────────────────────────</span>
+<span class="term-gray">${this.divider('─')}</span>
 <div id="${id}"><pre id="${id}-pre" style="font-family:'JetBrains Mono','DejaVu Sans Mono','Liberation Mono','Courier New',monospace;font-size:${fs};line-height:${lh};white-space:pre;overflow:hidden;margin:0;padding:0;border:none;outline:none;margin-top:.4rem;"></pre></div>`;
   }
 
@@ -671,9 +671,8 @@ export class Terminal {
         if (el !== active) el.remove();
       });
 
-      // On small screens start with 'help' (faster); on larger screens
-      // run 'whoami' which fetches and renders the ASCII portrait.
-      const initCmd = this.isSmallScreen() ? 'help' : 'whoami';
+      // Always start with 'whoami' which fetches and renders the ASCII portrait.
+      const initCmd = 'whoami';
       this.echoCommand(initCmd);
       const result = this.commands[initCmd]();
       this.renderOutput(result);
