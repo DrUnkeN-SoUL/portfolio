@@ -444,7 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "    • Secretless onboarding: AWS IAM, GCP service accounts, Azure AD consent\n" +
       "    • Multi-cloud validation (AWS, GCP BigQuery, Azure RBAC) on Docker/Terraform\n" +
       "    • OpenSearch alerting, GCP pre-onboarding validator on K8s + Helm\n" +
-      "    • AI cost estimation API: GPT-4o-mini, structured JSON, multi-step pipeline\n" +
+      "    • AI cost estimation API: OpenAI, structured JSON, multi-step pipeline\n" +
       "    • Microservices on AWS ECS: RDS MySQL, SQS, OpenSearch; Ansible playbooks",
       "color: #00ff66; font-weight: bold;", projectStyle,
       descStyle
@@ -474,11 +474,11 @@ document.addEventListener('DOMContentLoaded', () => {
     );
     console.log(
       "%c    • Built dcsl.cda.gov.ae — Guinness World Record for highest online participation\n" +
-      "    • Dockerised Next.js 15, i18n (EN/AR RTL), passwordless auth, PostgreSQL + audit",
+      "    • Dockerised Next.js, i18n (EN/AR RTL), passwordless auth, PostgreSQL + audit",
       descStyle
     );
     console.log(
-      "%c    Stack: %cNext.js 15, TypeScript, PostgreSQL, Docker, Azure, SendGrid, next-intl, reCAPTCHA\n",
+      "%c    Stack: %cNext.js, TypeScript, PostgreSQL, Docker, Azure, SendGrid, next-intl, reCAPTCHA\n",
       techLabelStyle, techValueStyle
     );
 
@@ -489,12 +489,12 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(
       "%c    • Sole developer: full-stack warehouse management platform\n" +
       "    • FastAPI: inventory, batch/expiry tracking, APScheduler compliance cron\n" +
-      "    • Next.js 14: webcam barcode (zxing), PDF reports, AWS Cognito auth\n" +
-      "    • v2 in Next.js 16: Vitest, Playwright E2E, Web Vitals monitoring",
+      "    • Next.js: webcam barcode (zxing), PDF reports, AWS Cognito auth\n" +
+      "    • v2 rebuild: Vitest, Playwright E2E, Web Vitals monitoring",
       descStyle
     );
     console.log(
-      "%c    Stack: %cPython, FastAPI, Next.js 14/16, PostgreSQL, Redis, AWS Cognito, shadcn/ui, Docker\n",
+      "%c    Stack: %cPython, FastAPI, Next.js, PostgreSQL, Redis, AWS Cognito, shadcn/ui, Docker\n",
       techLabelStyle, techValueStyle
     );
 
@@ -505,11 +505,11 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(
       "%c    • FastAPI backend: org/project/blueprint mgmt, cloud config (AWS/Azure/GCP/OCI)\n" +
       "    • Keycloak SSO: OAuth2/OIDC, custom themes, token exchange on ECS Fargate\n" +
-      "    • Next.js 14 dashboard: React Flow topology, ApexCharts, Radix UI, PDF invoicing",
+      "    • Next.js dashboard: React Flow topology, ApexCharts, Radix UI, PDF invoicing",
       descStyle
     );
     console.log(
-      "%c    Stack: %cPython, FastAPI, Next.js 14, Keycloak, PostgreSQL, AWS ECS Fargate, Cloudflare\n",
+      "%c    Stack: %cPython, FastAPI, Next.js, Keycloak, PostgreSQL, AWS ECS Fargate, Cloudflare\n",
       techLabelStyle, techValueStyle
     );
 
@@ -540,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
       "              GCP (BigQuery·IAM·GKE) · Azure (Cost Mgmt·ARM·Multi-tenant App Reg)\n" +
       "%c  IaC:        %cDocker · Terraform · Kubernetes · Helm · Ansible · GitHub Actions\n" +
       "%c  DB:         %cPostgreSQL · MySQL · SQLAlchemy · MongoDB · OpenSearch · Redis · DynamoDB\n" +
-      "%c  Frontend:   %cNext.js 14/15/16 · React · Tailwind · shadcn/ui · Radix UI · MUI\n" +
+      "%c  Frontend:   %cNext.js · React · Tailwind · shadcn/ui · Radix UI · MUI\n" +
       "%c  Auth:       %cOAuth2 · OIDC · JWT · AWS Cognito · Keycloak · Azure AD · RBAC\n" +
       "%c  AI/ML:      %cOpenAI (Structured JSON) · Amazon Bedrock · TensorFlow/Keras · OpenCV",
       techLabelStyle, descStyle,

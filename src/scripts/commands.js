@@ -5,25 +5,18 @@ export const getCommands = (terminal) => ({
   <span class="term-indigo">ms-shell v2.0</span>  <span class="term-gray">·  Mathews Shaji — Interactive Terminal</span>
   <span class="term-gray">${sep}</span>
 
-  <span class="term-yellow">── info</span>
   <span class="term-indigo">about</span>         who I am &amp; what I do
   <span class="term-indigo">whoami</span>        bio + interactive ASCII portrait
   <span class="term-indigo">now</span>           current status &amp; focus
   <span class="term-indigo">uses</span>          daily dev environment &amp; tools
   <span class="term-indigo">fun</span>           something personal 🥚
-
-  <span class="term-yellow">── work</span>
   <span class="term-indigo">skills</span>        full tech stack breakdown
   <span class="term-indigo">projects</span>      selected production builds
   <span class="term-indigo">resume</span>        complete CV with experience
-
-  <span class="term-yellow">── connect</span>
   <span class="term-indigo">contact</span>       email &amp; how to reach me
   <span class="term-indigo">availability</span>  open-to-work status &amp; timezone
   <span class="term-indigo">socials</span>       github &amp; linkedin
-
-  <span class="term-yellow">── shell</span>
-  <span class="term-indigo">theme</span> <span class="term-gray">[name]</span>   switch palette (mint·cyan·amber·mono)
+  <span class="term-indigo">theme</span> <span class="term-gray">[name]</span>  switch palette (mint·cyan·amber·mono)
   <span class="term-indigo">clear</span>         clear terminal
   <span class="term-indigo">help</span>          show this menu
 
@@ -96,7 +89,7 @@ for clients in Dubai and Austria on the side.
 <span class="term-yellow">Daily drivers</span>
   <span class="term-gray">Languages</span>   Python · Go · TypeScript
   <span class="term-gray">Backend</span>     FastAPI · Gin · SQLAlchemy · Alembic
-  <span class="term-gray">Frontend</span>    Next.js 14–16 · shadcn/ui · Tailwind
+  <span class="term-gray">Frontend</span>    Next.js · shadcn/ui · Tailwind
   <span class="term-gray">Cloud</span>       AWS (primary) · GCP · Azure
   <span class="term-gray">DB</span>          PostgreSQL · Redis · OpenSearch
   <span class="term-gray">Infra</span>       Docker · Terraform · K8s · Grafana
@@ -178,7 +171,7 @@ for clients in Dubai and Austria on the side.
   Node.js  <span class="term-gray">·</span>  Frappe Framework  <span class="term-gray">·</span>  REST &amp; WebSocket APIs
 
 <span class="term-yellow">Frontend</span>
-  Next.js 14/15/16  <span class="term-gray">·</span>  React  <span class="term-gray">·</span>  Tailwind  <span class="term-gray">·</span>  shadcn/ui
+  Next.js  <span class="term-gray">·</span>  React  <span class="term-gray">·</span>  Tailwind  <span class="term-gray">·</span>  shadcn/ui
   Framer Motion  <span class="term-gray">·</span>  Radix UI  <span class="term-gray">·</span>  TanStack  <span class="term-gray">·</span>  ZXing-JS
 
 <span class="term-yellow">Cloud &amp; Infra</span>
@@ -196,7 +189,7 @@ for clients in Dubai and Austria on the side.
   Multi-tenant RBAC  <span class="term-gray">·</span>  Secretless onboarding
 
 <span class="term-yellow">AI / ML</span>
-  OpenAI SDK (GPT-4o)  <span class="term-gray">·</span>  Amazon Bedrock (Nova Lite)
+  OpenAI SDK  <span class="term-gray">·</span>  Amazon Bedrock (Nova Lite)
   TensorFlow/Keras  <span class="term-gray">·</span>  OpenCV  <span class="term-gray">·</span>  LangChain
   Multimodal (text + image)  <span class="term-gray">·</span>  Structured JSON output
 
@@ -219,13 +212,13 @@ for clients in Dubai and Austria on the side.
 <span class="term-yellow">02  Xmigrate eBPF Replicator</span>  <span class="term-gray">systems / Go</span>
     Live VM disk replication via eBPF block-layer hooks
     Multi-channel WebSocket dispatcher, C-shared plugins
-    Next.js 14 topology dashboard with React Flow
+    Next.js topology dashboard with React Flow
     <span class="term-gray">Go · eBPF · Next.js · Keycloak · WebSocket</span>
 
 <span class="term-yellow">03  WMS &amp; Auto-Compliance</span>  <span class="term-gray">full-stack · Austria</span>
     Full warehouse system, barcode scanner, batch tracking,
     timezone-aware compliance cron, multi-phase Frappe migration
-    <span class="term-gray">FastAPI · Next.js 16 · Frappe · Neon DB · Redis · ZXing</span>
+    <span class="term-gray">FastAPI · Next.js · Frappe · Neon DB · Redis · ZXing</span>
 
 <span class="term-yellow">04  Dubai CDA Sign Language Platform</span>  <span class="term-gray">govt. contract</span>
     Bilingual EN/AR RTL portal for Guinness World Record event
@@ -236,12 +229,7 @@ for clients in Dubai and Austria on the side.
     Durable Lambda state machine + Bedrock Nova Lite
     Multimodal prescription parsing (text + photo)
     Zero external DB — free idempotency via state replay
-    <span class="term-gray">Python 3.13 · Lambda (Durable) · Bedrock · Telegram</span>
-
-<span class="term-yellow">06  Facial Emotion CNN Detector</span>  <span class="term-gray">ML · personal</span>
-    7-class emotion classifier on FER2013 dataset
-    OpenCV stream routing, Flask analytics interface
-    <span class="term-gray">TensorFlow/Keras · OpenCV · Flask · NumPy</span>`;
+    <span class="term-gray">Python · Lambda (Durable) · Bedrock · Telegram</span>`;
   },
 
   socials: () => {
@@ -280,22 +268,24 @@ for clients in Dubai and Austria on the side.
     const sep = terminal.divider('━');
     const sepDash = terminal.divider('─');
     const cols = terminal.getTerminalCols();
-    const boxW = Math.min(Math.max(cols - 2, 55), 78);
-    const inner = boxW - 2;
     const line1 = ' mathewshaji96@gmail.com    github.com/DrUnkeN-SoUL';
     const line2 = ' Kochi, Kerala, India         linkedin.com/in/mathews-shaji';
+    const maxLineLen = Math.max(line1.length, line2.length);
+    const minBoxW = maxLineLen + 2;
+    const boxW = Math.min(Math.max(cols - 2, minBoxW), 78);
+    const inner = boxW - 2;
     const pad1 = Math.max(inner - line1.length, 0);
     const pad2 = Math.max(inner - line2.length, 0);
-    const top    = '┌' + '─'.repeat(boxW - 2) + '┐';
-    const bot    = '└' + '─'.repeat(boxW - 2) + '┘';
+    const top    = '┌' + '─'.repeat(inner) + '┐';
+    const bot    = '└' + '─'.repeat(inner) + '┘';
     const r1     = '│' + line1 + ' '.repeat(pad1) + '│';
     const r2     = '│' + line2 + ' '.repeat(pad2) + '│';
     return `
 <span class="term-indigo">◍  Mathews Shaji — Full-Stack Developer</span>
-<span class="term-gray">${top}
-${r1}
-${r2}
-${bot}</span>
+<span class="term-gray">${top}</span>
+<span class="term-gray">${r1}</span>
+<span class="term-gray">${r2}</span>
+<span class="term-gray">${bot}</span>
 
 <span class="term-yellow">── Experience ${terminal.divider('─', 14)}</span>
 
@@ -310,7 +300,7 @@ ${bot}</span>
   ▸ Multi-cloud validation service (AWS, GCP BigQuery, Azure RBAC) on Docker/Terraform
   ▸ Real-time alerting: OpenSearch monitors, thresholds, webhook channels
   ▸ GCP pre-onboarding validator on Kubernetes with Helm chart
-  ▸ AI cost estimation API: GPT-4o-mini, structured JSON, multi-step pipeline
+  ▸ AI cost estimation API: OpenAI, structured JSON, multi-step pipeline
   ▸ Microservices on AWS ECS: RDS MySQL, SQS, OpenSearch; Ansible playbooks
   <span class="term-gray">Stack: Python, FastAPI, SQLAlchemy, AWS (ECS, RDS, Cognito, Lambda, SQS, Athena, OpenSearch),
   GCP (BigQuery, IAM, GKE), Azure (Cost Mgmt, ARM), MySQL, Docker, Terraform, K8s, Helm, OpenAI</span>
@@ -323,26 +313,26 @@ ${bot}</span>
 <span class="term-indigo">Full-Stack Developer</span>              <span class="term-gray">Dec 2025</span>
 <span class="term-gray">Thoughtroutes · CDA, Dubai Government (Remote)</span>
   ▸ Built dcsl.cda.gov.ae — <span class="term-green">Guinness World Record</span> for highest online participation
-  ▸ Dockerised Next.js 15 with multi-stage Azure builds
+  ▸ Dockerised Next.js with multi-stage Azure builds
   ▸ Full i18n (English/Arabic RTL), passwordless magic-link auth, PostgreSQL + audit logging
-  <span class="term-gray">Stack: Next.js 15, TypeScript, PostgreSQL, Docker, Azure, SendGrid, next-intl, reCAPTCHA</span>
+  <span class="term-gray">Stack: Next.js, TypeScript, PostgreSQL, Docker, Azure, SendGrid, next-intl, reCAPTCHA</span>
 
 <span class="term-indigo">Contract Full-Stack Developer</span>    <span class="term-gray">2024</span>
 <span class="term-gray">Exotic Green — Austria (Remote · Sole Developer)</span>
   ▸ Sole developer: full-stack warehouse management platform
   ▸ FastAPI backend: inventory, batch/expiry tracking, APScheduler compliance cron
-  ▸ Next.js 14 frontend: webcam barcode (zxing), PDF reports, AWS Cognito auth
-  ▸ v2 redesign in Next.js 16: Vitest, Playwright E2E, Web Vitals monitoring
+  ▸ Next.js frontend: webcam barcode (zxing), PDF reports, AWS Cognito auth
+  ▸ v2 rebuild: Vitest, Playwright E2E, Web Vitals monitoring
   ▸ Dockerised platform (FastAPI, Next.js, PostgreSQL, Redis) for dev &amp; production
-  <span class="term-gray">Stack: Python, FastAPI, Next.js 14/16, TypeScript, PostgreSQL, Redis, AWS Cognito, shadcn/ui, Docker</span>
+  <span class="term-gray">Stack: Python, FastAPI, Next.js, TypeScript, PostgreSQL, Redis, AWS Cognito, shadcn/ui, Docker</span>
 
 <span class="term-indigo">Full-Stack Developer</span>              <span class="term-gray">Jun 2023 – Nov 2023</span>
 <span class="term-gray">Xmigrate (Remote)</span>
   ▸ FastAPI backend: org/project/blueprint mgmt, cloud config (AWS/Azure/GCP/OCI)
   ▸ Keycloak SSO: OAuth2/OIDC, custom themes, token exchange on ECS Fargate
-  ▸ Next.js 14 dashboard: React Flow topology, ApexCharts, Radix UI, PDF invoicing
+  ▸ Next.js dashboard: React Flow topology, ApexCharts, Radix UI, PDF invoicing
   ▸ Validated live VM migration workflows across cloud environments
-  <span class="term-gray">Stack: Python, FastAPI, Next.js 14, Keycloak, PostgreSQL, AWS ECS Fargate, Cloudflare</span>
+  <span class="term-gray">Stack: Python, FastAPI, Next.js, Keycloak, PostgreSQL, AWS ECS Fargate, Cloudflare</span>
 
 <span class="term-indigo">Web Developer Intern</span>              <span class="term-gray">May 2023 – Jun 2023</span>
 <span class="term-gray">Xmigrate (Remote)</span>
@@ -358,7 +348,7 @@ ${bot}</span>
 <span class="term-gray">             </span>GCP (BigQuery·IAM·GKE) · Azure (Cost Mgmt·ARM·Multi-tenant App Reg)
 <span class="term-gray">IaC:</span>         Docker · Terraform · Kubernetes · Helm · Ansible · GitHub Actions
 <span class="term-gray">DB:</span>          PostgreSQL · MySQL · SQLAlchemy · MongoDB · OpenSearch · Redis · DynamoDB
-<span class="term-gray">Frontend:</span>    Next.js 14/15/16 · React · Tailwind · shadcn/ui · Radix UI · MUI
+<span class="term-gray">Frontend:</span>    Next.js · React · Tailwind · shadcn/ui · Radix UI · MUI
 <span class="term-gray">Auth:</span>        OAuth2 · OIDC · JWT · AWS Cognito · Keycloak · Azure AD · RBAC
 <span class="term-gray">AI/ML:</span>       OpenAI (Structured JSON) · Amazon Bedrock · TensorFlow/Keras · OpenCV · LangChain
 
