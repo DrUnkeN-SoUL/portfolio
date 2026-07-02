@@ -1079,6 +1079,135 @@ export const getSudoCommands = (terminal) => ({
 });
 
 export const getEasterEggs = (terminal) => ({
+  curl: (...args) => {
+    if (args.length === 0) return `<span class="term-red">curl: try 'curl --help' for more information</span>`;
+    if (args.includes('--help')) return `<span class="term-gray">Usage: curl [options...] &lt;url&gt;</span>`;
+    
+    document.body.style.transition = 'transform 2s ease-in-out';
+    document.body.style.transform = 'rotate(360deg)';
+    setTimeout(() => {
+      document.body.style.transition = 'none';
+      document.body.style.transform = 'rotate(0deg)';
+    }, 2000);
+    
+    return `<span class="term-gray">curl: fetching contents of ${args[0].replace(/<[^>]+>/g, '')}... woah!</span>`;
+  },
+  
+  tac: () => {
+    if (document.body.style.transform === 'rotate(180deg)') {
+      document.body.style.transform = 'rotate(0deg)';
+      return `<span class="term-green">tac: restored orientation</span>`;
+    } else {
+      document.body.style.transition = 'transform 1s ease-in-out';
+      document.body.style.transform = 'rotate(180deg)';
+      return `<span class="term-gray">tac: reversing output... literally.</span>`;
+    }
+  },
+
+  ping: (...args) => {
+    if (args.length === 0) return `<span class="term-red">usage: ping &lt;host&gt;</span>`;
+    const host = args[0].replace(/<[^>]+>/g, '');
+    
+    if (host.includes('127.0.0.1') || host === 'localhost' || host === window.location.hostname) {
+      return `<span class="term-green">PING ${host} (127.0.0.1) 56(84) bytes of data.</span>\n<span class="term-gray">64 bytes from 127.0.0.1: There's no place like home.</span>`;
+    }
+    
+    const terminalInput = document.getElementById('terminal-input');
+    if (terminalInput) terminalInput.disabled = true;
+    const activeLine = terminalInput ? terminalInput.closest('.terminal-line') : null;
+    if (activeLine) activeLine.style.display = 'none';
+    const terminalBody = document.getElementById('terminal-body');
+    
+    let isCancelled = false;
+    const handleCancel = (e) => {
+      if (e.ctrlKey && e.key.toLowerCase() === 'c') isCancelled = true;
+    };
+    document.addEventListener('keydown', handleCancel);
+    
+    // Hash the hostname to get a pseudo-random consistent IP
+    let hash = 0;
+    for (let i = 0; i < host.length; i++) hash = ((hash << 5) - hash) + host.charCodeAt(i);
+    const ip = `${Math.abs(hash % 255)}.${Math.abs((hash>>8) % 255)}.${Math.abs((hash>>16) % 255)}.${Math.abs((hash>>24) % 255)}`;
+
+    if (terminalBody) {
+      const initRow = document.createElement('div');
+      initRow.className = 'terminal-output-row';
+      initRow.innerHTML = `<span class="term-green">PING ${host} (${ip}) 56(84) bytes of data.</span>`;
+      const activeLine = terminalInput ? terminalInput.closest('.terminal-line') : null;
+      if (activeLine) terminalBody.insertBefore(initRow, activeLine);
+      else terminalBody.appendChild(initRow);
+    }
+    
+    let count = 0;
+    const times = [];
+
+    const finishPing = () => {
+      document.removeEventListener('keydown', handleCancel);
+      if (terminalBody) {
+        if (isCancelled) {
+          const ctrlCRow = document.createElement('div');
+          ctrlCRow.className = 'terminal-output-row';
+          ctrlCRow.innerHTML = `<span class="term-red">^C</span>`;
+          if (activeLine) terminalBody.insertBefore(ctrlCRow, activeLine);
+          else terminalBody.appendChild(ctrlCRow);
+        }
+        
+        if (times.length > 0) {
+          const min = Math.min(...times).toFixed(1);
+          const max = Math.max(...times).toFixed(1);
+          const avg = (times.reduce((a, b) => a + b) / times.length).toFixed(1);
+          const loss = isCancelled ? '0' : '0';
+          
+          const statsRow = document.createElement('div');
+          statsRow.className = 'terminal-output-row';
+          statsRow.innerHTML = `<br/><span class="term-gray">--- ${host} ping statistics ---<br/>${count} packets transmitted, ${times.length} received, ${loss}% packet loss, time ${Math.max(0, count-1)*1000}ms<br/>rtt min/avg/max/mdev = ${min}/${avg}/${max}/1.5 ms</span>`;
+          if (activeLine) terminalBody.insertBefore(statsRow, activeLine);
+          else terminalBody.appendChild(statsRow);
+        }
+      }
+      
+      if (activeLine) activeLine.style.display = 'flex';
+      if (terminalInput) {
+        terminalInput.disabled = false;
+        setTimeout(() => terminalInput.focus(), 10);
+      }
+      if (terminalBody) terminalBody.scrollTop = terminalBody.scrollHeight;
+    };
+
+    const sendPing = () => {
+      if (isCancelled) {
+        finishPing();
+        return;
+      }
+      if (terminalBody) {
+        const time = (Math.random() * 10 + 10).toFixed(1);
+        times.push(parseFloat(time));
+        const row = document.createElement('div');
+        row.className = 'terminal-output-row';
+        row.innerHTML = `<span class="term-gray">64 bytes from ${ip}: icmp_seq=${count+1} ttl=117 time=${time} ms</span>`;
+        if (activeLine) terminalBody.insertBefore(row, activeLine);
+        else terminalBody.appendChild(row);
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+      }
+      count++;
+      setTimeout(sendPing, 1000);
+    };
+    
+    setTimeout(sendPing, 1000);
+    return `<span class="term-gray"></span>`;
+  },
+
+  make: (...args) => {
+    const fullArgs = args.join(' ').toLowerCase();
+    if (fullArgs === 'me a sandwich') {
+      return `<span class="term-gray">make: *** No rule to make target 'me'.  Stop.</span>\n<span class="term-gray">(Maybe try sudo?)</span>`;
+    }
+    if (args.length === 0) {
+      return `<span class="term-gray">make: *** No targets specified and no makefile found.  Stop.</span>`;
+    }
+    return `<span class="term-gray">make: *** No rule to make target '${args[0].replace(/<[^>]+>/g, '')}'.  Stop.</span>`;
+  },
+
   cloudpositive: `<span class="term-indigo">CloudPositive</span>  <span class="term-gray">// Thoughtroutes · access granted</span>
 <span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>
 Multi-tenant cost governance SaaS — production.
@@ -1698,5 +1827,128 @@ The Matrix has you.
     return `<span class="term-green">System restoration complete. All layouts operational.</span>`;
   },
 
-  rebuild: () => terminal.easterEggs.restore()
+  rebuild: () => terminal.easterEggs.restore(),
+
+  cat: (...args) => {
+    if (args.length === 0) return `<span class="term-red">cat: missing file operand</span>`;
+    const target = args[0].replace(/\/$/, '').replace(/<[^>]+>/g, '');
+    
+    if (['about', 'projects', 'skills', 'now', 'contact'].includes(target)) {
+      return `<span class="term-red">cat: ${target}: Is a directory</span>`;
+    }
+    
+    if (target === 'resume.pdf') {
+      return `<span class="term-gray">Warning: terminal output might be garbled. Displaying ASCII representation instead:</span>\n<span class="term-green" style="font-family: monospace; white-space: pre; line-height: 1.2;">
+===================================================
+                  MATHEWS SHAJI                  
+===================================================
+ > SRE / DevOps Engineer
+ > mail@mathewsshaji.com | Kochi, India
+ 
+ [ EXPERIENCE ]
+ * SRE/DevOps Engineer @ Thoughtroutes
+   Terraform, AWS ECS/EKS, CI/CD, OpenSearch, AI/LLMs
+ * SRE @ Client Infrastructure Monitoring
+   Prometheus, Grafana, Loki, eBPF (Beyla)
+ * DevOps & Full-Stack @ CDA (Dubai Gov)
+   Docker, Azure, Next.js, PostgreSQL
+ * DevOps & Full-Stack @ Exotic Green
+   FastAPI, AWS Cognito, Redis, Docker Compose
+
+ [ TOP SKILLS ]
+ * Cloud: AWS, GCP, Azure, Kubernetes, Terraform
+ * CI/CD & Ops: Docker, Ansible, Helm, GitHub Actions
+ * Code: Python, TypeScript, FastAPI, Next.js
+ 
+ [ Download real PDF by typing 'wget resume.pdf' ]
+===================================================</span>`;
+    }
+    
+    return `<span class="term-red">cat: ${target}: No such file or directory</span>`;
+  },
+
+  cowsay: (...args) => {
+    if (args.length === 0 || (args.length === 1 && args[0].toLowerCase() === 'on')) {
+      terminal.cowsayMode = true;
+      return `<span class="term-green">cowsay mode activated. Everything you do now belongs to the cow.</span>\n<span class="term-gray">Type 'cowsay off' to disable.</span>`;
+    }
+    if (args.length === 1 && args[0].toLowerCase() === 'off') {
+      terminal.cowsayMode = false;
+      return `<span class="term-gray">cowsay mode deactivated. The cow has left.</span>`;
+    }
+    
+    const text = args.join(' ').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    return `<span class="term-gray"> _______________________________________ </span>
+<div style="padding: 5px 15px; border-left: 1px solid var(--gray); margin-left: 10px;">${text}</div>
+<span class="term-gray"> --------------------------------------- </span>
+<span class="term-yellow" style="font-family: monospace; white-space: pre; line-height: 1.2;">
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||
+</span>`;
+  },
+
+  wget: (...args) => {
+    if (args.length === 0) return `<span class="term-red">wget: missing URL</span>`;
+    const target = args[0].replace(/<[^>]+>/g, '');
+    
+    if (target.includes('resume.pdf') || target.includes('resume')) {
+      const terminalInput = document.getElementById('terminal-input');
+      if (terminalInput) terminalInput.disabled = true;
+      const activeLine = terminalInput ? terminalInput.closest('.terminal-line') : null;
+      if (activeLine) activeLine.style.display = 'none';
+      const terminalBody = document.getElementById('terminal-body');
+      
+      const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
+      
+      const logs = [
+        `--${now}--  ${target}`,
+        `Resolving host... 127.0.0.1`,
+        `Connecting to 127.0.0.1:443... connected.`,
+        `HTTP request sent, awaiting response... 200 OK`,
+        `Length: 123456 (120K) [application/pdf]`,
+        `Saving to: 'resume.pdf'`,
+        ``,
+        `<span class="term-green">resume.pdf         100%[===================>] 120.56K  --.-KB/s    in 0.1s</span>`,
+        ``,
+        `${now} (1.23 MB/s) - 'resume.pdf' saved [123456/123456]`
+      ];
+
+      if (terminalBody) {
+        let i = 0;
+        const printWget = () => {
+          if (i < logs.length) {
+            const row = document.createElement('div');
+            row.className = 'terminal-output-row';
+            row.innerHTML = `<span class="term-gray">${logs[i]}</span>`;
+            if (activeLine) terminalBody.insertBefore(row, activeLine);
+            else terminalBody.appendChild(row);
+            terminalBody.scrollTop = terminalBody.scrollHeight;
+            i++;
+            setTimeout(printWget, i > 5 ? 300 : Math.random() * 200 + 50);
+          } else {
+            // Trigger actual download attempt
+            const a = document.createElement('a');
+            a.href = '/Mathews_Shaji_Resume.pdf';
+            a.download = 'Mathews_Shaji_Resume.pdf';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            if (activeLine) activeLine.style.display = 'flex';
+            if (terminalInput) {
+              terminalInput.disabled = false;
+              setTimeout(() => terminalInput.focus(), 10);
+            }
+          }
+        };
+        setTimeout(printWget, 100);
+      }
+      return `<span class="term-gray"></span>`;
+    }
+    
+    return `<span class="term-red">wget: unable to resolve host address '${target}'</span>`;
+  }
 });
