@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://mathewsshaji.com/sitemap.xml
+LLM-File: https://mathewsshaji.com/llm.txt
