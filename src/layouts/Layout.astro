@@ -163,7 +163,7 @@ const schema = {
 
     <!-- Theme & Mobile -->
     <meta name="theme-color" content="#0a0e0a" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="Mathews Shaji" />
     <link rel="apple-touch-icon" href="/og-image.png" />
@@ -179,8 +179,8 @@ const schema = {
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-C998PS1E1H"></script>
-    <script>
+    <script is:inline async src="https://www.googletagmanager.com/gtag/js?id=G-C998PS1E1H"></script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
