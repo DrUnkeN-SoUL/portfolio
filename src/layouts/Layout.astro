@@ -7,6 +7,88 @@ export interface Props {
 }
 
 const { title = 'Mathews Shaji | Backend-Leaning Full-Stack Developer', description = 'Portfolio of Mathews Shaji, backend-leaning full-stack developer — FastAPI, Go/Gin, Next.js, multi-tenant AWS/GCP/Azure.' } = Astro.props;
+
+// Determine canonical URL dynamically
+const siteUrl = Astro.site ? Astro.site.href.replace(/\/$/, '') : 'https://mathewsshaji.com';
+const canonicalUrl = new URL(Astro.url.pathname, siteUrl).href;
+const ogImageUrl = `${siteUrl}/og-image.png`;
+
+// JSON-LD structured data schema
+const schema = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Person",
+      "@id": `${siteUrl}/#person`,
+      "name": "Mathews Shaji",
+      "jobTitle": "Backend-Leaning Full-Stack Developer",
+      "url": siteUrl,
+      "sameAs": [
+        "https://github.com/DrUnkeN-SoUL",
+        "https://linkedin.com/in/mathews-shaji"
+      ],
+      "email": "mathewshaji96@gmail.com",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Kochi",
+        "addressRegion": "Kerala",
+        "addressCountry": "India"
+      },
+      "knowsAbout": [
+        "FastAPI",
+        "Go (Programming Language)",
+        "Next.js",
+        "Amazon Web Services (AWS)",
+        "Google Cloud Platform (GCP)",
+        "Microsoft Azure",
+        "Terraform",
+        "Kubernetes",
+        "OpenAI",
+        "Amazon Bedrock",
+        "LangChain",
+        "React (Software Library)",
+        "Full-Stack Development",
+        "Backend Development",
+        "Cloud-Native Architecture",
+        "SaaS",
+        "AI/LLM integrations"
+      ],
+      "description": description
+    },
+    {
+      "@type": "WebSite",
+      "@id": `${siteUrl}/#website`,
+      "url": siteUrl,
+      "name": "Mathews Shaji Portfolio",
+      "description": "Mathews Shaji — Backend-Leaning Full-Stack Developer Portfolio.",
+      "publisher": {
+        "@id": `${siteUrl}/#person`
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": `${siteUrl}/#breadcrumb`,
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": siteUrl
+        }
+      ]
+    },
+    {
+      "@type": "ImageObject",
+      "@id": `${siteUrl}/og-image.png#image`,
+      "url": ogImageUrl,
+      "width": 1200,
+      "height": 630,
+      "caption": "Mathews Shaji — Backend-Leaning Full-Stack Developer Portfolio",
+      "inLanguage": "en-US",
+      "license": `${siteUrl}/license`
+    }
+  ]
+};
 ---
 
 <!DOCTYPE html>
@@ -17,14 +99,50 @@ const { title = 'Mathews Shaji | Backend-Leaning Full-Stack Developer', descript
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="author" content="Mathews Shaji" />
+    <meta name="robots" content="index, follow" />
+    
+    <link rel="canonical" href={canonicalUrl} />
+    
+    <!-- Hreflang for language targeting -->
+    <link rel="alternate" hreflang="en" href={canonicalUrl} />
+    <link rel="alternate" hreflang="x-default" href={canonicalUrl} />
+
+    <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:alt" content="Mathews Shaji — Backend-Leaning Full-Stack Developer Portfolio" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Mathews Shaji Portfolio" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content="Mathews Shaji — Backend-Leaning Full-Stack Developer Portfolio" />
+
+    <!-- Theme & Mobile -->
+    <meta name="theme-color" content="#0a0e0a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Mathews Shaji" />
+    <link rel="apple-touch-icon" href="/og-image.png" />
+
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23c9a96e'>M</text></svg>" />
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=JetBrains+Mono:wght@300;400;500;700&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=VT323&display=swap" rel="stylesheet" />
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json" set:html={JSON.stringify(schema)} />
   </head>
   <body>
     <div class="noise-overlay"></div>

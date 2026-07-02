@@ -628,7 +628,7 @@ export class Terminal {
       this.renderOutput(result);
       this.body.scrollTop = this.body.scrollHeight;
 
-      this.startAutomatedDemo();
+      this.startAutomatedDemo(initCmd);
     }, delay);
   }
 
@@ -655,7 +655,7 @@ export class Terminal {
     }, 60000); // 60 seconds of inactivity
   }
 
-  startAutomatedDemo() {
+  startAutomatedDemo(initCmd) {
     if (this.hasInteracted) return;
 
     // Per-command delay (ms the screen stays before clearing for next cmd)
@@ -668,15 +668,22 @@ export class Terminal {
       { cmd: 'contact',  wait: 10000 },
       { cmd: 'whoami',   wait: 38000 }, // portrait needs time to load + be seen
     ];
-    let step = 0;
 
-    const nextStep = () => {
+    let step = 0;
+    let initialWait = 8000;
+
+    if (initCmd) {
+      const idx = sequence.findIndex(item => item.cmd === initCmd);
+      if (idx !== -1) {
+        initialWait = sequence[idx].wait;
+        step = (idx + 1) % sequence.length;
+      }
+    }
+
+    const nextStep = (currentWait) => {
       if (this.hasInteracted) return;
 
-      if (step >= sequence.length) step = 0;
-
-      const { cmd, wait } = sequence[step];
-      step++;
+      const waitTime = currentWait !== undefined ? currentWait : sequence[(step - 1 + sequence.length) % sequence.length].wait;
 
       this.autoPlayTimeout = setTimeout(() => {
         if (this.hasInteracted) return;
@@ -686,13 +693,17 @@ export class Terminal {
           if (el !== active) el.remove();
         });
 
+        if (step >= sequence.length) step = 0;
+        const { cmd } = sequence[step];
+        step++;
+
         this.simulateTyping(cmd, () => {
           nextStep();
         });
-      }, wait);
+      }, waitTime);
     };
 
-    nextStep();
+    nextStep(initialWait);
   }
 
   simulateTyping(text, callback) {
