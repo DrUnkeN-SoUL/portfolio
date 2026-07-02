@@ -387,7 +387,122 @@ ${headerBlock}
   clear: () => '__CLEAR__'
 });
 
+const runAptInstall = (args) => {
+  if (args.length === 0 || !['install', 'update', 'upgrade'].includes(args[0])) {
+    return `<span class="term-gray">apt: missing operation. Try 'apt install &lt;package&gt;'</span>`;
+  }
+  
+  const terminalInput = document.getElementById('terminal-input');
+  if (terminalInput) terminalInput.disabled = true;
+  const activeLine = terminalInput ? terminalInput.closest('.terminal-line') : null;
+  if (activeLine) activeLine.style.display = 'none';
+  
+  const terminalBody = document.getElementById('terminal-body');
+  let isCancelled = false;
+  
+  const handleCancel = (e) => {
+    if (e.ctrlKey && e.key.toLowerCase() === 'c') {
+      isCancelled = true;
+    }
+  };
+  document.addEventListener('keydown', handleCancel);
+  
+  const packages = args.slice(1);
+  const pkgName = packages.length > 0 ? packages[0] : 'core-dependencies';
+  const cleanPkg = pkgName.replace(/<[^>]+>/g, '');
+
+  const logs = [
+    `Reading package lists... Done`,
+    `Building dependency tree... Done`,
+    `Reading state information... Done`,
+    `The following additional packages will be installed:`,
+    `  coffee-addiction imposter-syndrome stackoverflow-driven-development`,
+    `Suggested packages:`,
+    `  copilot chatgpt sleep`,
+    `Get:1 http://archive.ubuntu.com/ubuntu focal/main amd64 ${cleanPkg} [1,337 kB]`,
+    `Get:2 http://archive.ubuntu.com/ubuntu focal/main amd64 coffee-addiction [4,200 MB]`,
+    `Fetched 4,201 MB in 0s (9,999 MB/s)`,
+    `Selecting previously unselected package ${cleanPkg}.`,
+    `Preparing to unpack .../${cleanPkg}.deb ...`,
+    `Unpacking ${cleanPkg} (1.0.0) ...`,
+    `Setting up ${cleanPkg} (1.0.0) ...`,
+    `Setting up coffee-addiction (9.9.9) ...`,
+    `Processing triggers for libc-bin (2.31-0ubuntu9.9) ...`,
+    `<span class="term-green">Installation complete.</span>`
+  ];
+
+  let i = 0;
+  const finish = (interrupted) => {
+    document.removeEventListener('keydown', handleCancel);
+    if (interrupted && terminalBody) {
+      const row = document.createElement('div');
+      row.className = 'terminal-output-row';
+      row.innerHTML = `<span class="term-red">^C</span>`;
+      if (activeLine) terminalBody.insertBefore(row, activeLine);
+      else terminalBody.appendChild(row);
+    }
+    if (activeLine) activeLine.style.display = 'flex';
+    if (terminalInput) {
+      terminalInput.disabled = false;
+      setTimeout(() => terminalInput.focus(), 10);
+    }
+    if (terminalBody) terminalBody.scrollTop = terminalBody.scrollHeight;
+  };
+
+  const printLog = () => {
+    if (isCancelled) {
+      finish(true);
+      return;
+    }
+    if (i < logs.length) {
+      if (terminalBody) {
+        const row = document.createElement('div');
+        row.className = 'terminal-output-row';
+        row.innerHTML = `<span class="term-gray">${logs[i]}</span>`;
+        if (activeLine) terminalBody.insertBefore(row, activeLine);
+        else terminalBody.appendChild(row);
+        terminalBody.scrollTop = terminalBody.scrollHeight;
+      }
+      i++;
+      setTimeout(printLog, Math.random() * 150 + 20);
+    } else {
+      finish(false);
+    }
+  };
+  
+  setTimeout(printLog, 100);
+  return `<span class="term-gray"></span>`;
+};
+
 export const getSudoCommands = (terminal) => ({
+  'make': (...args) => {
+    const fullArgs = args.join(' ').toLowerCase();
+    if (fullArgs === 'me a sandwich') {
+      return `<span class="term-green">Okay.</span>\n<span class="term-yellow" style="font-family: monospace; white-space: pre; line-height: 1.2;">
+    .-""""-.
+   /        \\
+  /_        _\\
+ // \\      / \\\\
+ |\\__\\    /__/|
+  \\    ||    /
+   \\        /
+    \\  __  /
+     '.__.'
+</span>`;
+    }
+    return `<span class="term-red">make: *** No rule to make target '${args[0] ? args[0].replace(/<[^>]+>/g, '') : 'undefined'}'.  Stop.</span>`;
+  },
+  'apt': (...args) => runAptInstall(args),
+  'apt-get': (...args) => runAptInstall(args),
+  'su': () => {
+    document.documentElement.style.setProperty('--primary', '#ff003c');
+    document.documentElement.style.setProperty('--secondary', '#ff003c');
+    document.querySelectorAll('.glass-card, .metric-card, .project-card, .skills-category').forEach(el => {
+      el.style.boxShadow = '0 0 15px rgba(255, 0, 60, 0.5)';
+      el.style.borderColor = 'rgba(255, 0, 60, 0.8)';
+    });
+    return `<span class="term-red" style="font-weight: bold; text-shadow: 0 0 5px red;">[GOD MODE INITIATED] Root access granted. Reality override enabled.</span>`;
+  },
   'rm': (...args) => {
     if (args.length === 0) {
       return `<span class="term-red">rm: missing operand</span>\n<span class="term-gray">Try 'rm --help' for more information.</span>`;
