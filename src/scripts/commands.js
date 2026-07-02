@@ -288,10 +288,10 @@ for clients in Dubai and Austria on the side.
       const inner = boxW - 2;
       const pad1 = Math.max(inner - line1.length, 0);
       const pad2 = Math.max(inner - line2.length, 0);
-      const top    = '┌' + '─'.repeat(inner) + '┐';
-      const bot    = '└' + '─'.repeat(inner) + '┘';
-      const r1     = '│' + line1 + ' '.repeat(pad1) + '│';
-      const r2     = '│' + line2 + ' '.repeat(pad2) + '│';
+      const top = '┌' + '─'.repeat(inner) + '┐';
+      const bot = '└' + '─'.repeat(inner) + '┘';
+      const r1 = '│' + line1 + ' '.repeat(pad1) + '│';
+      const r2 = '│' + line2 + ' '.repeat(pad2) + '│';
       headerBlock = `
 <span class="term-indigo">◍  Mathews Shaji — Full-Stack Developer</span>
 <span class="term-gray">${top}</span>
@@ -388,8 +388,96 @@ ${headerBlock}
 });
 
 export const getSudoCommands = (terminal) => ({
-  'rm': () => {
-    // Collect layout elements to destroy (excluding the terminal container initially)
+  'rm': (...args) => {
+    if (args.length === 0) {
+      return `<span class="term-red">rm: missing operand</span>\n<span class="term-gray">Try 'rm --help' for more information.</span>`;
+    }
+    if (args.includes('--help')) {
+      return `<span class="term-gray">Usage: rm [OPTION]... [FILE]...\nRemove (unlink) the FILE(s).</span>`;
+    }
+
+    const fullArgs = args.join(' ').toLowerCase();
+    const triggers = ['-rf /', '-fr /', '/*', '-rf /*', '--no-preserve-root'];
+    const isDestructive = triggers.some(t => fullArgs.includes(t));
+
+    if (!isDestructive) {
+      const target = args[args.length - 1];
+      if (target.startsWith('-')) {
+        return `<span class="term-red">rm: missing operand</span>`;
+      }
+      return `<span class="term-red">rm: cannot remove '${target}': No such file or directory</span>`;
+    }
+
+    const terminalInput = document.getElementById('terminal-input');
+    if (terminalInput) {
+      terminalInput.disabled = true;
+    }
+
+    let isDeleting = false;
+    const targets = Array.from(document.querySelectorAll('section, footer, .navbar, .glass-card, .metric-card, .project-card, .skills-category, h1, h2, p, .nav-link, .hero-text-col, .logo, .theme-btn'))
+      .filter(el => !el.closest('.terminal-container'));
+    targets.sort(() => Math.random() - 0.5);
+
+    const handleScroll = () => {
+      if (isDeleting) return;
+      isDeleting = true;
+
+      const terminalBody = document.getElementById('terminal-body');
+      let index = 0;
+
+      const deleteNext = () => {
+        if (index < targets.length) {
+          const el = targets[index];
+
+          if (el && el.parentNode) {
+            el.style.transition = 'all 0.15s ease-out';
+            el.style.transform = 'scale(0.9) translateY(10px)';
+            el.style.opacity = '0';
+
+            setTimeout(() => {
+              if (el.parentNode) el.remove();
+            }, 150);
+
+            if (terminalBody) {
+              const row = document.createElement('div');
+              row.className = 'terminal-output-row';
+              const name = el.tagName.toLowerCase() + (el.id ? '#' + el.id : '') + (el.className ? '.' + el.className.split(' ')[0] : '');
+              row.innerHTML = `<span class="term-gray">rm: removed '${name}'</span>`;
+
+              const activeLine = terminalInput ? terminalInput.closest('.terminal-line') : null;
+              if (activeLine) {
+                terminalBody.insertBefore(row, activeLine);
+              } else {
+                terminalBody.appendChild(row);
+              }
+              terminalBody.scrollTop = terminalBody.scrollHeight;
+            }
+          }
+
+          index++;
+          const delay = Math.max(10, 150 - (index * 2));
+          setTimeout(deleteNext, delay);
+        } else {
+          const termContainer = document.querySelector('.terminal-container');
+          if (termContainer) {
+            termContainer.style.transition = 'all 0.5s ease-out';
+            termContainer.style.opacity = '0';
+            setTimeout(() => {
+              termContainer.remove();
+              document.body.innerHTML = '<div style="color: #00ff66; font-family: monospace; padding: 20px;">System halted.</div>';
+            }, 500);
+          }
+        }
+      };
+
+      deleteNext();
+    };
+
+    window.addEventListener('scroll', handleScroll, { once: true });
+
+    return `<span class="term-gray"></span>`;
+
+    /* // OLD IMPLEMENTATION
     const elements = [];
     document.querySelectorAll('section').forEach(sec => {
       if (sec.classList.contains('hero')) {
@@ -871,6 +959,7 @@ export const getSudoCommands = (terminal) => ({
     }
 
     return `<span class="term-red">CRITICAL WARNING: System destruction initiated. System panic incoming...</span>`;
+    */
   }
 });
 
@@ -929,6 +1018,7 @@ The Matrix has you.
 
   vim: () => {
     const uid = Date.now();
+    const sep = terminal.divider('━');
     const runVimSequence = () => {
       const loader = document.getElementById(`vim-loader-${uid}`);
       const bodyEl = document.getElementById('terminal-body');
@@ -949,7 +1039,7 @@ The Matrix has you.
         } else if (step === 3) {
           const banner = document.createElement('div');
           banner.className = 'terminal-output-row';
-          banner.innerHTML = `<span class="term-gray">━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━</span>\nHere’s how to escape if you ever get trapped:\n  <span class="term-yellow">:wq</span>   write and quit\n  <span class="term-yellow">:q!</span>   quit without saving  <span class="term-gray">(panic mode)</span>\n  <span class="term-yellow">:qa!</span>  quit all buffers\n<span class="term-gray">You’re welcome. 😊</span>`;
+          banner.innerHTML = `<span class="term-gray">${sep}</span>\nHere’s how to escape if you ever get trapped:\n  <span class="term-yellow">:wq</span>   write and quit\n  <span class="term-yellow">:q!</span>   quit without saving  <span class="term-gray">(panic mode)</span>\n  <span class="term-yellow">:qa!</span>  quit all buffers\n<span class="term-gray">You’re welcome. 😊</span>`;
           bodyEl.insertBefore(banner, activeLine);
           bodyEl.scrollTop = bodyEl.scrollHeight;
         }
@@ -974,13 +1064,13 @@ The Matrix has you.
     const now = new Date();
     const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
     return `<span class="term-gray">UTC: </span>${now.toUTCString()}
-<span class="term-gray">IST: </span>${ist.toLocaleString('en-US', { weekday:'short', year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:true })}`;
+<span class="term-gray">IST: </span>${ist.toLocaleString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })}`;
   },
 
   hello: `<span class="term-indigo">Hello!</span>  <span class="term-gray">Welcome to the shell. Type </span><span class="term-yellow">help</span><span class="term-gray"> to get started.</span>`,
   hi: `<span class="term-indigo">Hey there!</span>  <span class="term-gray">Good to see you. Type </span><span class="term-yellow">about</span><span class="term-gray"> to learn more.</span>`,
   hey: `<span class="term-indigo">Hey!</span>  <span class="term-gray">Type </span><span class="term-yellow">help</span><span class="term-gray"> for available commands.</span>`,
-  
+
   glitch: () => {
     if (window.triggerGlitchMode) {
       window.triggerGlitchMode();
@@ -997,7 +1087,7 @@ The Matrix has you.
     const cleanName = name.toLowerCase().trim();
     if (validThemes.includes(cleanName)) {
       document.documentElement.setAttribute('data-theme', cleanName);
-      try { localStorage.setItem('ms-portfolio-theme', cleanName); } catch(_) {}
+      try { localStorage.setItem('ms-portfolio-theme', cleanName); } catch (_) { }
       document.querySelectorAll('.theme-btn').forEach(b => b.classList.toggle('active', b.dataset.theme === cleanName));
       return `<span class="term-green">Theme shifted to: "${cleanName}"</span>`;
     }
@@ -1008,7 +1098,7 @@ The Matrix has you.
     // Create full page train overlay
     const overlay = document.createElement('div');
     overlay.id = 'full-page-train-overlay';
-    
+
     // Add skip hint text
     const skipHint = document.createElement('div');
     skipHint.style.position = 'absolute';
@@ -1198,7 +1288,7 @@ The Matrix has you.
       "Dumping data schemas...",
       "Success. Accessing system kernel..."
     ];
-    
+
     let index = 0;
     const runHackSequence = () => {
       const bodyEl = document.getElementById('terminal-body');
@@ -1228,7 +1318,7 @@ The Matrix has you.
         bodyEl.scrollTop = bodyEl.scrollHeight;
       }
     };
-    
+
     setTimeout(runHackSequence, 100);
     return `<span class="term-yellow">Initializing secure bypass routine...</span>`;
   },
@@ -1259,9 +1349,9 @@ The Matrix has you.
       const rect = el.getBoundingClientRect();
       el.classList.add('gravity-affected');
       // Pin element to its original viewport position
-      el.style.left   = rect.left + 'px';
-      el.style.top    = rect.top  + 'px';
-      el.style.width  = rect.width  + 'px';
+      el.style.left = rect.left + 'px';
+      el.style.top = rect.top + 'px';
+      el.style.width = rect.width + 'px';
       el.style.height = rect.height + 'px';
 
       // Launch from a random off-screen edge, velocity pointing inward
@@ -1269,10 +1359,10 @@ The Matrix has you.
       let ivx, ivy;
       const spd = BASE_SPEED * 1.5;
       const ang = (Math.random() * 0.5 + 0.25) * Math.PI;
-      if (edge === 0) {        ivx = (Math.random()-0.5)*spd; ivy =  Math.abs(Math.sin(ang))*spd; }
-      else if (edge === 1) {   ivx = -Math.abs(Math.cos(ang))*spd; ivy = (Math.random()-0.5)*spd; }
-      else if (edge === 2) {   ivx = (Math.random()-0.5)*spd; ivy = -Math.abs(Math.sin(ang))*spd; }
-      else {                   ivx =  Math.abs(Math.cos(ang))*spd; ivy = (Math.random()-0.5)*spd; }
+      if (edge === 0) { ivx = (Math.random() - 0.5) * spd; ivy = Math.abs(Math.sin(ang)) * spd; }
+      else if (edge === 1) { ivx = -Math.abs(Math.cos(ang)) * spd; ivy = (Math.random() - 0.5) * spd; }
+      else if (edge === 2) { ivx = (Math.random() - 0.5) * spd; ivy = -Math.abs(Math.sin(ang)) * spd; }
+      else { ivx = Math.abs(Math.cos(ang)) * spd; ivy = (Math.random() - 0.5) * spd; }
 
       // Starting transform offset — elements begin at their natural spot (x=0,y=0 = no offset)
       const item = {
@@ -1282,7 +1372,7 @@ The Matrix has you.
         angle: 0, va: 0,
         // Natural anchored rect (fixed coords)
         pinLeft: rect.left,
-        pinTop:  rect.top,
+        pinTop: rect.top,
         elW: rect.width,
         elH: rect.height,
         isDragging: false,
@@ -1326,7 +1416,7 @@ The Matrix has you.
       };
 
       const mdown = (e) => {
-        if (['INPUT','TEXTAREA','A','BUTTON'].includes(e.target.tagName)) return;
+        if (['INPUT', 'TEXTAREA', 'A', 'BUTTON'].includes(e.target.tagName)) return;
         e.preventDefault();
         onStart(e.clientX, e.clientY);
         const mm = ev => onMove(ev.clientX, ev.clientY);
@@ -1336,7 +1426,7 @@ The Matrix has you.
       };
 
       const tstart = (e) => {
-        if (['INPUT','TEXTAREA','A','BUTTON'].includes(e.target.tagName)) return;
+        if (['INPUT', 'TEXTAREA', 'A', 'BUTTON'].includes(e.target.tagName)) return;
         const t = e.touches[0];
         onStart(t.clientX, t.clientY);
         const tm = ev => { const tt = ev.touches[0]; onMove(tt.clientX, tt.clientY); };
@@ -1369,10 +1459,10 @@ The Matrix has you.
         item.angle += item.va;
 
         // Actual screen position = pinned coords + transform offset
-        const screenLeft   = item.pinLeft + item.x;
-        const screenTop    = item.pinTop  + item.y;
-        const screenRight  = screenLeft + item.elW;
-        const screenBottom = screenTop  + item.elH;
+        const screenLeft = item.pinLeft + item.x;
+        const screenTop = item.pinTop + item.y;
+        const screenRight = screenLeft + item.elW;
+        const screenBottom = screenTop + item.elH;
 
         item.onScreen = screenRight > 0 && screenLeft < W && screenBottom > 0 && screenTop < H;
 
@@ -1403,17 +1493,17 @@ The Matrix has you.
 
         // Drag cohesion
         if (dragging && item.onScreen) {
-          const dxD   = dragging.x - item.x;
-          const dyD   = dragging.y - item.y;
-          const dDist = Math.sqrt(dxD*dxD + dyD*dyD) + 1;
+          const dxD = dragging.x - item.x;
+          const dyD = dragging.y - item.y;
+          const dDist = Math.sqrt(dxD * dxD + dyD * dyD) + 1;
           if (dDist < 400) {
-            const influence = (1 - dDist/400) * 0.005;
+            const influence = (1 - dDist / 400) * 0.005;
             item.vx += dragging.vx * influence;
             item.vy += dragging.vy * influence;
-            const spd = Math.sqrt(item.vx*item.vx + item.vy*item.vy) || BASE_SPEED;
+            const spd = Math.sqrt(item.vx * item.vx + item.vy * item.vy) || BASE_SPEED;
             if (spd > BASE_SPEED * 2) {
-              item.vx = (item.vx/spd) * BASE_SPEED;
-              item.vy = (item.vy/spd) * BASE_SPEED;
+              item.vx = (item.vx / spd) * BASE_SPEED;
+              item.vy = (item.vy / spd) * BASE_SPEED;
             }
           }
         }
@@ -1431,9 +1521,9 @@ The Matrix has you.
         item._cleanupListeners();
         item.el.classList.remove('gravity-affected', 'dragging');
         item.el.style.transform = '';
-        item.el.style.left   = '';
-        item.el.style.top    = '';
-        item.el.style.width  = '';
+        item.el.style.left = '';
+        item.el.style.top = '';
+        item.el.style.width = '';
         item.el.style.height = '';
       });
       window.zeroG.active = false;
@@ -1447,17 +1537,17 @@ The Matrix has you.
   restore: () => {
     document.body.style.overflow = '';
     document.body.classList.remove('terminal-panicked');
-    
+
     document.querySelectorAll('.system-destroyed, .destruction-shake').forEach(el => {
       el.classList.remove('system-destroyed');
       el.classList.remove('destruction-shake');
       el.style.display = '';
     });
-    
+
     if (window.zeroG && window.zeroG.active) {
       window.zeroG.cleanup();
     }
-    
+
     // Hide panic overlay
     const overlay = document.getElementById('panic-overlay');
     if (overlay) {
@@ -1489,7 +1579,7 @@ The Matrix has you.
         el.removeAttribute('data-orig-text');
       }
     });
-    
+
     return `<span class="term-green">System restoration complete. All layouts operational.</span>`;
   },
 
