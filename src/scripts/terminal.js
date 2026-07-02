@@ -317,13 +317,6 @@ export class Terminal {
           this.renderOutput(`<span class="term-red">sudo: </span><span class="term-yellow">${sudoKey}</span><span class="term-gray">: command not found or not privileged</span>`);
         }
 
-      } else if (this.sudoCommands[cmd]) {
-        // Attempted to run a sudo-only command without sudo
-        this.renderOutput(
-          `<span class="term-red">Permission denied.</span> <span class="term-gray">This command requires elevated privileges.</span>\n` +
-          `<span class="term-gray">Try: </span><span class="term-yellow">sudo ${cmd}</span>`
-        );
-
       } else if (this.commands[cmd]) {
         const result = this.commands[cmd](...args);
         if (result !== '__CLEAR__') this.renderOutput(result);
@@ -332,6 +325,12 @@ export class Terminal {
         const egg = this.easterEggs[cmd];
         const result = typeof egg === 'function' ? egg(...args) : egg;
         this.renderOutput(result);
+      } else if (this.sudoCommands[cmd]) {
+        // Attempted to run a sudo-only command without sudo
+        this.renderOutput(
+          `<span class="term-red">Permission denied.</span> <span class="term-gray">This command requires elevated privileges.</span>\n` +
+          `<span class="term-gray">Try: </span><span class="term-yellow">sudo ${cmd}</span>`
+        );
       } else {
         const resolvedCmd = this.resolveSmartCommand(cmd);
         if (resolvedCmd) {
@@ -509,6 +508,19 @@ export class Terminal {
   }
 
   renderOutput(html) {
+    if (this.cowsayMode && html && html.trim() !== '' && !html.includes('^__^')) {
+      html = `<span class="term-gray"> _______________________________________ </span>
+<div style="padding: 5px 15px; border-left: 1px solid var(--gray); margin-left: 10px;">${html}</div>
+<span class="term-gray"> --------------------------------------- </span>
+<span class="term-yellow" style="font-family: monospace; white-space: pre; line-height: 1.2;">
+        \\   ^__^
+         \\  (oo)\\_______
+            (__)\\       )\\/\\
+                ||----w |
+                ||     ||
+</span>`;
+    }
+
     const activeLine = this.input.closest('.terminal-line');
     const container = document.createElement('div');
     container.className = 'terminal-output';
