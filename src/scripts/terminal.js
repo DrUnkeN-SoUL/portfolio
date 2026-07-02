@@ -19,6 +19,16 @@ export class Terminal {
     this._charWidth = null;
     this._measureCharWidth();
 
+    // Remeasure on window resize or when web fonts finish loading
+    window.addEventListener('resize', () => {
+      this._charWidth = null;
+    });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        this._charWidth = null;
+      });
+    }
+
     // Advanced shell state
     this.history = this.loadHistory();
     this.historyIndex = -1;
@@ -33,6 +43,7 @@ export class Terminal {
     this.hasInteracted = false;
     this.autoPlayTimeout = null;
     this.idleTimeout = null;
+    this.currentFlush = null;
 
     // Tmux-style status bar elements
     this.statusbarMode = document.getElementById('statusbar-mode');
@@ -58,23 +69,31 @@ export class Terminal {
   // Returns estimated number of monospace columns available in the terminal body
   getTerminalCols() {
     if (!this.body) return 80;
-    // Use a cached measurement updated on each call (cheap)
+    if (this._charWidth === null) {
+      this._measureCharWidth();
+    }
+    // Get actual horizontal padding dynamically
+    const style = window.getComputedStyle(this.body);
+    const paddingLeft = parseFloat(style.paddingLeft) || 0;
+    const paddingRight = parseFloat(style.paddingRight) || 0;
+    const padding = paddingLeft + paddingRight;
+
     const bodyWidth = this.body.clientWidth;
-    // Padding: terminal-body typically has 1rem (16px) padding each side
-    const padding = 32;
     const usable = Math.max(bodyWidth - padding, 200);
     const charW = this._charWidth || 8.4; // fallback for JetBrains Mono 13px
-    return Math.floor(usable / charW);
+    // Subtract 2 characters safety margin to prevent layout/overflow wrapping
+    return Math.max(Math.floor(usable / charW) - 2, 20);
   }
 
   _measureCharWidth() {
-    // Create a temporary off-screen span to measure one character
+    if (!this.body) return;
+    // Create a temporary off-screen span to measure characters with the exact styling of terminal body
     const span = document.createElement('span');
-    span.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;font-family:"JetBrains Mono",monospace;font-size:13px;';
+    span.style.cssText = 'position:absolute;visibility:hidden;white-space:pre;font-family:inherit;font-size:inherit;line-height:inherit;';
     span.textContent = 'M'.repeat(20);
-    document.body.appendChild(span);
+    this.body.appendChild(span);
     const w = span.getBoundingClientRect().width;
-    document.body.removeChild(span);
+    this.body.removeChild(span);
     if (w > 0) this._charWidth = w / 20;
   }
 
@@ -88,6 +107,9 @@ export class Terminal {
   bindEvents() {
     const markInteracted = () => {
       this.hasInteracted = true;
+      if (this.currentFlush) {
+        this.currentFlush();
+      }
       if (this.autoPlayTimeout) {
         clearTimeout(this.autoPlayTimeout);
         this.autoPlayTimeout = null;
@@ -495,20 +517,28 @@ export class Terminal {
 
     const delay = this.isMobile() ? 20 : 32;
     let index = 0;
-    const revealNext = () => {
-      if (this.hasInteracted) {
-        // Flush remaining lines instantly so output is visible
-        lineElements.slice(index).forEach(el => el.style.display = 'block');
-        this.body.scrollTop = this.body.scrollHeight;
-        return;
+    let timeoutId = null;
+
+    const flush = () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutId = null;
       }
+      lineElements.slice(index).forEach(el => el.style.display = 'block');
+      this.body.scrollTop = this.body.scrollHeight;
+      this.currentFlush = null;
+    };
+
+    this.currentFlush = flush;
+
+    const revealNext = () => {
       if (index < lineElements.length) {
         lineElements[index].style.display = 'block';
         index++;
         this.body.scrollTop = this.body.scrollHeight;
-        setTimeout(revealNext, delay);
+        timeoutId = setTimeout(revealNext, delay);
       } else {
-        this.body.scrollTop = this.body.scrollHeight;
+        this.currentFlush = null;
       }
     };
     revealNext();
@@ -606,7 +636,7 @@ export class Terminal {
 <span class="term-gray">Stack:   </span>Python · Go · TypeScript · AWS · GCP · Azure
 <span class="term-gray">Bio:     </span>Building high-performance distributed systems.
 <span class="term-gray">──────────────────────────────────────────────────</span>
-<div id="${id}"><pre id="${id}-pre" style="font-family:'JetBrains Mono',monospace;font-size:${fs};line-height:${lh};white-space:pre;overflow:hidden;margin:0;padding:0;border:none;outline:none;margin-top:.4rem;"></pre></div>`;
+<div id="${id}"><pre id="${id}-pre" style="font-family:'JetBrains Mono','DejaVu Sans Mono','Liberation Mono','Courier New',monospace;font-size:${fs};line-height:${lh};white-space:pre;overflow:hidden;margin:0;padding:0;border:none;outline:none;margin-top:.4rem;"></pre></div>`;
   }
 
   autoRunHelp() {
