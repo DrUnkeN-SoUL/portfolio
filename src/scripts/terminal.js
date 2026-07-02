@@ -107,12 +107,7 @@ export class Terminal {
   divider(char = '─', reserve = 0) {
     const cols = this.getTerminalCols();
     const len = Math.max(cols - reserve, 20);
-    let drawChar = char;
-    if (this.isMobile()) {
-      if (char === '─') drawChar = '-';
-      if (char === '━') drawChar = '=';
-    }
-    return drawChar.repeat(len);
+    return char.repeat(len);
   }
 
   bindEvents() {
@@ -144,17 +139,28 @@ export class Terminal {
       if (!e.target.closest('a')) this.input.focus();
     });
 
-    // Handle smooth keyboard scrolling when input is focused (regardless of platform)
-    this.input.addEventListener('focus', () => {
-      setTimeout(() => {
-        this.input.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-      }, 150);
-    });
-
     if (this.isTouchDevice()) {
+      // Track touch start position to distinguish taps from scrolls
+      let touchStartY = 0;
+
       // touchstart: instantly stop the auto-demo so the UI feels responsive
-      this.body.addEventListener('touchstart', () => {
+      this.body.addEventListener('touchstart', (e) => {
         markInteracted();
+        touchStartY = e.touches[0]?.clientY || 0;
+      }, { passive: true });
+
+      // touchend: focus + scroll ONLY on taps (minimal finger movement).
+      // If the user was scrolling to read output, do nothing — prevents
+      // the terminal from snapping back to the input line on every swipe.
+      this.body.addEventListener('touchend', (e) => {
+        const touchEndY = e.changedTouches[0]?.clientY || 0;
+        const moved = Math.abs(touchEndY - touchStartY);
+        if (moved < 10 && !e.target.closest('a') && e.target !== this.input) {
+          setTimeout(() => {
+            this.input.focus();
+            this.input.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+          }, 60);
+        }
       }, { passive: true });
 
       // Show / hide the tap hint
