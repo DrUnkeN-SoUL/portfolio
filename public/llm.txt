@@ -8,7 +8,7 @@
   "role": "Full-Stack & DevOps Engineer",
   "location": "Kochi, Kerala, India",
   "timezone": "IST (UTC+5:30)",
-  "email": "mathewsshaji96@gmail.com",
+  "email": "mail@mathewsshaji.com",
   "website": "https://mathewsshaji.com",
   "github": "https://github.com/DrUnkeN-SoUL",
   "linkedin": "https://linkedin.com/in/mathews-shaji",
