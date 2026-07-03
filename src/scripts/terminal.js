@@ -50,6 +50,7 @@ export class Terminal {
     this.autoPlayTimeout = null;
     this.idleTimeout = null;
     this.currentFlush = null;
+    this.usedEggs = new Set();
 
     // Tmux-style status bar elements
     this.statusbarMode = document.getElementById('statusbar-mode');
@@ -132,6 +133,16 @@ export class Terminal {
       this.syncDisplay();
     });
 
+    this.input.addEventListener('keyup', (e) => {
+      if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) {
+        this.syncDisplay();
+      }
+    });
+
+    this.input.addEventListener('click', () => {
+      this.syncDisplay();
+    });
+
     // Click fires on every tap on mobile too (after touchend).
     // Using it for focus is the most reliable cross-browser way to open the soft keyboard.
     this.body.addEventListener('click', (e) => {
@@ -173,6 +184,16 @@ export class Terminal {
 
     this.input.addEventListener('keydown', (e) => {
       markInteracted();
+      
+      // 0. Ctrl+C: Cancel current input
+      if (e.key.toLowerCase() === 'c' && e.ctrlKey) {
+        e.preventDefault();
+        this.echoCommand(this.input.value + '^C');
+        this.input.value = '';
+        this.syncDisplay();
+        return;
+      }
+
       // 1. Enter key
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -261,11 +282,22 @@ export class Terminal {
       }
     } else {
       const typed = this.input.value;
-      const escaped = typed.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const cursorPos = this.input.selectionStart || 0;
+      
+      const escapeHTML = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      
+      const beforeCursor = escapeHTML(typed.substring(0, cursorPos));
+      const afterCursor = escapeHTML(typed.substring(cursorPos));
+      
       const suggestion = this.getGhostSuggestion();
-      this.display.innerHTML = suggestion
-        ? `${escaped}<span class="terminal-ghost-text">${suggestion}</span>`
-        : escaped;
+      
+      let html = `${beforeCursor}<span class="terminal-cursor"></span>${afterCursor}`;
+      
+      if (suggestion && cursorPos === typed.length) {
+        html += `<span class="terminal-ghost-text">${suggestion}</span>`;
+      }
+      
+      this.display.innerHTML = html;
     }
   }
 
@@ -307,6 +339,7 @@ export class Terminal {
         if (!sudoKey) {
           this.renderOutput(`<span class="term-gray">Usage: </span><span class="term-yellow">sudo</span><span class="term-gray"> &lt;command&gt; [args]</span>`);
         } else if (this.sudoCommands[sudoKey]) {
+          this.usedEggs.add(sudoKey);
           try {
             const result = this.sudoCommands[sudoKey](...args.slice(1));
             this.renderOutput(result);
@@ -322,6 +355,7 @@ export class Terminal {
         if (result !== '__CLEAR__') this.renderOutput(result);
       } else if (this.easterEggs[cmd]) {
         // Easter eggs can be strings or functions
+        this.usedEggs.add(cmd);
         const egg = this.easterEggs[cmd];
         const result = typeof egg === 'function' ? egg(...args) : egg;
         this.renderOutput(result);

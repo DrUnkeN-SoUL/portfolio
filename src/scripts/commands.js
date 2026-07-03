@@ -20,7 +20,9 @@ export const getCommands = (terminal) => ({
   <span class="term-indigo">clear</span>         clear terminal
   <span class="term-indigo">help</span>          show this menu
 
-  <span class="term-gray">Tab autocomplete · ↑↓ history · Ctrl+R search</span>`;
+  <span class="term-gray">Tab autocomplete · ↑↓ history · Ctrl+R search</span>
+  
+  <span class="term-gray" style="font-size: 0.9em; opacity: 0.7;">* Note: This system contains undocumented commands. Try exploring standard Linux utilities... but beware of elevated privileges.</span>`;
   },
 
   about: () => {
@@ -136,6 +138,48 @@ for clients in Dubai and Austria on the side.
 
   fun: () => {
     const sep = terminal.divider('━');
+    
+    // Easter egg hints disguised as personal statements
+    const allHints = [
+      { cmd: 'sudo', hint: "I occasionally let the power go to my head when I type `sudo su`." },
+      { cmd: 'make', hint: "I honestly wish I could just run `sudo make me a sandwich` when I get hungry." },
+      { cmd: 'rm', hint: "I have intrusive thoughts about running `sudo rm -rf /` on my own website." },
+      { cmd: 'cowsay', hint: "I probably spend way too much time making a `cowsay` things in the terminal." },
+      { cmd: 'wget', hint: "I still use `wget` to download my own `resume.pdf` just because it feels cooler." },
+      { cmd: 'cat', hint: "I tried using `cat` on my `resume.pdf` once. It was an interesting experience." },
+      { cmd: 'ping', hint: "I occasionally `ping localhost` just to make sure I'm still connected to reality." },
+      { cmd: 'apt', hint: "I find myself trying to `sudo apt install coffee-addiction` during late night coding sessions." },
+      { cmd: 'curl', hint: "I wonder if `curl`ing this website would make the whole thing spin." },
+      { cmd: 'tac', hint: "I read log files backwards using `tac` more often than I'd like to admit." },
+      { cmd: 'gravity', hint: "Sometimes I wish I could turn off `gravity` and just let the UI float away." },
+      { cmd: 'sl', hint: "I type `sl` instead of ls so often I just expect a train to run across my screen." },
+      { cmd: 'glitch', hint: "I like to embrace the `glitch` when the simulation breaks down." },
+      { cmd: 'hack', hint: "I sometimes type `hack` and pretend I'm bypassing mainframe firewalls." },
+      { cmd: 'restore', hint: "I break my own layout all the time, but I always know how to `restore` it." },
+      { cmd: 'matrix', hint: "I'm still searching for the `matrix` white rabbit in my codebase." },
+      { cmd: 'vim', hint: "I've been trapped in `vim` since 2018. Send help." },
+      { cmd: 'theme', hint: "I change my `theme` to hacker mode when no one is looking." },
+      { cmd: 'konami', hint: "I habitually tap out the Konami code (arrow keys...) on every website I visit." },
+      { cmd: 'caffeine', hint: "Clicking a coffee icon 5 times in a row is the only way I can get a real caffeine rush." },
+      { cmd: 'console', hint: "I always leave an unlockSecret() function in my browser's developer console. Just in case." }
+    ];
+    
+    // Filter out the ones the user has already found
+    let availableHints = allHints.filter(h => {
+      // Check both the command itself and specific arguments if necessary
+      if (['make', 'rm', 'apt', 'su'].includes(h.cmd)) {
+        return !terminal.usedEggs.has(h.cmd);
+      }
+      // For konami, caffeine, console, we don't have a direct terminal command to check, so they might just stay in rotation
+      return !terminal.usedEggs.has(h.cmd);
+    });
+
+    if (availableHints.length === 0) {
+      availableHints = [{ cmd: 'done', hint: "I think you've found literally every secret on this site. You are a true terminal master." }];
+    }
+    
+    const randomThought = availableHints[Math.floor(Math.random() * availableHints.length)].hint;
+
     return `
 <span class="term-indigo">◍  The Human Behind the Terminal</span>
 <span class="term-gray">${sep}</span>
@@ -148,16 +192,17 @@ for clients in Dubai and Austria on the side.
   ▸ Mechanical keyboard rabbit hole  <span class="term-gray">(it never ends)</span>
   ▸ Breaking things to understand how they work
   ▸ Convincing myself Rust is the answer to everything
-  ▸ Watching F1 reruns &amp; pretending I didn’t know the outcome
+  ▸ Watching F1 reruns &amp; pretending I didn't know the outcome
 
 <span class="term-yellow">Opinions</span>
   <span class="term-indigo">Hot take</span>    Tabs &gt; spaces. There. I said it.
   <span class="term-indigo">Cold take</span>   TypeScript saved frontend development
   <span class="term-indigo">Spicy take</span>  Docker solves 90% of “works on my machine”
 
-<span class="term-yellow">Philosophy</span>
-  “Ship something real. Then make it good. Then make it fast.”
-  Code is a liability — delete more than you write.`;
+<span class="term-yellow">Random thought</span>
+  ${randomThought}
+
+<span class="term-gray">${terminal.divider('─')}</span>`;
   },
 
   skills: () => {

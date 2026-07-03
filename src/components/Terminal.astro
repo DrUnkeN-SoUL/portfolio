@@ -13,7 +13,6 @@
           <input type="text" class="terminal-input" id="terminal-input"
             autocomplete="off" spellcheck="false" aria-label="Terminal input">
           <span class="terminal-input-display" id="terminal-input-display"></span>
-          <span class="terminal-cursor" id="terminal-cursor"></span>
         </div>
       </div>
       <div class="terminal-tap-hint" id="terminal-tap-hint">
@@ -232,8 +231,8 @@
     flex-shrink: 0;
   }
 
-  .terminal-input:focus ~ .terminal-cursor { animation: blink .85s step-end infinite; }
-  .terminal-input:not(:focus) ~ .terminal-cursor {
+  .terminal-input:focus ~ .terminal-input-display .terminal-cursor { animation: blink .85s step-end infinite; }
+  .terminal-input:not(:focus) ~ .terminal-input-display .terminal-cursor {
     background: transparent;
     border: 1px solid var(--ac-dim);
     animation: none;
