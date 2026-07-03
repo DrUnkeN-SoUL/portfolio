@@ -1,8 +1,5 @@
 User-Agent: *
 Allow: /
-Disallow: /_next/
-Disallow: /api/
-Disallow: /studio/
 
 User-Agent: OAI-SearchBot
 Allow: /
