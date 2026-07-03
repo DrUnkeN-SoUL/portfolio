@@ -1,0 +1,53 @@
+<svg viewBox="30 20 630 470" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>M.S monogram, artistic brushstroke style</title>
+<desc>A bold expressive monogram of the letters M and S painted as thick overlapping brushstroke shapes in magenta, orange, and teal, layered over a dark background with scattered ink-splatter dots and sweeping curved lines.</desc>
+<defs>
+<marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></marker>
+<linearGradient id="bgfade" x1="0%" y1="0%" x2="100%" y2="100%">
+<stop offset="0%" stop-color="#161221"/>
+<stop offset="100%" stop-color="#0c0a14"/>
+</linearGradient>
+</defs>
+
+<!-- Background curves (untouched, filling the canvas) -->
+<path d="M 90 420 Q 340 40 610 380" fill="none" stroke="#e94f8a" stroke-width="2" opacity="0.35"/>
+<path d="M 60 90 Q 330 470 630 130" fill="none" stroke="#2fd4c4" stroke-width="1.5" opacity="0.3"/>
+<path d="M 40 460 Q 340 500 640 450" fill="none" stroke="#e94f8a" stroke-width="1" opacity="0.25"/>
+
+<!-- Scattered dots (untouched) -->
+<circle cx="120" cy="130" r="5" fill="#f2a33e" opacity="0.6"/>
+<circle cx="560" cy="380" r="7" fill="#e94f8a" opacity="0.5"/>
+<circle cx="600" cy="90" r="3" fill="#2fd4c4" opacity="0.7"/>
+<circle cx="80" cy="400" r="4" fill="#2fd4c4" opacity="0.5"/>
+<circle cx="480" cy="440" r="3" fill="#f2a33e" opacity="0.6"/>
+<circle cx="160" cy="440" r="2.5" fill="#e94f8a" opacity="0.5"/>
+<circle cx="580" cy="440" r="2" fill="#f2a33e" opacity="0.5"/>
+<circle cx="40" cy="230" r="2.5" fill="#2fd4c4" opacity="0.4"/>
+
+<!-- ENLARGED M.S MONOGRAM -->
+<!-- Group scales up the M.S elements by 1.5x and perfectly centers them -->
+<g transform="translate(345, 255) scale(1.5) translate(-310, -295)">
+    <!-- M (Scaled up an extra 15% to be more prominent) -->
+    <g transform="translate(184, 298) scale(1.15) translate(-184, -298)">
+        <g transform="translate(180,300) rotate(-4)">
+            <path d="M -60 60 L -60 -70 L -20 -70 L 10 -10 L 40 -70 L 78 -70 L 78 60 L 46 60 L 46 -10 L 20 45 L 0 45 L -26 -10 L -26 60 Z" fill="#e94f8a" opacity="0.92"/>
+        </g>
+        <g transform="translate(188,296) rotate(3)">
+            <path d="M -55 55 L -55 -65 L -18 -65 L 8 -12 L 35 -65 L 70 -65 L 70 55 L 42 55 L 42 -12 L 18 38 L 0 38 L -24 -12 L -24 55 Z" fill="#f2a33e" opacity="0.55"/>
+        </g>
+    </g>
+
+    <!-- Dot -->
+    <circle cx="322" cy="330" r="8" fill="#2fd4c4"/>
+    <circle cx="322" cy="330" r="8" fill="none" stroke="#e94f8a" stroke-width="1" opacity="0.7"/>
+
+    <!-- S -->
+    <g transform="translate(430,290) rotate(5)">
+        <path d="M 55 -70 Q -20 -75 -25 -30 Q -28 5 25 8 Q 65 10 60 45 Q 55 78 -20 68" fill="none" stroke="#2fd4c4" stroke-width="34" stroke-linecap="round" opacity="0.9"/>
+    </g>
+    <g transform="translate(438,286) rotate(-3)">
+        <path d="M 50 -68 Q -18 -72 -22 -28 Q -25 6 24 9 Q 60 11 56 44 Q 52 74 -18 65" fill="none" stroke="#f2a33e" stroke-width="18" stroke-linecap="round" opacity="0.55"/>
+    </g>
+</g>
+
+</svg>
