@@ -6,15 +6,15 @@ import '../styles/global.css';
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>404 — Page Not Found</title>
-    <meta name="description" content="The page you're looking for has been abducted. Return to base.">
+    <meta name="description" content="The page you're looking for has been abducted. Return to base or play retro games.">
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400&family=JetBrains+Mono:wght@400;700;900&display=swap" rel="stylesheet">
     <script is:inline>
         const theme = localStorage.getItem('theme') || 'mint';
         document.documentElement.setAttribute('data-theme', theme);
@@ -29,6 +29,8 @@ import '../styles/global.css';
         html {
             background: var(--bg);
             color: var(--tx-1);
+            overflow: hidden;
+            height: 100%;
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -43,12 +45,11 @@ import '../styles/global.css';
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            cursor: none;
             position: relative;
             -webkit-font-smoothing: antialiased;
         }
 
-        /* ── Atmospheric background (mirrors global.css) ── */
+        /* ── Atmospheric background ── */
         body::before {
             content: '';
             position: fixed;
@@ -67,8 +68,8 @@ import '../styles/global.css';
             z-index: 0;
             pointer-events: none;
             background-image:
-                linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+                linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
             background-size: 80px 80px;
         }
 
@@ -92,7 +93,56 @@ import '../styles/global.css';
             100% { opacity: 0.45; transform: scale(1.2); }
         }
 
-        /* ── Content ── */
+        /* ── Theme-specific Translucent Shells ── */
+        html[data-theme="mint"] {
+            --shell-color: rgba(18, 30, 22, 0.85);
+            --shell-border: rgba(201, 169, 110, 0.22);
+            --shell-glow: rgba(201, 169, 110, 0.1);
+            --screen-bg: #8b966c;
+            --screen-shade-0: #8b966c;
+            --screen-shade-1: #6b7a50;
+            --screen-shade-2: #4c5b36;
+            --screen-shade-3: #1f2d1a;
+            --screen-glow: rgba(139, 150, 108, 0.12);
+        }
+
+        html[data-theme="cyan"] {
+            --shell-color: rgba(12, 28, 38, 0.85);
+            --shell-border: rgba(90, 176, 212, 0.22);
+            --shell-glow: rgba(90, 176, 212, 0.1);
+            --screen-bg: #749fb8;
+            --screen-shade-0: #749fb8;
+            --screen-shade-1: #51778f;
+            --screen-shade-2: #30536b;
+            --screen-shade-3: #0c2538;
+            --screen-glow: rgba(116, 159, 184, 0.12);
+        }
+
+        html[data-theme="amber"] {
+            --shell-color: rgba(36, 18, 10, 0.85);
+            --shell-border: rgba(224, 123, 58, 0.22);
+            --shell-glow: rgba(224, 123, 58, 0.1);
+            --screen-bg: #dca06c;
+            --screen-shade-0: #dca06c;
+            --screen-shade-1: #b0784a;
+            --screen-shade-2: #84502a;
+            --screen-shade-3: #4a2408;
+            --screen-glow: rgba(220, 160, 108, 0.12);
+        }
+
+        html[data-theme="mono"] {
+            --shell-color: rgba(26, 26, 26, 0.88);
+            --shell-border: rgba(200, 196, 188, 0.16);
+            --shell-glow: rgba(200, 196, 188, 0.05);
+            --screen-bg: #9ea098;
+            --screen-shade-0: #9ea098;
+            --screen-shade-1: #74776e;
+            --screen-shade-2: #4b4d47;
+            --screen-shade-3: #1a1b18;
+            --screen-glow: rgba(158, 160, 152, 0.12);
+        }
+
+        /* ── Space Theme Landing View ── */
         .content {
             position: relative;
             z-index: 10;
@@ -100,9 +150,17 @@ import '../styles/global.css';
             display: flex;
             flex-direction: column;
             align-items: center;
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.4s var(--ease), transform 0.4s var(--ease);
         }
 
-        /* ── Eyebrow label ── */
+        .content.hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.95);
+        }
+
         .eyebrow {
             font-family: 'JetBrains Mono', monospace;
             font-size: 0.58rem;
@@ -114,7 +172,6 @@ import '../styles/global.css';
             opacity: 0.8;
         }
 
-        /* ── 404 heading ── */
         h1 {
             font-family: 'JetBrains Mono', monospace;
             font-size: clamp(6rem, 16vw, 12rem);
@@ -132,7 +189,6 @@ import '../styles/global.css';
             color: var(--ac);
         }
 
-        /* ── Divider rule ── */
         .rule {
             width: 32px;
             height: 1px;
@@ -141,9 +197,7 @@ import '../styles/global.css';
             margin: 1.5rem auto;
         }
 
-        /* ── Subtitle ── */
         .subtitle {
-            font-family: 'DM Sans', sans-serif;
             font-size: 0.9rem;
             font-weight: 300;
             letter-spacing: 0.04em;
@@ -152,7 +206,6 @@ import '../styles/global.css';
             line-height: 1.7;
         }
 
-        /* ── Actions ── */
         .actions {
             display: flex;
             gap: 0.75rem;
@@ -162,7 +215,6 @@ import '../styles/global.css';
             z-index: 20;
         }
 
-        /* Mirrors global.css .btn style */
         .btn {
             display: inline-flex;
             align-items: center;
@@ -203,7 +255,6 @@ import '../styles/global.css';
             transform: translateY(-1px);
         }
 
-        /* ── Hint text ── */
         .hint {
             position: fixed;
             bottom: 2.5rem;
@@ -214,6 +265,11 @@ import '../styles/global.css';
             pointer-events: none;
             text-transform: uppercase;
             z-index: 10;
+            transition: opacity 0.3s;
+        }
+
+        .hint.hidden {
+            opacity: 0;
         }
 
         /* ── UFO Cursor ── */
@@ -230,7 +286,6 @@ import '../styles/global.css';
             opacity: 0.9;
         }
 
-        /* ── Tractor beam ── */
         .tractor-beam {
             position: absolute;
             top: 38px;
@@ -275,94 +330,854 @@ import '../styles/global.css';
             100% { transform: translateY(-280px) scale(0.1) rotate(5deg); opacity: 0; }
         }
 
-        /* ── Game Modal ── */
-        #game-modal {
-            position: fixed;
+        /* ── Console Viewport Container ── */
+        .console-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            height: 100vh;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            box-sizing: border-box;
+            opacity: 0;
+            overflow: hidden;
+            transform: scale(0.95);
+            transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+        }
+
+        .console-wrapper.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Scale Wrapper Card (Solves PC Layout Box Clipping) */
+        .console-scale-card {
+            width: 390px;
+            height: 720px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        /* The Handheld Device Casing */
+        .gameboy-console {
+            display: flex;
+            flex-direction: column;
+            background: var(--shell-color);
+            background-image: 
+                radial-gradient(var(--shell-border) 1px, transparent 0),
+                linear-gradient(to right, rgba(255,255,255,0.015) 1px, transparent 0),
+                linear-gradient(to bottom, rgba(255,255,255,0.015) 1px, transparent 0);
+            background-size: 20px 20px, 40px 40px, 40px 40px;
+            border: 4px solid var(--shell-border);
+            box-shadow: 
+                0 30px 60px -15px rgba(0, 0, 0, 0.85),
+                inset 0 2px 2px rgba(255, 255, 255, 0.12),
+                inset 0 -4px 6px rgba(0, 0, 0, 0.4),
+                0 0 40px var(--shell-glow);
+            position: absolute;
+            overflow: hidden;
+            width: 390px;
+            height: 720px;
+            padding: 24px;
+            border-radius: 16px 16px 85px 16px;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        /* PCB traces behind plastic */
+        .console-pcb {
+            position: absolute;
             inset: 0;
-            background: color-mix(in srgb, var(--bg) 92%, transparent);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            z-index: 200;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0.15;
+            mix-blend-mode: overlay;
+        }
+
+        /* Top switch */
+        .console-top-edge {
+            height: 18px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            padding-left: 20px;
+            gap: 8px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .power-switch-casing {
+            width: 30px;
+            height: 10px;
+            background: #111;
+            border-radius: 2px;
+            border: 1px solid rgba(255,255,255,0.05);
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .power-switch-knob {
+            width: 14px;
+            height: 8px;
+            background: #6c7075;
+            border-radius: 1px;
+            border: 1px solid #4a4d52;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.6);
+            position: absolute;
+            top: 0;
+            left: 0;
+            transition: left 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .power-switch-knob.on {
+            left: 14px;
+        }
+
+        .power-label-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 6px;
+            font-weight: bold;
+            color: var(--tx-3);
+            letter-spacing: 0.5px;
+        }
+
+        /* Screen Bezel */
+        .screen-bezel {
+            background: #25262a;
+            border-radius: 8px 8px 32px 8px;
+            padding: 16px 28px 12px 28px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            box-shadow: 
+                inset 0 3px 6px rgba(0,0,0,0.85),
+                inset 0 -1px 3px rgba(255,255,255,0.05),
+                0 4px 12px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.03);
+            position: relative;
+            z-index: 10;
+        }
+
+        .bezel-header {
+            position: relative;
+            height: 16px;
+            width: 100%;
+            margin-bottom: 6px;
+        }
+
+        .battery-indicator {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            position: absolute;
+            left: -12px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .battery-led {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #2b0c0c;
+            border: 1px solid #120303;
+            transition: background 0.4s, box-shadow 0.4s;
+        }
+
+        .battery-led.lit {
+            background: #ff3b30;
+            box-shadow: 0 0 6px #ff3b30, 0 0 12px #ff3b30;
+        }
+
+        .battery-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 5px;
+            font-weight: bold;
+            color: #8c8c8c;
+            letter-spacing: 0.5px;
+        }
+
+        .bezel-header-lines {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            margin: 4px auto 0 auto;
+            width: 80%;
+        }
+
+        .bezel-line {
+            height: 1.5px;
+            width: 100%;
+        }
+
+        .bezel-line.blue { background: #3d589e; }
+        .bezel-line.red { background: #b52c2c; }
+
+        /* The Screen Display (Set to 3/5 aspect ratio to match canvas dimensions) */
+        .screen-display {
+            background: var(--screen-bg);
+            border: 5px solid #16171a;
+            border-radius: 4px;
+            box-shadow: inset 0 4px 10px rgba(0,0,0,0.85);
+            width: 100%;
+            aspect-ratio: 3 / 5; /* Matches canvas height/width proportions */
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-crt-overlay {
+            position: absolute;
+            inset: 0;
+            background: 
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.08) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.015), rgba(0, 255, 0, 0.008), rgba(0, 0, 255, 0.015));
+            background-size: 100% 3px, 6px 100%;
+            pointer-events: none;
+            z-index: 12;
+        }
+
+        .screen-crt-overlay::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.35);
+            pointer-events: none;
+        }
+
+        .screen-display::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(255, 255, 255, 0.12) 0%,
+                rgba(255, 255, 255, 0.04) 28%,
+                transparent 29%,
+                transparent 100%
+            );
+            pointer-events: none;
+            z-index: 13;
+        }
+
+        .screen-content {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 0 35px var(--screen-glow);
+        }
+
+        .screen-hud {
+            width: 100%;
+            height: 24px;
+            background: var(--screen-shade-1);
+            border-bottom: 2px solid var(--screen-shade-3);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 8px;
+            font-size: 9px;
+            font-weight: bold;
+            color: var(--screen-shade-3);
+            z-index: 10;
+            box-sizing: border-box;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        /* game canvas fills 100% of the display */
+        #game-canvas {
+            width: 100%;
+            height: 100%;
+            display: none;
+            image-rendering: pixelated;
+            background: var(--screen-bg);
+        }
+
+        .screen-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 24px 16px;
+            box-sizing: border-box;
+            color: var(--screen-shade-3);
+            z-index: 15;
+            background: var(--screen-bg);
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .boot-screen {
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+        }
+
+        .boot-logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .boot-logo {
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+            transform: translateY(-160px);
+            transition: transform 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .boot-logo.scrolled {
+            transform: translateY(0);
+        }
+
+        .boot-sublogo {
+            font-size: 8px;
+            font-weight: bold;
+            border: 1.5px solid var(--screen-shade-3);
+            padding: 2px 10px;
+            margin-top: 8px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .boot-sublogo.visible {
+            opacity: 1;
+        }
+
+        .menu-header {
+            font-size: 22px;
+            font-weight: 900;
+            text-align: center;
+            letter-spacing: -1px;
+            margin-bottom: 2px;
+        }
+
+        .menu-subtitle {
+            font-size: 8px;
+            font-weight: bold;
+            text-align: center;
+            letter-spacing: 0.5px;
+            opacity: 0.85;
+            margin-top: -12px;
+        }
+
+        .menu-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-left: 20px;
+            margin-top: -10px;
+        }
+
+        .menu-option {
+            font-size: 11px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .menu-option .cursor {
+            width: 10px;
+            display: inline-block;
+        }
+
+        .menu-option.active {
+            animation: pulseText 0.8s infinite alternate;
+        }
+
+        @keyframes pulseText {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.04); }
+        }
+
+        .menu-footer {
+            font-size: 7px;
+            text-align: center;
+            letter-spacing: 1.5px;
+            opacity: 0.7;
+        }
+
+        .gameover-overlay {
+            position: absolute;
+            inset: 0;
+            background: var(--screen-bg);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s cubic-bezier(.23,.93,.45,1);
+            color: var(--screen-shade-3);
+            z-index: 20;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        #game-modal.visible {
-            opacity: 1;
-            pointer-events: all;
-            cursor: default;
+        .go-title {
+            font-size: 20px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            margin-bottom: 12px;
         }
 
-        #game-modal.visible ~ #ufo-cursor { display: none; }
+        .go-score-details {
+            font-size: 10px;
+            margin-bottom: 24px;
+            line-height: 1.8;
+            text-align: center;
+            font-weight: bold;
+        }
 
-        .game-container {
-            border: 1px solid var(--bd-ac);
-            padding: 1.5rem;
-            background: var(--bg-1);
+        .go-restart-prompt {
+            font-size: 8px;
+            font-weight: bold;
+            animation: retroBlink 1s step-end infinite;
+        }
+
+        .bezel-footer {
+            display: flex;
+            justify-content: center;
+            margin-top: 6px;
+        }
+
+        .bezel-logo-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 9px;
+            font-weight: 900;
+            color: #8c8c8c;
+            letter-spacing: 0.5px;
+            font-style: italic;
+        }
+
+        .bezel-logo-text .color-accent {
+            color: #b52c2c;
+            margin-left: 2px;
+        }
+
+        /* ── Controls Area ── */
+        .console-controls {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 24px;
             position: relative;
+            padding-bottom: 16px;
+            z-index: 10;
         }
 
-        #game-canvas {
-            background: var(--bg);
-            border: 1px solid var(--bd);
-            image-rendering: pixelated;
-            display: block;
-        }
-
-        .game-header {
+        .controls-row-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0.75rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.62rem;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--tx-2);
+            width: 100%;
         }
 
-        #game-title { color: var(--ac); }
-
-        .close-game {
-            background: none;
-            border: none;
-            color: var(--tx-2);
-            font-size: 1.1rem;
-            cursor: pointer;
-            font-family: inherit;
-            transition: color 0.2s;
-            padding: 0 0.25rem;
-        }
-        .close-game:hover { color: var(--ac); }
-
-        .game-hint {
-            margin-top: 0.75rem;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.5rem;
-            letter-spacing: 0.16em;
-            text-transform: uppercase;
-            color: var(--tx-3);
-            text-align: center;
+        .dpad-wrapper, .action-buttons-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        .game-over-text {
+        .dpad {
+            position: relative;
+            width: 90px;
+            height: 90px;
+        }
+
+        .dpad-btn {
             position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Cormorant Garant', serif;
-            font-size: 2.5rem;
-            font-weight: 300;
-            font-style: italic;
-            color: var(--ac);
-            display: none;
-            pointer-events: none;
-            letter-spacing: 0.02em;
+            background: #1c1c1f;
+            border: 2px solid #0b0c0d;
+            box-shadow: 
+                inset 0 1px 1px rgba(255,255,255,0.08),
+                0 3px 5px rgba(0,0,0,0.55);
+            cursor: pointer;
+            z-index: 2;
+            touch-action: none;
+        }
+
+        .dpad-btn:active, .dpad-btn.pressed {
+            background: #090a0a !important;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.85);
+        }
+
+        .dpad-btn.up {
+            top: 0; left: 30px; width: 30px; height: 35px;
+            border-radius: 4px 4px 0 0;
+        }
+        .dpad-btn.up::after {
+            content: '▲';
+            position: absolute;
+            top: 2px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 7px;
+            color: #0b0c0d;
+        }
+
+        .dpad-btn.down {
+            bottom: 0; left: 30px; width: 30px; height: 35px;
+            border-radius: 0 0 4px 4px;
+        }
+        .dpad-btn.down::after {
+            content: '▼';
+            position: absolute;
+            bottom: 2px; left: 50%;
+            transform: translateX(-50%);
+            font-size: 7px;
+            color: #0b0c0d;
+        }
+
+        .dpad-btn.left {
+            top: 30px; left: 0; width: 35px; height: 30px;
+            border-radius: 4px 0 0 4px;
+        }
+        .dpad-btn.left::after {
+            content: '◀';
+            position: absolute;
+            left: 3px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 7px;
+            color: #0b0c0d;
+        }
+
+        .dpad-btn.right {
+            top: 30px; right: 0; width: 35px; height: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        .dpad-btn.right::after {
+            content: '▶';
+            position: absolute;
+            right: 3px; top: 50%;
+            transform: translateY(-50%);
+            font-size: 7px;
+            color: #0b0c0d;
+        }
+
+        .dpad-center {
+            position: absolute;
+            top: 30px; left: 30px; width: 30px; height: 30px;
+            background: #1c1c1f;
+            z-index: 1;
+            box-shadow: inset 0 0 2px rgba(255,255,255,0.05);
+        }
+
+        .dpad-center::after {
+            content: '';
+            position: absolute;
+            top: 6px; left: 6px; width: 18px; height: 18px;
+            border-radius: 50%;
+            background: #141416;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* Action Buttons */
+        .buttons-container {
+            display: flex;
+            gap: 16px;
+            transform: rotate(-15deg);
+        }
+
+        .action-btn-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .action-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #9c1f38;
+            border: 2.5px solid #000;
+            box-shadow: 
+                inset 0 2px 2px rgba(255,255,255,0.22),
+                0 4px 6px rgba(0,0,0,0.6);
+            cursor: pointer;
+            touch-action: none;
+            position: relative;
+        }
+
+        .action-btn:active, .action-btn.pressed {
+            transform: translateY(2px);
+            box-shadow: 
+                inset 0 3px 5px rgba(0,0,0,0.85),
+                0 1px 2px rgba(0,0,0,0.3);
+            background: #701124 !important;
+        }
+
+        .btn-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            font-weight: 900;
+            color: var(--tx-2);
+            text-shadow: 1px 1px 0 rgba(0,0,0,0.4);
+            margin-top: 2px;
+        }
+
+        .menu-buttons-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 8px;
+            width: 100%;
+        }
+
+        .menu-buttons {
+            display: flex;
+            gap: 20px;
+        }
+
+        .menu-btn-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .menu-btn {
+            width: 44px;
+            height: 11px;
+            border-radius: 6px;
+            background: #717578;
+            border: 2px solid #000;
+            transform: rotate(-25deg);
+            box-shadow: 
+                inset 0 1px 2px rgba(255,255,255,0.15),
+                0 3px 4px rgba(0,0,0,0.5);
+            cursor: pointer;
+            touch-action: none;
+        }
+
+        .menu-btn:active, .menu-btn.pressed {
+            transform: rotate(-25deg) translateY(1.5px);
+            box-shadow: inset 0 2px 3px rgba(0,0,0,0.85);
+            background: #505254 !important;
+        }
+
+        .menu-btn-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 7.5px;
+            font-weight: bold;
+            color: var(--tx-3);
+            letter-spacing: 0.8px;
+        }
+
+        /* Speaker Grille */
+        .speaker-grille {
+            position: absolute;
+            bottom: -5px;
+            right: 8px;
+            display: flex;
+            gap: 6px;
+            transform: rotate(-28deg);
+        }
+
+        .speaker-slot {
+            width: 5.5px;
+            height: 42px;
+            background: #0f1012;
+            border-radius: 3px;
+            box-shadow: 
+                inset 1px 1px 2px rgba(0,0,0,0.9),
+                1px 1.5px 1px rgba(255,255,255,0.05);
+        }
+
+        /* Phone label */
+        .console-bottom-edge {
+            display: flex;
+            justify-content: center;
+            margin-top: auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .bottom-edge-text {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 6px;
+            font-weight: bold;
+            color: var(--tx-3);
+            letter-spacing: 0.5px;
+        }
+
+        /* ── Scale Card layout updates for PC viewport height ── */
+        @media (min-width: 769px) and (max-height: 780px) {
+            .console-scale-card {
+                width: 351px;
+                height: 648px;
+            }
+            .gameboy-console {
+                transform: scale(0.9);
+                transform-origin: center center;
+            }
+        }
+        @media (min-width: 769px) and (max-height: 700px) {
+            .console-scale-card {
+                width: 312px;
+                height: 576px;
+            }
+            .gameboy-console {
+                transform: scale(0.8);
+                transform-origin: center center;
+            }
+        }
+        @media (min-width: 769px) and (max-height: 620px) {
+            .console-scale-card {
+                width: 273px;
+                height: 504px;
+            }
+            .gameboy-console {
+                transform: scale(0.7);
+                transform-origin: center center;
+            }
+        }
+        @media (min-width: 769px) and (max-height: 540px) {
+            .console-scale-card {
+                width: 234px;
+                height: 432px;
+            }
+            .gameboy-console {
+                transform: scale(0.6);
+                transform-origin: center center;
+            }
+        }
+        @media (min-width: 769px) and (max-height: 460px) {
+            .console-scale-card {
+                width: 195px;
+                height: 360px;
+            }
+            .gameboy-console {
+                transform: scale(0.5);
+                transform-origin: center center;
+            }
+        }
+
+        /* ── Mobile Layout ── */
+        @media (max-width: 768px) {
+            .console-wrapper {
+                padding: 0;
+            }
+
+            .console-scale-card {
+                width: 100%;
+                height: 100%;
+            }
+
+            .gameboy-console {
+                width: 100%;
+                height: 100%;
+                border: none;
+                border-radius: 0;
+                padding: 16px 16px calc(16px + env(safe-area-inset-bottom)) 16px;
+                box-shadow: none;
+                backdrop-filter: none;
+                justify-content: space-between;
+                position: relative;
+            }
+
+            .console-top-edge {
+                margin-bottom: 4px;
+            }
+
+            .screen-bezel {
+                padding: 12px 18px 10px 18px;
+            }
+
+            /* Large ergonomic mobile controls */
+            .console-controls {
+                margin-top: auto;
+                padding-bottom: 30px;
+                flex: 1;
+                justify-content: space-around;
+            }
+
+            .controls-row-top {
+                padding: 0 12px;
+            }
+
+            .dpad {
+                width: 135px;
+                height: 135px;
+            }
+
+            .dpad-btn.up {
+                top: 0; left: 45px; width: 45px; height: 52px;
+            }
+            .dpad-btn.up::after {
+                font-size: 10px; top: 3px;
+            }
+            .dpad-btn.down {
+                bottom: 0; left: 45px; width: 45px; height: 52px;
+            }
+            .dpad-btn.down::after {
+                font-size: 10px; bottom: 3px;
+            }
+            .dpad-btn.left {
+                top: 45px; left: 0; width: 52px; height: 45px;
+            }
+            .dpad-btn.left::after {
+                font-size: 10px; left: 4px;
+            }
+            .dpad-btn.right {
+                top: 45px; right: 0; width: 52px; height: 45px;
+            }
+            .dpad-btn.right::after {
+                font-size: 10px; right: 4px;
+            }
+            .dpad-center {
+                top: 45px; left: 45px; width: 45px; height: 45px;
+            }
+            .dpad-center::after {
+                top: 8px; left: 8px; width: 29px; height: 29px;
+            }
+
+            .action-btn {
+                width: 58px;
+                height: 58px;
+                border-width: 3px;
+            }
+
+            .buttons-container {
+                gap: 20px;
+            }
+
+            .btn-label {
+                font-size: 13px;
+                margin-top: 4px;
+            }
+
+            .menu-buttons {
+                gap: 28px;
+            }
+
+            .menu-btn {
+                width: 58px;
+                height: 13px;
+                border-width: 2.5px;
+            }
+
+            .menu-btn-label {
+                font-size: 9px;
+                margin-top: 3px;
+            }
+
+            .speaker-grille {
+                right: 20px;
+                bottom: -20px;
+            }
+            
+            .speaker-slot {
+                height: 36px;
+                width: 5px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -376,9 +1191,9 @@ import '../styles/global.css';
 
     <canvas id="ambient-canvas"></canvas>
     <div class="cursor-glow" id="cursor-glow"></div>
-
     <div class="stars" id="stars-container"></div>
 
+    <!-- Space Theme Landing Page Content -->
     <div class="content" id="main-content">
         <p class="eyebrow">// error 404</p>
         <h1 id="the-404"><em>4</em>0<em>4</em></h1>
@@ -391,7 +1206,7 @@ import '../styles/global.css';
         </div>
     </div>
 
-    <p class="hint">Hold left click above the 404 to abduct it</p>
+    <p class="hint" id="abduction-hint">Hold left click above the 404 to abduct it</p>
 
     <!-- UFO Cursor -->
     <div id="ufo-cursor">
@@ -433,27 +1248,167 @@ import '../styles/global.css';
         <div class="tractor-beam"></div>
     </div>
 
-    <!-- Game Modal -->
-    <div id="game-modal">
-        <div class="game-container" style="position: relative;">
-            <div class="game-header">
-                <span id="game-title">// game</span>
-                <span id="game-score">Score: 0</span>
-                <button class="close-game" id="btn-close-game">&times;</button>
+    <!-- The Handheld Console Wrapper -->
+    <div class="console-wrapper">
+        <!-- Layout card scaling -->
+        <div class="console-scale-card">
+            <div class="gameboy-console">
+                <!-- PCB overlay background -->
+                <div class="console-pcb">
+                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="25%" y="42%" width="50%" height="22%" rx="3" fill="none" stroke="var(--ac)" stroke-width="1.5" />
+                        <path d="M 10% 20% L 20% 30% V 42% M 90% 20% L 80% 30% V 42%" fill="none" stroke="var(--ac)" stroke-width="1" opacity="0.4"/>
+                        <path d="M 50% 64% V 80% L 35% 90%" fill="none" stroke="var(--ac)" stroke-width="1.2" opacity="0.6"/>
+                        <path d="M 45% 64% V 74% L 20% 84%" fill="none" stroke="var(--ac)" stroke-width="0.8" opacity="0.5"/>
+                        <circle cx="20%" cy="30%" r="2.5" fill="var(--ac)" />
+                        <circle cx="80%" cy="30%" r="2.5" fill="var(--ac)" />
+                        <circle cx="20%" cy="84%" r="2.5" fill="var(--ac)" />
+                    </svg>
+                </div>
+
+                <!-- Top Switch and Label -->
+                <div class="console-top-edge">
+                    <div class="power-switch-casing">
+                        <div class="power-switch-knob" id="power-switch-knob"></div>
+                    </div>
+                    <div class="power-label-text">◀ OFF • ON ▶</div>
+                </div>
+
+                <!-- Screen Bezel -->
+                <div class="screen-bezel">
+                    <div class="bezel-header">
+                        <div class="battery-indicator">
+                            <div class="battery-led" id="battery-led"></div>
+                            <span class="battery-label">POWER</span>
+                        </div>
+                        <div class="bezel-header-lines">
+                            <div class="bezel-line blue"></div>
+                            <div class="bezel-line red"></div>
+                        </div>
+                    </div>
+
+                    <div class="screen-display">
+                        <div class="screen-crt-overlay"></div>
+
+                        <div class="screen-content">
+                            <!-- HUD Status -->
+                            <div class="screen-hud" id="screen-hud" style="display: none;">
+                                <span id="hud-game-name">TETRIS</span>
+                                <span id="hud-score-val">00000</span>
+                            </div>
+
+                            <!-- Game canvas -->
+                            <canvas id="game-canvas" width="240" height="400"></canvas>
+
+                            <!-- Boot Screen -->
+                            <div id="boot-screen" class="screen-overlay boot-screen">
+                                <div class="boot-logo-container">
+                                    <div id="boot-logo" class="boot-logo">PORTFOLIO</div>
+                                    <div class="boot-sublogo">ASTRO</div>
+                                </div>
+                            </div>
+
+                            <!-- Game Menu Screen -->
+                            <div id="menu-screen" class="screen-overlay" style="display: none;">
+                                <div class="menu-header">ERROR 404</div>
+                                <div class="menu-subtitle">PAGE NOT FOUND</div>
+                                <div class="menu-options">
+                                    <div class="menu-option active" data-index="0">
+                                        <span class="cursor">&gt;</span> TETRIS
+                                    </div>
+                                    <div class="menu-option" data-index="1">
+                                        <span class="cursor">&nbsp;</span> SNAKE
+                                    </div>
+                                    <div class="menu-option" data-index="2">
+                                        <span class="cursor">&nbsp;</span> RETURN BASE
+                                    </div>
+                                </div>
+                                <div class="menu-footer">CHOOSE CARTRIDGE</div>
+                            </div>
+
+                            <!-- Game Over overlay -->
+                            <div id="gameover-overlay" class="gameover-overlay" style="display: none;">
+                                <div class="go-title">GAME OVER</div>
+                                <div class="go-score-details">
+                                    SCORE: <span id="go-score-span">00000</span><br/>
+                                    HIGH: <span id="go-high-span">00000</span>
+                                </div>
+                                <div class="go-restart-prompt">A TO RESTART / B TO MENU</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bezel-footer">
+                        <span class="bezel-logo-text">GAME BOY<span class="color-accent">COLOR</span></span>
+                    </div>
+                </div>
+
+                <!-- Controls Area -->
+                <div class="console-controls">
+                    <div class="controls-row-top">
+                        <!-- D-Pad -->
+                        <div class="dpad-wrapper">
+                            <div class="dpad">
+                                <button class="dpad-btn up" data-action="UP" aria-label="D-Pad Up"></button>
+                                <button class="dpad-btn left" data-action="LEFT" aria-label="D-Pad Left"></button>
+                                <button class="dpad-btn right" data-action="RIGHT" aria-label="D-Pad Right"></button>
+                                <button class="dpad-btn down" data-action="DOWN" aria-label="D-Pad Down"></button>
+                                <div class="dpad-center"></div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="action-buttons-wrapper">
+                            <div class="buttons-container">
+                                <div class="action-btn-wrapper b-btn-wrapper">
+                                    <button class="action-btn b-btn" data-action="B" aria-label="Button B"></button>
+                                    <span class="btn-label">B</span>
+                                </div>
+                                <div class="action-btn-wrapper a-btn-wrapper">
+                                    <button class="action-btn a-btn" data-action="A" aria-label="Button A"></button>
+                                    <span class="btn-label">A</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Select & Start -->
+                    <div class="menu-buttons-container">
+                        <div class="menu-buttons">
+                            <div class="menu-btn-wrapper select-wrapper">
+                                <button class="menu-btn select-btn" data-action="SELECT" aria-label="Select Button"></button>
+                                <span class="menu-btn-label">SELECT</span>
+                            </div>
+                            <div class="menu-btn-wrapper start-wrapper">
+                                <button class="menu-btn start-btn" data-action="START" aria-label="Start Button"></button>
+                                <span class="menu-btn-label">START</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Speaker Grille -->
+                    <div class="speaker-grille">
+                        <div class="speaker-slot"></div>
+                        <div class="speaker-slot"></div>
+                        <div class="speaker-slot"></div>
+                        <div class="speaker-slot"></div>
+                        <div class="speaker-slot"></div>
+                        <div class="speaker-slot"></div>
+                    </div>
+                </div>
+
+                <!-- Bottom edge Phones -->
+                <div class="console-bottom-edge">
+                    <span class="bottom-edge-text">◁ PHONES ▷</span>
+                </div>
             </div>
-            <canvas id="game-canvas" width="240" height="400"></canvas>
-            <div id="game-over-msg" class="game-over-text">Game Over</div>
-            <p class="game-hint">Arrow keys / WASD &mdash; Space to restart</p>
         </div>
     </div>
 
     <script>
-        const rootStyles = getComputedStyle(document.documentElement);
-        const getVar = (name, fallback) => rootStyles.getPropertyValue(name).trim() || fallback;
-
-        // ── Stars ──
+        // ── Stars System ──
         const starsContainer = document.getElementById('stars-container');
-        for (let i = 0; i < 120; i++) {
+        for (let i = 0; i < 70; i++) {
             const star = document.createElement('div');
             star.className = 'star';
             const size = Math.random() * 2 + 0.5;
@@ -466,18 +1421,26 @@ import '../styles/global.css';
             starsContainer.appendChild(star);
         }
 
-        // ── UFO Cursor ──
-        const cursor  = document.getElementById('ufo-cursor');
+        // ── UFO Cursor tracking & attraction ──
+        const cursor = document.getElementById('ufo-cursor');
         const text404 = document.getElementById('the-404');
-        const modal   = document.getElementById('game-modal');
+        const mainContent = document.getElementById('main-content');
+        const consoleWrapper = document.querySelector('.console-wrapper');
+        const hintEl = document.getElementById('abduction-hint');
         let mouseX = window.innerWidth  / 2;
         let mouseY = window.innerHeight / 2;
         let cursorX = mouseX, cursorY = mouseY;
 
-        document.addEventListener('mousemove', e => { mouseX = e.clientX; mouseY = e.clientY; });
+        document.addEventListener('mousemove', e => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
 
         function animateCursor() {
-            if (modal.classList.contains('visible')) { requestAnimationFrame(animateCursor); return; }
+            if (mainContent.classList.contains('hidden')) {
+                requestAnimationFrame(animateCursor);
+                return;
+            }
             cursorX += (mouseX - cursorX) * 0.12;
             cursorY += (mouseY - cursorY) * 0.12;
             const tilt = (mouseX - cursorX) * 0.4;
@@ -488,9 +1451,9 @@ import '../styles/global.css';
         }
         animateCursor();
 
-        // ── 404 Parallax Repulsion ──
+        // Parallax repulsion
         document.addEventListener('mousemove', e => {
-            if (isAbducting || modal.classList.contains('visible')) return;
+            if (isAbducting || mainContent.classList.contains('hidden')) return;
             const rect    = text404.getBoundingClientRect();
             const centerX = rect.left + rect.width  / 2;
             const centerY = rect.top  + rect.height / 2;
@@ -505,13 +1468,12 @@ import '../styles/global.css';
             }
         });
 
-        // ── Abduction Logic ──
+        // Abduction hold logic
         let abductionTimer, isAbducting = false;
-
         document.addEventListener('mousedown', e => {
-            if (e.target.closest('.btn') || modal.classList.contains('visible')) return;
+            if (e.target.closest('.btn') || mainContent.classList.contains('hidden')) return;
             document.body.classList.add('beaming');
-            const rect        = text404.getBoundingClientRect();
+            const rect = text404.getBoundingClientRect();
             const textCenterX = rect.left + rect.width / 2;
             if (Math.abs(mouseX - textCenterX) < 180 && mouseY < rect.top + 40) {
                 isAbducting = true;
@@ -532,52 +1494,331 @@ import '../styles/global.css';
             }
         });
 
-        // ── Games Engine ──
-        const canvas      = document.getElementById('game-canvas');
-        const ctx         = canvas.getContext('2d');
-        const scoreEl     = document.getElementById('game-score');
-        const titleEl     = document.getElementById('game-title');
-        const gameOverMsg = document.getElementById('game-over-msg');
-        let currentGame = null;
-        let animationId, score = 0, isGameOver = false;
+        // ── Transition to Console ──
+        let pendingGame = null;
+        function openConsole(game) {
+            document.documentElement.style.cursor = 'auto';
+            cursor.style.display = 'none';
+            hintEl.classList.add('hidden');
 
-        document.getElementById('btn-tetris').addEventListener('click', () => startGame('tetris'));
-        document.getElementById('btn-snake').addEventListener('click',  () => startGame('snake'));
-        document.getElementById('btn-close-game').addEventListener('click', () => {
-            modal.classList.remove('visible');
+            mainContent.classList.add('hidden');
+
+            setTimeout(() => {
+                mainContent.style.display = 'none';
+                consoleWrapper.style.display = 'flex';
+                
+                consoleWrapper.offsetHeight;
+                consoleWrapper.classList.add('visible');
+                
+                pendingGame = game;
+                runBoot();
+            }, 450);
+        }
+
+        function closeConsole() {
+            document.getElementById('power-switch-knob').classList.remove('on');
+            document.getElementById('battery-led').classList.remove('lit');
+            
             cancelAnimationFrame(animationId);
             currentGame = null;
-        });
+            gameState = 'menu';
+            isPaused = false;
+            
+            consoleWrapper.classList.remove('visible');
+
+            setTimeout(() => {
+                consoleWrapper.style.display = 'none';
+                mainContent.style.display = 'flex';
+                
+                mainContent.offsetHeight;
+                mainContent.classList.remove('hidden');
+                
+                document.documentElement.style.cursor = '';
+                cursor.style.display = 'block';
+                hintEl.classList.remove('hidden');
+            }, 450);
+        }
+
+        document.getElementById('btn-tetris').addEventListener('click', () => openConsole('tetris'));
+        document.getElementById('btn-snake').addEventListener('click', () => openConsole('snake'));
+
+        // ── Web Audio Synthesizer ──
+        const audio = {
+            ctx: null,
+            init() {
+                if (this.ctx) return;
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) this.ctx = new AudioContext();
+            },
+            beep(freq, duration, type = 'square') {
+                this.init();
+                if (!this.ctx) return;
+                try {
+                    if (this.ctx.state === 'suspended') this.ctx.resume();
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = type;
+                    osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+                    gain.gain.setValueAtTime(0.015, this.ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + duration);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start();
+                    osc.stop(this.ctx.currentTime + duration);
+                } catch(e){}
+            },
+            playBoot() {
+                this.beep(370, 0.08);
+                setTimeout(() => this.beep(740, 0.3), 85);
+            },
+            playBlip() {
+                this.beep(400, 0.03, 'sine');
+            },
+            playSuccess() {
+                this.beep(523, 0.05);
+                setTimeout(() => this.beep(659, 0.05), 50);
+                setTimeout(() => this.beep(784, 0.1), 100);
+            },
+            playBuzz() {
+                this.beep(150, 0.15, 'triangle');
+            }
+        };
+
+        // Resume Audio on interaction
+        document.addEventListener('pointerdown', () => {
+            audio.init();
+            if (audio.ctx && audio.ctx.state === 'suspended') {
+                audio.ctx.resume();
+            }
+        }, { once: true });
+
+        // ── Theme adaptation & cached colors ──
+        const screenShades = { bg: '#8b966c', s0: '#8b966c', s1: '#6b7a50', s2: '#4c5b36', s3: '#1f2d1a' };
+        function updateScreenColors() {
+            const rootStyles = getComputedStyle(document.documentElement);
+            screenShades.bg = rootStyles.getPropertyValue('--screen-bg').trim() || '#8b966c';
+            screenShades.s0 = rootStyles.getPropertyValue('--screen-shade-0').trim() || '#8b966c';
+            screenShades.s1 = rootStyles.getPropertyValue('--screen-shade-1').trim() || '#6b7a50';
+            screenShades.s2 = rootStyles.getPropertyValue('--screen-shade-2').trim() || '#4c5b36';
+            screenShades.s3 = rootStyles.getPropertyValue('--screen-shade-3').trim() || '#1f2d1a';
+        }
+        
+        const themeObserver = new MutationObserver(updateScreenColors);
+        themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+        updateScreenColors();
+
+        // ── State Machine ──
+        let gameState = 'boot';
+        let currentGame = null;
+        let menuIndex = 0;
+        let isPaused = false;
+        let isGameOver = false;
+        let score = 0;
+        let animationId;
+        const bootTimers = { t1: null, t2: null, t3: null };
+
+        // ── Boot Sequence ──
+        function runBoot() {
+            gameState = 'boot';
+            const bootScreen = document.getElementById('boot-screen');
+            const bootLogo = document.getElementById('boot-logo');
+            const bootSublogo = document.querySelector('.boot-sublogo');
+            const pwrSwitch = document.getElementById('power-switch-knob');
+            const pwrLed = document.getElementById('battery-led');
+
+            bootScreen.style.display = 'flex';
+            bootScreen.style.opacity = '1';
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('game-canvas').style.display = 'none';
+            document.getElementById('gameover-overlay').style.display = 'none';
+            document.getElementById('screen-hud').style.display = 'none';
+
+            bootLogo.classList.remove('scrolled');
+            bootSublogo.classList.remove('visible');
+
+            bootTimers.t1 = setTimeout(() => {
+                pwrSwitch.classList.add('on');
+                pwrLed.classList.add('lit');
+                bootLogo.classList.add('scrolled');
+            }, 300);
+
+            bootTimers.t2 = setTimeout(() => {
+                audio.playBoot();
+                bootSublogo.classList.add('visible');
+            }, 1800);
+
+            bootTimers.t3 = setTimeout(() => {
+                bootScreen.style.transition = 'opacity 0.4s ease';
+                bootScreen.style.opacity = '0';
+                setTimeout(() => {
+                    bootScreen.style.display = 'none';
+                    if (pendingGame) {
+                        startGame(pendingGame);
+                        pendingGame = null;
+                    } else {
+                        showMenu();
+                    }
+                }, 400);
+            }, 3000);
+        }
+
+        function skipBoot() {
+            if (gameState !== 'boot') return;
+            clearTimeout(bootTimers.t1);
+            clearTimeout(bootTimers.t2);
+            clearTimeout(bootTimers.t3);
+            
+            document.getElementById('power-switch-knob').classList.add('on');
+            document.getElementById('battery-led').classList.add('lit');
+            document.getElementById('boot-screen').style.display = 'none';
+            audio.playBoot();
+            if (pendingGame) {
+                startGame(pendingGame);
+                pendingGame = null;
+            } else {
+                showMenu();
+            }
+        }
+
+        function showMenu() {
+            gameState = 'menu';
+            document.getElementById('menu-screen').style.display = 'flex';
+            document.getElementById('game-canvas').style.display = 'none';
+            document.getElementById('gameover-overlay').style.display = 'none';
+            document.getElementById('screen-hud').style.display = 'none';
+            updateMenuUI();
+        }
+
+        function updateMenuUI() {
+            const options = document.querySelectorAll('.menu-option');
+            options.forEach((opt, idx) => {
+                const cursor = opt.querySelector('.cursor');
+                if (idx === menuIndex) {
+                    opt.classList.add('active');
+                    if (cursor) cursor.innerHTML = '&gt;';
+                } else {
+                    opt.classList.remove('active');
+                    if (cursor) cursor.innerHTML = '&nbsp;';
+                }
+            });
+        }
+
+        function selectMenuOption() {
+            if (menuIndex === 0) {
+                startGame('tetris');
+            } else if (menuIndex === 1) {
+                startGame('snake');
+            } else if (menuIndex === 2) {
+                audio.playSuccess();
+                setTimeout(closeConsole, 400);
+            }
+        }
+
+        function exitToMenu() {
+            currentGame = null;
+            gameState = 'menu';
+            isPaused = false;
+            cancelAnimationFrame(animationId);
+            audio.playBuzz();
+            showMenu();
+        }
+
+        function triggerHaptic() {
+            if (navigator.vibrate) {
+                navigator.vibrate(12);
+            }
+        }
+
+        function getHighScore(game) {
+            return parseInt(localStorage.getItem(`${game}HighScore`) || '0', 10);
+        }
+
+        function setHighScore(game, s) {
+            const high = getHighScore(game);
+            if (s > high) {
+                localStorage.setItem(`${game}HighScore`, s);
+                return s;
+            }
+            return high;
+        }
+
+        function triggerGameOver() {
+            isGameOver = true;
+            gameState = 'gameover';
+            audio.playBuzz();
+            cancelAnimationFrame(animationId);
+            
+            const high = setHighScore(currentGame, score);
+            const goOverlay = document.getElementById('gameover-overlay');
+            goOverlay.style.display = 'flex';
+            
+            document.getElementById('go-score-span').innerText = String(score).padStart(5, '0');
+            document.getElementById('go-high-span').innerText = String(high).padStart(5, '0');
+        }
+
+        function updateScoreDisplay() {
+            document.getElementById('hud-score-val').innerText = String(score).padStart(5, '0');
+        }
+
+        function togglePause() {
+            if (gameState !== 'playing') return;
+            isPaused = !isPaused;
+            audio.playBlip();
+            if (isPaused) {
+                ctx.fillStyle = 'rgba(0,0,0,0.35)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = screenShades.s3;
+                ctx.font = 'bold 16px "JetBrains Mono", monospace';
+                ctx.textAlign = 'center';
+                ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
+            } else {
+                lastTime = performance.now();
+                s_lastTime = performance.now();
+            }
+        }
+
+        // ── Game Booter ──
+        const canvas = document.getElementById('game-canvas');
+        const ctx = canvas.getContext('2d');
 
         function startGame(type) {
             currentGame = type;
-            modal.classList.add('visible');
-            titleEl.innerText = type === 'tetris' ? '// tetris' : '// snake';
-            score = 0;
-            scoreEl.innerText = 'Score: 0';
+            gameState = 'playing';
+            isPaused = false;
             isGameOver = false;
-            gameOverMsg.style.display = 'none';
+            score = 0;
+            
+            audio.playSuccess();
+            
+            document.getElementById('menu-screen').style.display = 'none';
+            document.getElementById('gameover-overlay').style.display = 'none';
+            canvas.style.display = 'block';
+            
+            const hud = document.getElementById('screen-hud');
+            hud.style.display = 'flex';
+            document.getElementById('hud-game-name').innerText = type.toUpperCase();
+            updateScoreDisplay();
+
             cancelAnimationFrame(animationId);
-            if (type === 'tetris') initTetris();
-            else initSnake();
+            if (type === 'tetris') {
+                initTetris();
+            } else {
+                initSnake();
+            }
         }
 
-        // ── TETRIS ──
+        // ── Tetris Engine ──
         let arena, player, dropCounter = 0, dropInterval = 1000, lastTime = 0;
 
         function initTetris() {
             canvas.width = 240; canvas.height = 400;
             ctx.scale(20, 20);
-            arena  = createMatrix(12, 20);
+            arena = [];
+            for (let y = 0; y < 20; y++) arena.push(new Array(12).fill(0));
             player = { pos: { x: 0, y: 0 }, matrix: null };
             playerReset();
+            lastTime = performance.now();
             updateTetris();
-        }
-
-        function createMatrix(w, h) {
-            const m = [];
-            while (h--) m.push(new Array(w).fill(0));
-            return m;
         }
 
         function createPiece(type) {
@@ -591,33 +1832,19 @@ import '../styles/global.css';
         }
 
         function drawMatrix(matrix, offset) {
-            const colors = [
-                null,
-                getVar('--ac',          '#c9a96e'),
-                getVar('--hi',          '#7ba7c2'),
-                getVar('--term-green',  '#28c840'),
-                getVar('--term-yellow', '#febc2e'),
-                getVar('--term-red',    '#ff5f57'),
-                getVar('--tx-1',        '#ede9e0'),
-                getVar('--ac-dim',      '#8a7a65'),
-            ];
             matrix.forEach((row, y) => {
                 row.forEach((value, x) => {
                     if (value !== 0) {
-                        ctx.fillStyle = colors[value];
+                        const shadeIndex = (value % 3) + 1;
+                        ctx.fillStyle = screenShades[`s${shadeIndex}`];
                         ctx.fillRect(x + offset.x, y + offset.y, 1, 1);
-                        ctx.strokeStyle = 'rgba(0,0,0,0.4)';
-                        ctx.lineWidth = 0.05;
+                        
+                        ctx.strokeStyle = screenShades.bg;
+                        ctx.lineWidth = 0.08;
                         ctx.strokeRect(x + offset.x, y + offset.y, 1, 1);
                     }
                 });
             });
-        }
-
-        function merge(arena, player) {
-            player.matrix.forEach((row, y) =>
-                row.forEach((val, x) => { if (val) arena[y + player.pos.y][x + player.pos.x] = val; })
-            );
         }
 
         function collide(arena, player) {
@@ -628,72 +1855,106 @@ import '../styles/global.css';
             return false;
         }
 
+        function merge(arena, player) {
+            player.matrix.forEach((row, y) =>
+                row.forEach((val, x) => { if (val) arena[y + player.pos.y][x + player.pos.x] = val; })
+            );
+        }
+
         function playerDrop() {
             player.pos.y++;
-            if (collide(arena, player)) { player.pos.y--; merge(arena, player); playerReset(); arenaSweep(); }
+            if (collide(arena, player)) {
+                player.pos.y--;
+                merge(arena, player);
+                playerReset();
+                arenaSweep();
+            }
             dropCounter = 0;
         }
 
-        function playerMove(dir) { player.pos.x += dir; if (collide(arena, player)) player.pos.x -= dir; }
+        function playerMove(dir) {
+            player.pos.x += dir;
+            if (collide(arena, player)) player.pos.x -= dir;
+            else audio.playBlip();
+        }
 
         function playerReset() {
             const pieces = 'ILJOTSZ';
             player.matrix = createPiece(pieces[pieces.length * Math.random() | 0]);
             player.pos.y  = 0;
             player.pos.x  = (arena[0].length / 2 | 0) - (player.matrix[0].length / 2 | 0);
-            if (collide(arena, player)) { isGameOver = true; gameOverMsg.style.display = 'block'; }
+            if (collide(arena, player)) {
+                triggerGameOver();
+            }
         }
 
         function playerRotate(dir) {
             const pos = player.pos.x;
             let offset = 1;
-            rotate(player.matrix, dir);
+            const m = player.matrix;
+            for (let y = 0; y < m.length; ++y) {
+                for (let x = 0; x < y; ++x) {
+                    [m[x][y], m[y][x]] = [m[y][x], m[x][y]];
+                }
+            }
+            if (dir > 0) m.forEach(row => row.reverse()); else m.reverse();
+
             while (collide(arena, player)) {
                 player.pos.x += offset;
                 offset = -(offset + (offset > 0 ? 1 : -1));
-                if (offset > player.matrix[0].length) { rotate(player.matrix, -dir); player.pos.x = pos; return; }
+                if (offset > m[0].length) {
+                    if (dir > 0) m.forEach(row => row.reverse()); else m.reverse();
+                    for (let y = 0; y < m.length; ++y) {
+                        for (let x = 0; x < y; ++x) {
+                            [m[x][y], m[y][x]] = [m[y][x], m[x][y]];
+                        }
+                    }
+                    player.pos.x = pos;
+                    return;
+                }
             }
-        }
-
-        function rotate(matrix, dir) {
-            for (let y = 0; y < matrix.length; ++y)
-                for (let x = 0; x < y; ++x)
-                    [matrix[x][y], matrix[y][x]] = [matrix[y][x], matrix[x][y]];
-            if (dir > 0) matrix.forEach(row => row.reverse()); else matrix.reverse();
+            audio.playBlip();
         }
 
         function arenaSweep() {
             let rowCount = 1;
             outer: for (let y = arena.length - 1; y >= 0; --y) {
-                for (let x = 0; x < arena[y].length; ++x) if (arena[y][x] === 0) continue outer;
+                for (let x = 0; x < arena[y].length; ++x) {
+                    if (arena[y][x] === 0) continue outer;
+                }
                 const row = arena.splice(y, 1)[0].fill(0);
-                arena.unshift(row); ++y;
-                score += rowCount * 10; rowCount *= 2;
-                scoreEl.innerText = `Score: ${score}`;
-                dropInterval = Math.max(100, 1000 - score * 2);
+                arena.unshift(row);
+                ++y;
+                score += rowCount * 10;
+                rowCount *= 2;
+                updateScoreDisplay();
+                audio.playSuccess();
+                dropInterval = Math.max(100, 1000 - score * 2.5);
             }
         }
 
         function updateTetris(time = 0) {
-            if (currentGame !== 'tetris') return;
-            if (!isGameOver) {
+            if (currentGame !== 'tetris' || isGameOver || gameState !== 'playing') return;
+            
+            if (!isPaused) {
                 const dt = time - lastTime; lastTime = time;
                 dropCounter += dt;
                 if (dropCounter > dropInterval) playerDrop();
-                ctx.fillStyle = getVar('--bg', '#06060a');
+                
+                ctx.fillStyle = screenShades.bg;
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
                 drawMatrix(arena, { x: 0, y: 0 });
                 drawMatrix(player.matrix, player.pos);
             }
             animationId = requestAnimationFrame(updateTetris);
         }
 
-        // ── SNAKE ──
-        let s_snake, s_food, s_dx, s_dy;
+        // ── Snake Engine ──
+        let s_snake, s_food, s_dx, s_dy, s_lastTime = 0;
         const S_GRID = 10;
-        const S_COLS = 240 / S_GRID;
-        const S_ROWS = 400 / S_GRID;
-        let s_lastTime = 0;
+        const S_COLS = 24;
+        const S_ROWS = 40;
 
         function initSnake() {
             canvas.width = 240; canvas.height = 400;
@@ -701,59 +1962,232 @@ import '../styles/global.css';
             s_snake = [{ x: 12, y: 20 }, { x: 12, y: 21 }, { x: 12, y: 22 }];
             s_dx = 0; s_dy = -1;
             placeFood();
+            s_lastTime = performance.now();
             updateSnake();
         }
 
         function placeFood() {
-            s_food = { x: Math.floor(Math.random() * S_COLS), y: Math.floor(Math.random() * S_ROWS) };
+            s_food = {
+                x: Math.floor(Math.random() * S_COLS),
+                y: Math.floor(Math.random() * S_ROWS)
+            };
+            if (s_snake.some(seg => seg.x === s_food.x && seg.y === s_food.y)) {
+                placeFood();
+            }
         }
 
         function updateSnake(time = 0) {
-            if (currentGame !== 'snake') return;
-            if (!isGameOver) {
-                if (time - s_lastTime > 100) {
+            if (currentGame !== 'snake' || isGameOver || gameState !== 'playing') return;
+
+            if (!isPaused) {
+                if (time - s_lastTime > 120) {
                     s_lastTime = time;
                     const head = { x: s_snake[0].x + s_dx, y: s_snake[0].y + s_dy };
+                    
                     if (head.x < 0 || head.x >= S_COLS || head.y < 0 || head.y >= S_ROWS ||
                         s_snake.some(seg => seg.x === head.x && seg.y === head.y)) {
-                        isGameOver = true; gameOverMsg.style.display = 'block';
-                    } else {
-                        s_snake.unshift(head);
-                        if (head.x === s_food.x && head.y === s_food.y) {
-                            score += 10; scoreEl.innerText = `Score: ${score}`; placeFood();
-                        } else { s_snake.pop(); }
+                        triggerGameOver();
+                        return;
                     }
-                    ctx.fillStyle = getVar('--bg', '#06060a');
+                    
+                    s_snake.unshift(head);
+                    if (head.x === s_food.x && head.y === s_food.y) {
+                        score += 10;
+                        updateScoreDisplay();
+                        placeFood();
+                        audio.playSuccess();
+                    } else {
+                        s_snake.pop();
+                    }
+                    
+                    ctx.fillStyle = screenShades.bg;
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
-                    ctx.fillStyle = getVar('--ac', '#c9a96e');
+                    
+                    // Food
+                    ctx.fillStyle = screenShades.s3;
                     ctx.fillRect(s_food.x * S_GRID, s_food.y * S_GRID, S_GRID, S_GRID);
+                    ctx.fillStyle = screenShades.bg;
+                    ctx.fillRect(s_food.x * S_GRID + 2, s_food.y * S_GRID + 2, S_GRID - 4, S_GRID - 4);
+                    ctx.fillStyle = screenShades.s3;
+                    ctx.fillRect(s_food.x * S_GRID + 3, s_food.y * S_GRID + 3, S_GRID - 6, S_GRID - 6);
+                    
+                    // Snake
                     s_snake.forEach((seg, i) => {
-                        ctx.fillStyle = i === 0
-                            ? getVar('--tx-1', '#ede9e0')
-                            : getVar('--ac-dim', 'rgba(201,169,110,.45)');
-                        ctx.fillRect(seg.x * S_GRID, seg.y * S_GRID, S_GRID - 1, S_GRID - 1);
+                        if (i === 0) {
+                            ctx.fillStyle = screenShades.s3;
+                            ctx.fillRect(seg.x * S_GRID, seg.y * S_GRID, S_GRID, S_GRID);
+                            ctx.fillStyle = screenShades.bg;
+                            if (s_dy !== 0) {
+                                ctx.fillRect(seg.x * S_GRID + 2, seg.y * S_GRID + 4, 2, 2);
+                                ctx.fillRect(seg.x * S_GRID + 6, seg.y * S_GRID + 4, 2, 2);
+                            } else {
+                                ctx.fillRect(seg.x * S_GRID + 4, seg.y * S_GRID + 2, 2, 2);
+                                ctx.fillRect(seg.x * S_GRID + 4, seg.y * S_GRID + 6, 2, 2);
+                            }
+                        } else {
+                            ctx.fillStyle = screenShades.s2;
+                            ctx.fillRect(seg.x * S_GRID + 1, seg.y * S_GRID + 1, S_GRID - 2, S_GRID - 2);
+                            ctx.strokeStyle = screenShades.s3;
+                            ctx.lineWidth = 0.5;
+                            ctx.strokeRect(seg.x * S_GRID + 1, seg.y * S_GRID + 1, S_GRID - 2, S_GRID - 2);
+                        }
                     });
                 }
             }
             animationId = requestAnimationFrame(updateSnake);
         }
 
-        // ── Controls ──
-        document.addEventListener('keydown', e => {
-            if (!modal.classList.contains('visible')) return;
-            if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
-            if (isGameOver && e.key === ' ') { startGame(currentGame); return; }
-            if (currentGame === 'tetris') {
-                if      (e.key === 'ArrowLeft'  || e.key === 'a') playerMove(-1);
-                else if (e.key === 'ArrowRight' || e.key === 'd') playerMove(1);
-                else if (e.key === 'ArrowDown'  || e.key === 's') playerDrop();
-                else if (e.key === 'ArrowUp'    || e.key === 'w') playerRotate(1);
-            } else if (currentGame === 'snake') {
-                if      ((e.key === 'ArrowLeft'  || e.key === 'a') && s_dx !==  1) { s_dx = -1; s_dy =  0; }
-                else if ((e.key === 'ArrowRight' || e.key === 'd') && s_dx !== -1) { s_dx =  1; s_dy =  0; }
-                else if ((e.key === 'ArrowUp'    || e.key === 'w') && s_dy !==  1) { s_dx =  0; s_dy = -1; }
-                else if ((e.key === 'ArrowDown'  || e.key === 's') && s_dy !== -1) { s_dx =  0; s_dy =  1; }
+        // ── Input & Action Handler ──
+        let repeatTimeout = null;
+        let repeatInterval = null;
+
+        function handleActionStart(action) {
+            if (gameState === 'boot') {
+                skipBoot();
+                return;
             }
+            
+            if (gameState === 'menu') {
+                if (action === 'UP') {
+                    menuIndex = (menuIndex - 1 + 3) % 3;
+                    updateMenuUI();
+                    audio.playBlip();
+                } else if (action === 'DOWN') {
+                    menuIndex = (menuIndex + 1) % 3;
+                    updateMenuUI();
+                    audio.playBlip();
+                } else if (action === 'A' || action === 'START') {
+                    selectMenuOption();
+                } else if (action === 'SELECT' || action === 'B') {
+                    audio.playBuzz();
+                    closeConsole();
+                }
+                return;
+            }
+
+            if (gameState === 'gameover') {
+                if (action === 'A' || action === 'START') {
+                    startGame(currentGame);
+                } else if (action === 'B' || action === 'SELECT') {
+                    exitToMenu();
+                }
+                return;
+            }
+
+            if (gameState === 'playing') {
+                if (currentGame === 'tetris') {
+                    if (action === 'LEFT') {
+                        playerMove(-1);
+                        startAutoRepeat('LEFT');
+                    } else if (action === 'RIGHT') {
+                        playerMove(1);
+                        startAutoRepeat('RIGHT');
+                    } else if (action === 'DOWN') {
+                        playerDrop();
+                        startAutoRepeat('DOWN');
+                    } else if (action === 'A' || action === 'UP') {
+                        playerRotate(1);
+                    } else if (action === 'B') {
+                        playerRotate(-1);
+                    } else if (action === 'SELECT') {
+                        exitToMenu();
+                    } else if (action === 'START') {
+                        togglePause();
+                    }
+                } else if (currentGame === 'snake') {
+                    if (action === 'UP' && s_dy !== 1) {
+                        s_dx = 0; s_dy = -1; audio.playBlip();
+                    } else if (action === 'DOWN' && s_dy !== -1) {
+                        s_dx = 0; s_dy = 1; audio.playBlip();
+                    } else if (action === 'LEFT' && s_dx !== 1) {
+                        s_dx = -1; s_dy = 0; audio.playBlip();
+                    } else if (action === 'RIGHT' && s_dx !== -1) {
+                        s_dx = 1; s_dy = 0; audio.playBlip();
+                    } else if (action === 'SELECT') {
+                        exitToMenu();
+                    } else if (action === 'START') {
+                        togglePause();
+                    }
+                }
+            }
+        }
+
+        function handleActionEnd(action) {
+            if (action === 'LEFT' || action === 'RIGHT' || action === 'DOWN') {
+                clearAutoRepeat();
+            }
+        }
+
+        function startAutoRepeat(direction) {
+            clearAutoRepeat();
+            repeatTimeout = setTimeout(() => {
+                repeatInterval = setInterval(() => {
+                    if (gameState !== 'playing' || isPaused) {
+                        clearAutoRepeat();
+                        return;
+                    }
+                    if (direction === 'LEFT') playerMove(-1);
+                    else if (direction === 'RIGHT') playerMove(1);
+                    else if (direction === 'DOWN') playerDrop();
+                }, 80);
+            }, 220);
+        }
+
+        function clearAutoRepeat() {
+            clearTimeout(repeatTimeout);
+            clearInterval(repeatInterval);
+        }
+
+        // ── Keyboard Binding ──
+        const keyMap = {
+            'ArrowUp': 'UP', 'ArrowDown': 'DOWN', 'ArrowLeft': 'LEFT', 'ArrowRight': 'RIGHT',
+            'w': 'UP', 's': 'DOWN', 'a': 'LEFT', 'd': 'RIGHT',
+            'W': 'UP', 'S': 'DOWN', 'A': 'LEFT', 'D': 'RIGHT',
+            ' ': 'A', 'Enter': 'A', 'z': 'A', 'Z': 'A',
+            'x': 'B', 'X': 'B', 'Escape': 'B', 'Backspace': 'B',
+            'p': 'START', 'P': 'START', 'c': 'SELECT', 'C': 'SELECT'
+        };
+
+        document.addEventListener('keydown', e => {
+            if (document.activeElement && ['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) return;
+            const action = keyMap[e.key];
+            if (action) {
+                if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
+                    e.preventDefault();
+                }
+                const btn = document.querySelector(`[data-action="${action}"]`);
+                if (btn) btn.classList.add('pressed');
+                handleActionStart(action);
+            }
+        });
+
+        document.addEventListener('keyup', e => {
+            const action = keyMap[e.key];
+            if (action) {
+                const btn = document.querySelector(`[data-action="${action}"]`);
+                if (btn) btn.classList.remove('pressed');
+                handleActionEnd(action);
+            }
+        });
+
+        // ── Hardware Button Pointer Event Mappings ──
+        document.querySelectorAll('.dpad-btn, .action-btn, .menu-btn').forEach(btn => {
+            btn.addEventListener('pointerdown', e => {
+                e.preventDefault();
+                triggerHaptic();
+                btn.classList.add('pressed');
+                const action = btn.getAttribute('data-action');
+                if (action) handleActionStart(action);
+            });
+            
+            const release = () => {
+                btn.classList.remove('pressed');
+                const action = btn.getAttribute('data-action');
+                if (action) handleActionEnd(action);
+            };
+            btn.addEventListener('pointerup', release);
+            btn.addEventListener('pointerleave', release);
+            btn.addEventListener('pointercancel', release);
         });
 
         // ── Particle System ──
