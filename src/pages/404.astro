@@ -8,7 +8,7 @@ import '../styles/global.css';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>404 — Page Not Found</title>
-    <meta name="description" content="The page you're looking for has been abducted. Return to base or play retro games.">
+    <meta name="description" content="The page you're looking for has been abducted. Return to base or play retro games in the Funzone.">
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/svg+xml" sizes="any" href="/favicon.svg" />
@@ -400,7 +400,7 @@ import '../styles/global.css';
             mix-blend-mode: overlay;
         }
 
-        /* Top switch */
+        /* Top edge power switch */
         .console-top-edge {
             height: 18px;
             display: flex;
@@ -1200,9 +1200,8 @@ import '../styles/global.css';
         <div class="rule"></div>
         <p class="subtitle">You've drifted into uncharted space. This page doesn't exist.</p>
         <div class="actions">
-            <button class="btn btn-secondary" id="btn-tetris">Play Tetris</button>
-            <button class="btn btn-secondary" id="btn-snake">Play Snake</button>
             <a href="/" class="btn btn-primary" id="home-btn">Return to Base</a>
+            <button class="btn btn-secondary" id="btn-funzone">Enter Funzone</button>
         </div>
     </div>
 
@@ -1320,6 +1319,9 @@ import '../styles/global.css';
                                         <span class="cursor">&nbsp;</span> SNAKE
                                     </div>
                                     <div class="menu-option" data-index="2">
+                                        <span class="cursor">&nbsp;</span> INVADERS
+                                    </div>
+                                    <div class="menu-option" data-index="3">
                                         <span class="cursor">&nbsp;</span> RETURN BASE
                                     </div>
                                 </div>
@@ -1539,8 +1541,7 @@ import '../styles/global.css';
             }, 450);
         }
 
-        document.getElementById('btn-tetris').addEventListener('click', () => openConsole('tetris'));
-        document.getElementById('btn-snake').addEventListener('click', () => openConsole('snake'));
+        document.getElementById('btn-funzone').addEventListener('click', () => openConsole());
 
         // ── Web Audio Synthesizer ──
         const audio = {
@@ -1709,6 +1710,8 @@ import '../styles/global.css';
             } else if (menuIndex === 1) {
                 startGame('snake');
             } else if (menuIndex === 2) {
+                startGame('invaders');
+            } else if (menuIndex === 3) {
                 audio.playSuccess();
                 setTimeout(closeConsole, 400);
             }
@@ -1802,8 +1805,10 @@ import '../styles/global.css';
             cancelAnimationFrame(animationId);
             if (type === 'tetris') {
                 initTetris();
-            } else {
+            } else if (type === 'snake') {
                 initSnake();
+            } else if (type === 'invaders') {
+                initInvaders();
             }
         }
 
@@ -2037,6 +2042,174 @@ import '../styles/global.css';
             animationId = requestAnimationFrame(updateSnake);
         }
 
+        // ── Space Invaders Engine ──
+        let playerX = 120;
+        let bullets = [];
+        let invaders = [];
+        let invaderDir = 1;
+        let invaderSpeedX = 0.6;
+        let invaderSpeedY = 15;
+        let laserCooldown = 0;
+        let keysPressed = { LEFT: false, RIGHT: false };
+
+        function initInvaders() {
+            canvas.width = 240; canvas.height = 400;
+            ctx.setTransform(1, 0, 0, 1, 0, 0); // reset scale
+            
+            playerX = 120;
+            bullets = [];
+            invaders = [];
+            invaderDir = 1;
+            invaderSpeedX = 0.6;
+            laserCooldown = 0;
+            keysPressed = { LEFT: false, RIGHT: false };
+            
+            spawnInvadersWave();
+            
+            s_lastTime = performance.now();
+            updateInvaders();
+        }
+
+        function spawnInvadersWave() {
+            invaders = [];
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 5; col++) {
+                    invaders.push({
+                        x: 40 + col * 35,
+                        y: 50 + row * 25,
+                        width: 16,
+                        height: 10,
+                        alive: true
+                    });
+                }
+            }
+        }
+
+        function fireLaser() {
+            if (currentGame !== 'invaders' || isPaused || isGameOver) return;
+            if (laserCooldown <= 0) {
+                bullets.push({
+                    x: playerX,
+                    y: 360,
+                    active: true
+                });
+                laserCooldown = 250; // 250ms shot delay
+                audio.beep(600, 0.08, 'sine');
+            }
+        }
+
+        function updateInvaders(time = 0) {
+            if (currentGame !== 'invaders' || isGameOver || gameState !== 'playing') return;
+            
+            if (!isPaused) {
+                // Smooth movement
+                if (keysPressed.LEFT) {
+                    playerX = Math.max(15, playerX - 3);
+                }
+                if (keysPressed.RIGHT) {
+                    playerX = Math.min(225, playerX + 3);
+                }
+                
+                // Cooldown ticker
+                if (laserCooldown > 0) {
+                    laserCooldown -= 16.67; // ~60fps
+                }
+                
+                // Lasers updates
+                bullets.forEach(b => {
+                    if (b.active) {
+                        b.y -= 5;
+                        if (b.y < 0) {
+                            b.active = false;
+                        }
+                        
+                        // Collision lasers vs invaders
+                        invaders.forEach(inv => {
+                            if (inv.alive && b.active) {
+                                const hitX = b.x >= inv.x - 8 && b.x <= inv.x + 8;
+                                const hitY = b.y >= inv.y - 5 && b.y <= inv.y + 5;
+                                if (hitX && hitY) {
+                                    inv.alive = false;
+                                    b.active = false;
+                                    score += 10;
+                                    updateScoreDisplay();
+                                    audio.beep(250, 0.08, 'triangle');
+                                }
+                            }
+                        });
+                    }
+                });
+                bullets = bullets.filter(b => b.active);
+                
+                // Invaders updates
+                let hitWall = false;
+                invaders.forEach(inv => {
+                    if (inv.alive) {
+                        inv.x += invaderSpeedX * invaderDir;
+                        if (inv.x < 15 || inv.x > 225) {
+                            hitWall = true;
+                        }
+                    }
+                });
+                
+                if (hitWall) {
+                    invaderDir *= -1;
+                    invaders.forEach(inv => {
+                        if (inv.alive) {
+                            inv.y += invaderSpeedY;
+                            if (inv.y >= 355) {
+                                triggerGameOver();
+                            }
+                        }
+                    });
+                }
+                
+                // Re-spawn wave
+                if (invaders.every(inv => !inv.alive)) {
+                    invaderSpeedX += 0.25;
+                    spawnInvadersWave();
+                    audio.playSuccess();
+                }
+                
+                // Drawing frame
+                ctx.fillStyle = screenShades.bg;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw player ship
+                ctx.fillStyle = screenShades.s3;
+                ctx.fillRect(playerX - 10, 370, 20, 8);
+                ctx.fillRect(playerX - 3, 364, 6, 6);
+                ctx.fillRect(playerX - 7, 378, 3, 3);
+                ctx.fillRect(playerX + 4, 378, 3, 3);
+                
+                // Draw bullets
+                ctx.fillStyle = screenShades.s3;
+                bullets.forEach(b => {
+                    ctx.fillRect(b.x - 1, b.y, 2, 6);
+                });
+                
+                // Draw invaders
+                invaders.forEach(inv => {
+                    if (inv.alive) {
+                        ctx.fillStyle = screenShades.s2;
+                        ctx.fillRect(inv.x - 8, inv.y - 5, 16, 10);
+                        
+                        ctx.fillStyle = screenShades.s3;
+                        ctx.fillRect(inv.x - 6, inv.y - 7, 2, 2);
+                        ctx.fillRect(inv.x + 4, inv.y - 7, 2, 2);
+                        ctx.fillRect(inv.x - 8, inv.y + 5, 2, 2);
+                        ctx.fillRect(inv.x + 6, inv.y + 5, 2, 2);
+                        
+                        ctx.fillStyle = screenShades.bg;
+                        ctx.fillRect(inv.x - 4, inv.y - 2, 2, 2);
+                        ctx.fillRect(inv.x + 2, inv.y - 2, 2, 2);
+                    }
+                });
+            }
+            
+            animationId = requestAnimationFrame(updateInvaders);
+        }
+
         // ── Input & Action Handler ──
         let repeatTimeout = null;
         let repeatInterval = null;
@@ -2049,11 +2222,11 @@ import '../styles/global.css';
             
             if (gameState === 'menu') {
                 if (action === 'UP') {
-                    menuIndex = (menuIndex - 1 + 3) % 3;
+                    menuIndex = (menuIndex - 1 + 4) % 4;
                     updateMenuUI();
                     audio.playBlip();
                 } else if (action === 'DOWN') {
-                    menuIndex = (menuIndex + 1) % 3;
+                    menuIndex = (menuIndex + 1) % 4;
                     updateMenuUI();
                     audio.playBlip();
                 } else if (action === 'A' || action === 'START') {
@@ -2108,6 +2281,18 @@ import '../styles/global.css';
                     } else if (action === 'START') {
                         togglePause();
                     }
+                } else if (currentGame === 'invaders') {
+                    if (action === 'LEFT') {
+                        keysPressed.LEFT = true;
+                    } else if (action === 'RIGHT') {
+                        keysPressed.RIGHT = true;
+                    } else if (action === 'A' || action === 'UP') {
+                        fireLaser();
+                    } else if (action === 'SELECT') {
+                        exitToMenu();
+                    } else if (action === 'START') {
+                        togglePause();
+                    }
                 }
             }
         }
@@ -2115,6 +2300,13 @@ import '../styles/global.css';
         function handleActionEnd(action) {
             if (action === 'LEFT' || action === 'RIGHT' || action === 'DOWN') {
                 clearAutoRepeat();
+            }
+            if (currentGame === 'invaders') {
+                if (action === 'LEFT') {
+                    keysPressed.LEFT = false;
+                } else if (action === 'RIGHT') {
+                    keysPressed.RIGHT = false;
+                }
             }
         }
 
