@@ -339,20 +339,18 @@ import '../styles/global.css';
             display: none;
             justify-content: center;
             align-items: center;
-            padding: 2rem;
+            padding: 1rem;
             box-sizing: border-box;
             opacity: 0;
             overflow: hidden;
-            transform: scale(0.95);
-            transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+            transition: opacity 0.5s var(--ease);
         }
 
         .console-wrapper.visible {
             opacity: 1;
-            transform: scale(1);
         }
 
-        /* Scale Wrapper Card (Solves PC Layout Box Clipping) */
+        /* Scale Wrapper Card (JS sets dynamic width/height to center and scale console shell) */
         .console-scale-card {
             width: 390px;
             height: 720px;
@@ -361,6 +359,7 @@ import '../styles/global.css';
             align-items: center;
             position: relative;
             flex-shrink: 0;
+            overflow: visible;
         }
 
         /* The Handheld Device Casing */
@@ -380,7 +379,6 @@ import '../styles/global.css';
                 inset 0 -4px 6px rgba(0, 0, 0, 0.4),
                 0 0 40px var(--shell-glow);
             position: absolute;
-            overflow: hidden;
             width: 390px;
             height: 720px;
             padding: 24px;
@@ -388,6 +386,7 @@ import '../styles/global.css';
             box-sizing: border-box;
             user-select: none;
             -webkit-user-select: none;
+            flex-shrink: 0;
         }
 
         /* PCB traces behind plastic */
@@ -400,7 +399,7 @@ import '../styles/global.css';
             mix-blend-mode: overlay;
         }
 
-        /* Top edge power switch */
+        /* Top switch and label */
         .console-top-edge {
             height: 18px;
             display: flex;
@@ -448,11 +447,11 @@ import '../styles/global.css';
             letter-spacing: 0.5px;
         }
 
-        /* Screen Bezel */
+        /* Screen Bezel (horizontal padding increased to 36px to give controls breathing room) */
         .screen-bezel {
             background: #25262a;
             border-radius: 8px 8px 32px 8px;
-            padding: 16px 28px 12px 28px;
+            padding: 16px 36px 12px 36px;
             display: flex;
             flex-direction: column;
             width: 100%;
@@ -477,7 +476,7 @@ import '../styles/global.css';
             align-items: center;
             gap: 4px;
             position: absolute;
-            left: -12px;
+            left: -18px;
             top: 50%;
             transform: translateY(-50%);
         }
@@ -900,8 +899,8 @@ import '../styles/global.css';
             background: #9c1f38;
             border: 2.5px solid #000;
             box-shadow: 
-                inset 0 2px 2px rgba(255,255,255,0.22),
-                0 4px 6px rgba(0,0,0,0.6);
+                inset 0 2px 2px rgba(255, 255, 255, 0.22),
+                0 4px 6px rgba(0, 0, 0, 0.6);
             cursor: pointer;
             touch-action: none;
             position: relative;
@@ -1008,178 +1007,6 @@ import '../styles/global.css';
             letter-spacing: 0.5px;
         }
 
-        /* ── Scale Card layout updates for PC viewport height ── */
-        @media (min-width: 769px) and (max-height: 780px) {
-            .console-scale-card {
-                width: 351px;
-                height: 648px;
-            }
-            .gameboy-console {
-                transform: scale(0.9);
-                transform-origin: center center;
-            }
-        }
-        @media (min-width: 769px) and (max-height: 700px) {
-            .console-scale-card {
-                width: 312px;
-                height: 576px;
-            }
-            .gameboy-console {
-                transform: scale(0.8);
-                transform-origin: center center;
-            }
-        }
-        @media (min-width: 769px) and (max-height: 620px) {
-            .console-scale-card {
-                width: 273px;
-                height: 504px;
-            }
-            .gameboy-console {
-                transform: scale(0.7);
-                transform-origin: center center;
-            }
-        }
-        @media (min-width: 769px) and (max-height: 540px) {
-            .console-scale-card {
-                width: 234px;
-                height: 432px;
-            }
-            .gameboy-console {
-                transform: scale(0.6);
-                transform-origin: center center;
-            }
-        }
-        @media (min-width: 769px) and (max-height: 460px) {
-            .console-scale-card {
-                width: 195px;
-                height: 360px;
-            }
-            .gameboy-console {
-                transform: scale(0.5);
-                transform-origin: center center;
-            }
-        }
-
-        /* ── Mobile Layout ── */
-        @media (max-width: 768px) {
-            .console-wrapper {
-                padding: 0;
-            }
-
-            .console-scale-card {
-                width: 100%;
-                height: 100%;
-            }
-
-            .gameboy-console {
-                width: 100%;
-                height: 100%;
-                border: none;
-                border-radius: 0;
-                padding: 16px 16px calc(16px + env(safe-area-inset-bottom)) 16px;
-                box-shadow: none;
-                backdrop-filter: none;
-                justify-content: space-between;
-                position: relative;
-            }
-
-            .console-top-edge {
-                margin-bottom: 4px;
-            }
-
-            .screen-bezel {
-                padding: 12px 18px 10px 18px;
-            }
-
-            /* Large ergonomic mobile controls */
-            .console-controls {
-                margin-top: auto;
-                padding-bottom: 30px;
-                flex: 1;
-                justify-content: space-around;
-            }
-
-            .controls-row-top {
-                padding: 0 12px;
-            }
-
-            .dpad {
-                width: 135px;
-                height: 135px;
-            }
-
-            .dpad-btn.up {
-                top: 0; left: 45px; width: 45px; height: 52px;
-            }
-            .dpad-btn.up::after {
-                font-size: 10px; top: 3px;
-            }
-            .dpad-btn.down {
-                bottom: 0; left: 45px; width: 45px; height: 52px;
-            }
-            .dpad-btn.down::after {
-                font-size: 10px; bottom: 3px;
-            }
-            .dpad-btn.left {
-                top: 45px; left: 0; width: 52px; height: 45px;
-            }
-            .dpad-btn.left::after {
-                font-size: 10px; left: 4px;
-            }
-            .dpad-btn.right {
-                top: 45px; right: 0; width: 52px; height: 45px;
-            }
-            .dpad-btn.right::after {
-                font-size: 10px; right: 4px;
-            }
-            .dpad-center {
-                top: 45px; left: 45px; width: 45px; height: 45px;
-            }
-            .dpad-center::after {
-                top: 8px; left: 8px; width: 29px; height: 29px;
-            }
-
-            .action-btn {
-                width: 58px;
-                height: 58px;
-                border-width: 3px;
-            }
-
-            .buttons-container {
-                gap: 20px;
-            }
-
-            .btn-label {
-                font-size: 13px;
-                margin-top: 4px;
-            }
-
-            .menu-buttons {
-                gap: 28px;
-            }
-
-            .menu-btn {
-                width: 58px;
-                height: 13px;
-                border-width: 2.5px;
-            }
-
-            .menu-btn-label {
-                font-size: 9px;
-                margin-top: 3px;
-            }
-
-            .speaker-grille {
-                right: 20px;
-                bottom: -20px;
-            }
-            
-            .speaker-slot {
-                height: 36px;
-                width: 5px;
-            }
-        }
-
         @media (max-width: 480px) {
             h1 { font-size: 6rem; }
             .actions { flex-direction: column; align-items: stretch; }
@@ -1249,7 +1076,7 @@ import '../styles/global.css';
 
     <!-- The Handheld Console Wrapper -->
     <div class="console-wrapper">
-        <!-- Layout card scaling -->
+        <!-- Layout card scaling wrapper -->
         <div class="console-scale-card">
             <div class="gameboy-console">
                 <!-- PCB overlay background -->
@@ -1408,6 +1235,34 @@ import '../styles/global.css';
     </div>
 
     <script>
+        // ── Proportional Scale Resizing Logic (Unified PC & Mobile) ──
+        function resizeConsole() {
+            const consoleEl = document.querySelector('.gameboy-console');
+            const scaleCard = document.querySelector('.console-scale-card');
+            if (!consoleEl || !scaleCard) return;
+            
+            const targetW = 390;
+            const targetH = 720;
+            
+            // Padding buffer around console
+            const padding = window.innerWidth <= 768 ? 10 : 28;
+            const maxW = window.innerWidth - padding * 2;
+            const maxH = window.innerHeight - padding * 2;
+            
+            // Calculate scale to fit console fully inside width & height
+            const scale = Math.min(maxW / targetW, maxH / targetH);
+            
+            consoleEl.style.transform = `scale(${scale})`;
+            consoleEl.style.transformOrigin = 'center center';
+            
+            scaleCard.style.width = `${targetW * scale}px`;
+            scaleCard.style.height = `${targetH * scale}px`;
+        }
+
+        window.addEventListener('resize', resizeConsole);
+        window.addEventListener('load', resizeConsole);
+        document.addEventListener('DOMContentLoaded', resizeConsole);
+
         // ── Stars System ──
         const starsContainer = document.getElementById('stars-container');
         for (let i = 0; i < 70; i++) {
@@ -1486,6 +1341,7 @@ import '../styles/global.css';
 
         document.addEventListener('mouseup', () => {
             document.body.classList.remove('beaming');
+            if (isAbacting) return;
             if (isAbducting) {
                 document.body.classList.remove('abducting');
                 isAbducting = false;
@@ -1513,6 +1369,7 @@ import '../styles/global.css';
                 consoleWrapper.classList.add('visible');
                 
                 pendingGame = game;
+                resizeConsole(); // Recalculate scaling immediately when layout turns on
                 runBoot();
             }, 450);
         }
@@ -1759,6 +1616,7 @@ import '../styles/global.css';
             document.getElementById('go-high-span').innerText = String(high).padStart(5, '0');
         }
 
+        // HUD and pause
         function updateScoreDisplay() {
             document.getElementById('hud-score-val').innerText = String(score).padStart(5, '0');
         }
