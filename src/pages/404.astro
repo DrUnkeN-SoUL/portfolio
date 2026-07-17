@@ -1362,7 +1362,6 @@ import '../styles/global.css';
 
         document.addEventListener('mouseup', () => {
             document.body.classList.remove('beaming');
-            if (isAbacting) return;
             if (isAbducting) {
                 document.body.classList.remove('abducting');
                 isAbducting = false;
