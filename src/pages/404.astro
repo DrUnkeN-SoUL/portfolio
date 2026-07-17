@@ -1016,11 +1016,130 @@ import '../styles/global.css';
             .btn { justify-content: center; }
         }
 
+        /* ── Mobile: Full-Screen Gamepad Mode ── */
         @media (max-width: 768px) {
             .console-wrapper {
-                align-items: flex-start !important;
-                padding: 10px 4px 4px 4px !important;
-                padding-top: max(12px, env(safe-area-inset-top)) !important;
+                padding: 0 !important;
+                align-items: stretch !important;
+            }
+
+            .console-scale-card {
+                width: 100% !important;
+                height: 100% !important;
+            }
+
+            .gameboy-console {
+                position: relative !important;
+                width: 100% !important;
+                height: 100% !important;
+                border: none !important;
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                background-image: none !important;
+                transform: none !important;
+            }
+
+            /* Hide all decorative shell elements */
+            .console-pcb,
+            .console-top-edge,
+            .bezel-header,
+            .bezel-footer,
+            .speaker-grille,
+            .console-bottom-edge {
+                display: none !important;
+            }
+
+            /* Screen bezel becomes a simple container */
+            .screen-bezel {
+                border-radius: 0 !important;
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                flex: 1;
+                min-height: 0;
+            }
+
+            /* Screen fills the top portion */
+            .screen-display {
+                aspect-ratio: unset !important;
+                border-radius: 0 !important;
+                border-width: 0 0 3px 0 !important;
+                flex: 1;
+            }
+
+            /* Controls fill the bottom portion */
+            .console-controls {
+                margin-top: 0 !important;
+                padding: 16px 20px !important;
+                padding-bottom: calc(16px + env(safe-area-inset-bottom)) !important;
+                gap: 14px !important;
+                background: var(--shell-color);
+                flex-shrink: 0;
+            }
+
+            .controls-row-top {
+                padding: 0 8px;
+            }
+
+            /* Large D-pad */
+            .dpad {
+                width: 120px !important;
+                height: 120px !important;
+            }
+
+            .dpad-btn.up {
+                top: 0; left: 40px; width: 40px; height: 46px;
+            }
+            .dpad-btn.up::after { font-size: 12px; top: 4px; }
+            .dpad-btn.down {
+                bottom: 0; left: 40px; width: 40px; height: 46px;
+            }
+            .dpad-btn.down::after { font-size: 12px; bottom: 4px; }
+            .dpad-btn.left {
+                top: 40px; left: 0; width: 46px; height: 40px;
+            }
+            .dpad-btn.left::after { font-size: 12px; left: 5px; }
+            .dpad-btn.right {
+                top: 40px; right: 0; width: 46px; height: 40px;
+            }
+            .dpad-btn.right::after { font-size: 12px; right: 5px; }
+            .dpad-center {
+                top: 40px; left: 40px; width: 40px; height: 40px;
+            }
+            .dpad-center::after {
+                top: 7px; left: 7px; width: 26px; height: 26px;
+            }
+
+            /* Large A/B buttons */
+            .action-btn {
+                width: 56px !important;
+                height: 56px !important;
+                border-width: 3px !important;
+            }
+
+            .buttons-container {
+                gap: 18px !important;
+            }
+
+            .btn-label {
+                font-size: 13px !important;
+                margin-top: 3px !important;
+            }
+
+            /* SELECT / START */
+            .menu-buttons {
+                gap: 32px !important;
+            }
+
+            .menu-btn {
+                width: 54px !important;
+                height: 12px !important;
+            }
+
+            .menu-btn-label {
+                font-size: 9px !important;
+                margin-top: 3px !important;
             }
         }
     </style>
@@ -1246,8 +1365,20 @@ import '../styles/global.css';
     </div>
 
     <script>
-        // ── Proportional Scale Resizing Logic (Unified PC & Mobile) ──
+        // ── Proportional Scale Resizing Logic (Desktop only) ──
         function resizeConsole() {
+            // On mobile, CSS handles full-screen gamepad layout — no scaling needed
+            if (window.innerWidth <= 768) {
+                const consoleEl = document.querySelector('.gameboy-console');
+                const scaleCard = document.querySelector('.console-scale-card');
+                if (consoleEl) consoleEl.style.transform = 'none';
+                if (scaleCard) {
+                    scaleCard.style.width = '100%';
+                    scaleCard.style.height = '100%';
+                }
+                return;
+            }
+
             const consoleEl = document.querySelector('.gameboy-console');
             const scaleCard = document.querySelector('.console-scale-card');
             const wrapper = document.querySelector('.console-wrapper');
@@ -1266,7 +1397,7 @@ import '../styles/global.css';
             }
             
             // Padding buffer around console inside the wrapper
-            const padding = window.innerWidth <= 768 ? 6 : 24;
+            const padding = 24;
             maxW -= padding * 2;
             maxH -= padding * 2;
             
