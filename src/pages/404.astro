@@ -31,6 +31,7 @@ import '../styles/global.css';
             color: var(--tx-1);
             overflow: hidden;
             height: 100%;
+            height: 100dvh;
         }
 
         @media (hover: hover) and (pointer: fine) {
@@ -40,6 +41,7 @@ import '../styles/global.css';
         body {
             font-family: 'DM Sans', sans-serif;
             height: 100vh;
+            height: 100dvh;
             overflow: hidden;
             display: flex;
             flex-direction: column;
@@ -336,6 +338,7 @@ import '../styles/global.css';
             z-index: 10;
             width: 100%;
             height: 100vh;
+            height: 100dvh;
             display: none;
             justify-content: center;
             align-items: center;
@@ -1012,6 +1015,14 @@ import '../styles/global.css';
             .actions { flex-direction: column; align-items: stretch; }
             .btn { justify-content: center; }
         }
+
+        @media (max-width: 768px) {
+            .console-wrapper {
+                align-items: flex-start !important;
+                padding: 10px 4px 4px 4px !important;
+                padding-top: max(12px, env(safe-area-inset-top)) !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1239,15 +1250,25 @@ import '../styles/global.css';
         function resizeConsole() {
             const consoleEl = document.querySelector('.gameboy-console');
             const scaleCard = document.querySelector('.console-scale-card');
-            if (!consoleEl || !scaleCard) return;
+            const wrapper = document.querySelector('.console-wrapper');
+            if (!consoleEl || !scaleCard || !wrapper) return;
             
             const targetW = 390;
             const targetH = 720;
             
-            // Padding buffer around console
-            const padding = window.innerWidth <= 768 ? 10 : 28;
-            const maxW = window.innerWidth - padding * 2;
-            const maxH = window.innerHeight - padding * 2;
+            let maxW = wrapper.clientWidth;
+            let maxH = wrapper.clientHeight;
+            
+            // Fallback if container is hidden during initialization
+            if (maxW === 0 || maxH === 0) {
+                maxW = window.innerWidth;
+                maxH = window.innerHeight;
+            }
+            
+            // Padding buffer around console inside the wrapper
+            const padding = window.innerWidth <= 768 ? 6 : 24;
+            maxW -= padding * 2;
+            maxH -= padding * 2;
             
             // Calculate scale to fit console fully inside width & height
             const scale = Math.min(maxW / targetW, maxH / targetH);
