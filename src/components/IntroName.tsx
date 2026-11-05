@@ -173,7 +173,8 @@ export function IntroName({
       const x = startX + (dockX - startX) * dockEase;
       const y = startY + (dockY - startY) * dockEase;
 
-      const tile = largeCell * 3;
+      // Keep the published dissolve, using smaller square pixels.
+      const tile = largeCell * 2;
       const originX = Math.floor(startX);
       const originY = Math.floor(startY);
       const isDark = (column: number, row: number) => {
@@ -192,7 +193,11 @@ export function IntroName({
             column++
           ) {
             if (isDark(column, row)) {
-              mosaicContext.fillRect(originX + column * tile, originY + row * tile, tile, tile);
+              const left = Math.round((originX + column * tile) * dpr) / dpr;
+              const top = Math.round((originY + row * tile) * dpr) / dpr;
+              const right = Math.round((originX + (column + 1) * tile) * dpr) / dpr;
+              const bottom = Math.round((originY + (row + 1) * tile) * dpr) / dpr;
+              mosaicContext.fillRect(left, top, right - left, bottom - top);
             }
           }
         }
