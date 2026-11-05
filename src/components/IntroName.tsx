@@ -66,6 +66,7 @@ export function IntroName({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
+  const mosaicRef = useRef<HTMLCanvasElement>(null);
   const completedRef = useRef(false);
   const leavingRef = useRef(false);
 
@@ -83,7 +84,9 @@ export function IntroName({
     }
 
     const context = canvas.getContext("2d");
-    if (!context) {
+    const mosaic = mosaicRef.current;
+    const mosaicContext = mosaic?.getContext("2d");
+    if (!context || !mosaic || !mosaicContext) {
       completedRef.current = true;
       onComplete();
       return;
@@ -122,13 +125,18 @@ export function IntroName({
       canvas.style.width = `${width}px`;
       canvas.style.height = `${height}px`;
       context.setTransform(dpr, 0, 0, dpr, 0, 0);
+      mosaic.width = canvas.width;
+      mosaic.height = canvas.height;
+      mosaic.style.width = `${width}px`;
+      mosaic.style.height = `${height}px`;
+      mosaicContext.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     const draw = (time: number) => {
       if (!start) start = time;
       const elapsed = time - start;
 
-      // Smooth, cinematic interpolation between white/paper (248) and black/ink (15)
+      // Reveal solid dark tiles only during the original colour-change interval.
       let invertProgress = 0;
       if (elapsed >= INVERT_END) {
         invertProgress = 1;
@@ -137,11 +145,10 @@ export function IntroName({
         invertProgress = easeInOutCubic(Math.max(0, Math.min(1, rawProgress)));
       }
 
-      const bgLightness = Math.round(248 + (15 - 248) * invertProgress);
-      const fgLightness = Math.round(15 + (248 - 15) * invertProgress);
-
-      const background = `rgb(${bgLightness}, ${bgLightness}, ${bgLightness})`;
-      const foreground = `rgb(${fgLightness}, ${fgLightness}, ${fgLightness})`;
+      const paper = "rgb(248, 248, 248)";
+      const ink = "rgb(15, 15, 15)";
+      const background = invertProgress === 1 ? ink : paper;
+      const foreground = invertProgress === 1 ? paper : ink;
 
       const dockRaw = Math.max(0, Math.min(1, (elapsed - DOCK_START) / DOCK_DURATION));
       const dockEase = easeInOutQuad(dockRaw);
@@ -166,6 +173,31 @@ export function IntroName({
       const x = startX + (dockX - startX) * dockEase;
       const y = startY + (dockY - startY) * dockEase;
 
+      const tile = largeCell * 3;
+      const originX = Math.floor(startX);
+      const originY = Math.floor(startY);
+      const isDark = (column: number, row: number) => {
+        const seed = Math.sin(column * 127.1 + row * 311.7) * 43758.5453;
+        return (
+          invertProgress >= 1 || (invertProgress > 0 && invertProgress > seed - Math.floor(seed))
+        );
+      };
+      mosaicContext.clearRect(0, 0, width, height);
+      if (invertProgress > 0 && invertProgress < 1) {
+        mosaicContext.fillStyle = ink;
+        for (let row = Math.floor(-originY / tile); row * tile + originY < height; row++) {
+          for (
+            let column = Math.floor(-originX / tile);
+            column * tile + originX < width;
+            column++
+          ) {
+            if (isDark(column, row)) {
+              mosaicContext.fillRect(originX + column * tile, originY + row * tile, tile, tile);
+            }
+          }
+        }
+      }
+
       // Draw the pixel letters
       context.fillStyle = foreground;
       for (let column = 0; column < COLUMNS.length; column++) {
@@ -177,6 +209,12 @@ export function IntroName({
         if (settled) {
           for (let row = 0; row < ROWS; row++) {
             if (columnData[row]) {
+              context.fillStyle = isDark(
+                Math.floor((x + column * cell + cell / 2 - originX) / tile),
+                Math.floor((y + row * cell + cell / 2 - originY) / tile),
+              )
+                ? paper
+                : ink;
               context.fillRect(
                 x + column * cell,
                 y + row * cell,
@@ -244,7 +282,9 @@ export function IntroName({
 
   return (
     <div ref={overlayRef} className="intro-loader" aria-hidden="true">
-      <div ref={backdropRef} className="intro-loader__backdrop" />
+      <div ref={backdropRef} className="intro-loader__backdrop">
+        <canvas ref={mosaicRef} />
+      </div>
       <canvas ref={canvasRef} />
       <span className="sr-only">Mathews Shaji</span>
     </div>
