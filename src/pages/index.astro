@@ -56,6 +56,8 @@ const year = new Date().getFullYear();
               bio.map((line, i) =>
                 line === "" ? (
                   <div class="h-3 md:h-[1.5vh]" />
+                ) : line === "Guinness World Record" ? (
+                  <p class="text-yellow-500">{line}</p>
                 ) : (
                   <p>{line}</p>
                 ),
