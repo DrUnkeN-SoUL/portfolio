@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://mathewsshaji.com/sitemap-index.xml
+Sitemap: /sitemap.xml

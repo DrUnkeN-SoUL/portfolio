@@ -251,25 +251,28 @@ html {
   }
 }
 
-/* One restrained scrollbar language for the page and nested scroll regions. */
+/* Minimal scrollbar: invisible at rest, a thin line only while scrolling. */
 html {
-  scrollbar-color: var(--color-muted-foreground) var(--color-background);
   scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+
+html.is-scrolling {
+  scrollbar-color: var(--color-muted-foreground) transparent;
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 2px;
+  height: 2px;
 }
 
 *::-webkit-scrollbar-track {
-  background: var(--color-background);
-  border-inline-start: 1px solid var(--color-border);
+  background: transparent;
 }
 
 *::-webkit-scrollbar-thumb {
-  background: var(--color-muted-foreground);
-  border: 2px solid var(--color-background);
+  background: transparent;
+  border: 0;
   border-radius: 0;
 }
 
@@ -278,68 +281,11 @@ html {
 }
 
 *::-webkit-scrollbar-corner {
-  background: var(--color-background);
+  background: transparent;
+}
+
+html.is-scrolling *::-webkit-scrollbar-thumb {
+  background: var(--color-muted-foreground);
 }
 
 
-
-/* Intro-gated page reveal: visible by default, hidden only while the intro is
-   running so content never depends on JS. */
-@keyframes reveal-up {
-  from {
-    opacity: 0;
-    transform: translateY(0.75rem);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-html[data-intro="pending"] .reveal {
-  opacity: 0;
-}
-
-html[data-intro="ready"] .reveal {
-  animation: reveal-up 700ms cubic-bezier(0.33, 1, 0.68, 1) both;
-}
-
-html[data-intro="ready"] .reveal-delay {
-  animation-delay: 150ms;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html[data-intro="pending"] .reveal {
-    opacity: 1;
-  }
-
-  html[data-intro="ready"] .reveal {
-    animation: none;
-  }
-}
-
-/* Project accordion: animates open, instant close (no JS needed). */
-.project-panel {
-  overflow: hidden;
-}
-
-details[open] > .project-panel {
-  animation: project-open 420ms cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-@keyframes project-open {
-  from {
-    opacity: 0;
-    transform: translateY(-0.5rem);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  details[open] > .project-panel {
-    animation: none;
-  }
-}
