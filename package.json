@@ -1,13 +1,30 @@
 {
-  "name": "mathews-shaji-portfolio",
-  "version": "3.0.0",
+  "name": "mathews-portfolio",
+  "version": "4.0.0",
+  "private": true,
   "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "dev": "astro dev",
+    "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "check": "astro check"
   },
   "dependencies": {
-    "astro": "^5.0.0"
+    "@astrojs/react": "^4.4.0",
+    "@astrojs/sitemap": "^3.6.0",
+    "@tailwindcss/vite": "^4.2.1",
+    "astro": "^5.16.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "tailwindcss": "^4.2.1",
+    "tw-animate-css": "^1.3.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0"
   }
 }

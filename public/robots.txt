@@ -1,53 +1,16 @@
-User-Agent: *
+User-agent: Googlebot
 Allow: /
 
-User-Agent: OAI-SearchBot
+User-agent: Bingbot
 Allow: /
 
-User-Agent: ChatGPT-User
+User-agent: Twitterbot
 Allow: /
 
-User-Agent: anthropic-ai
+User-agent: facebookexternalhit
 Allow: /
 
-User-Agent: ClaudeBot
+User-agent: *
 Allow: /
 
-User-Agent: claude-web
-Allow: /
-
-User-Agent: PerplexityBot
-Allow: /
-
-User-Agent: Perplexity-User
-Allow: /
-
-User-Agent: Google-Extended
-Allow: /
-
-User-Agent: Googlebot
-Allow: /
-
-User-Agent: Bingbot
-Allow: /
-
-User-Agent: Amazonbot
-Allow: /
-
-User-Agent: Applebot
-Allow: /
-
-User-Agent: GPTBot
-Allow: /
-
-User-Agent: Baiduspider
-Disallow: /
-
-User-Agent: Yandex
-Disallow: /
-
-User-Agent: ia_archiver
-Disallow: /
-
-Sitemap: https://mathewsshaji.com/sitemap.xml
-LLM-File: https://mathewsshaji.com/llm.txt
+Sitemap: https://mathewsshaji.com/sitemap-index.xml

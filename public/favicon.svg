@@ -1,1 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y=".9em" font-size="90" fill="#c9a96e">M</text></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Mathews Shaji — pixel M (IntroName 5x7 glyph) + amber terminal block cursor -->
+  <rect width="64" height="64" fill="#0d0d0d"/>
+  <rect x="12" y="11" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="36" y="11" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="12" y="17" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="18" y="17" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="30" y="17" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="36" y="17" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="12" y="23" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="24" y="23" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="36" y="23" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="12" y="29" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="24" y="29" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="36" y="29" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="12" y="35" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="36" y="35" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="12" y="41" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="36" y="41" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="12" y="47" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="36" y="47" width="5" height="5" fill="#e8e8e8"/>
+  <rect x="45" y="47" width="9" height="5" fill="#eab308"/>
+</svg>
