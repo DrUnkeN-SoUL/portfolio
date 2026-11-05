@@ -19,11 +19,11 @@ const ROWS = 7;
 const BUILD_START = 300;
 const BUILD_END = 2100;
 const INVERT_START = 2250;
-const INVERT_DURATION = 700; // Silky 700ms smooth gradient transition
-const INVERT_END = INVERT_START + INVERT_DURATION; // 2950ms
-const DOCK_START = 3100;
+const INVERT_DURATION = 1100;
+const INVERT_END = INVERT_START + INVERT_DURATION;
+const DOCK_START = INVERT_END + 120;
 const DOCK_DURATION = 850;
-const FINISH_AT = 4100;
+const FINISH_AT = DOCK_START + DOCK_DURATION + 150;
 
 // Smooth exit duration
 const EXIT_DURATION = 600;
@@ -48,14 +48,8 @@ function buildColumns(text: string) {
 const COLUMNS = buildColumns(NAME);
 const DOCK_CELL = 1.7;
 
-function easeInOutCubic(x: number): number {
-  return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-}
-
 function easeInOutQuad(value: number): number {
-  return value < 0.5
-    ? 2 * value * value
-    : 1 - Math.pow(-2 * value + 2, 2) / 2;
+  return value < 0.5 ? 2 * value * value : 1 - Math.pow(-2 * value + 2, 2) / 2;
 }
 
 export function IntroName({
@@ -93,7 +87,14 @@ export function IntroName({
     let height = 0;
     let dpr = 1;
     let frameId = 0;
+    let exitTimer = 0;
     let start = 0;
+
+    const styles = getComputedStyle(overlay);
+    const paper = styles.getPropertyValue("--intro-paper").trim();
+    const ink = styles.getPropertyValue("--intro-ink").trim();
+    const pageBackground = styles.getPropertyValue("--background").trim();
+    const pageForeground = styles.getPropertyValue("--foreground").trim();
 
     const startExit = () => {
       if (leavingRef.current || completedRef.current) return;
@@ -101,7 +102,7 @@ export function IntroName({
       overlay.classList.add("intro-loader--leaving");
       onTransitionStart?.();
 
-      window.setTimeout(() => {
+      exitTimer = window.setTimeout(() => {
         completedRef.current = true;
         cancelAnimationFrame(frameId);
         onComplete();
@@ -123,25 +124,33 @@ export function IntroName({
       if (!start) start = time;
       const elapsed = time - start;
 
-      // Smooth, cinematic interpolation between white/paper (248) and black/ink (15)
+      // Move a soft edge across the screen instead of fading the entire name
+      // through the same grey as the background.
       let invertProgress = 0;
       if (elapsed >= INVERT_END) {
         invertProgress = 1;
       } else if (elapsed > INVERT_START) {
         const rawProgress = (elapsed - INVERT_START) / INVERT_DURATION;
-        invertProgress = easeInOutCubic(Math.max(0, Math.min(1, rawProgress)));
+        invertProgress = easeInOutQuad(Math.max(0, Math.min(1, rawProgress)));
       }
 
-      const bgLightness = Math.round(248 + (15 - 248) * invertProgress);
-      const fgLightness = Math.round(15 + (248 - 15) * invertProgress);
+      let background: string | CanvasGradient = paper;
+      let foreground: string | CanvasGradient = ink;
+      if (invertProgress === 1) {
+        background = pageBackground;
+        foreground = pageForeground;
+      } else if (invertProgress > 0) {
+        const feather = Math.max(48, width * 0.12);
+        const edge = -feather + (width + feather * 2) * invertProgress;
+        background = context.createLinearGradient(edge - feather, 0, edge + feather, 0);
+        background.addColorStop(0, pageBackground);
+        background.addColorStop(1, paper);
+        foreground = context.createLinearGradient(edge - feather, 0, edge + feather, 0);
+        foreground.addColorStop(0, pageForeground);
+        foreground.addColorStop(1, ink);
+      }
 
-      const background = `rgb(${bgLightness}, ${bgLightness}, ${bgLightness})`;
-      const foreground = `rgb(${fgLightness}, ${fgLightness}, ${fgLightness})`;
-
-      const dockRaw = Math.max(
-        0,
-        Math.min(1, (elapsed - DOCK_START) / DOCK_DURATION),
-      );
+      const dockRaw = Math.max(0, Math.min(1, (elapsed - DOCK_START) / DOCK_DURATION));
       const dockEase = easeInOutQuad(dockRaw);
 
       // Render smooth background
@@ -154,10 +163,7 @@ export function IntroName({
       const dockX = dockRect?.left ?? (width >= 768 ? 40 : 20);
       const dockY = dockRect?.top ?? 24;
 
-      const largeCell = Math.max(
-        4,
-        Math.min(15, Math.floor((width * 0.88) / COLUMNS.length)),
-      );
+      const largeCell = Math.max(4, Math.min(15, Math.floor((width * 0.88) / COLUMNS.length)));
       const smallCell = DOCK_CELL;
       const largeWidth = COLUMNS.length * largeCell;
       const startX = (width - largeWidth) / 2;
@@ -171,9 +177,7 @@ export function IntroName({
       context.fillStyle = foreground;
       for (let column = 0; column < COLUMNS.length; column++) {
         const settleAt =
-          BUILD_START +
-          (column / Math.max(COLUMNS.length - 1, 1)) *
-            (BUILD_END - BUILD_START);
+          BUILD_START + (column / Math.max(COLUMNS.length - 1, 1)) * (BUILD_END - BUILD_START);
         const settled = elapsed >= settleAt;
         const columnData = COLUMNS[column] ?? [];
 
@@ -189,9 +193,7 @@ export function IntroName({
             }
           }
         } else if (elapsed > settleAt - 650) {
-          const pulse = Math.abs(
-            Math.sin(column * 12.9898 + Math.floor(elapsed / 55) * 0.73),
-          );
+          const pulse = Math.abs(Math.sin(column * 12.9898 + Math.floor(elapsed / 55) * 0.73));
           const barHeight = 1 + Math.floor(pulse * ROWS);
           context.globalAlpha = 0.18 + pulse * 0.42;
           for (let row = ROWS - barHeight; row < ROWS; row++) {
@@ -241,17 +243,14 @@ export function IntroName({
 
     return () => {
       cancelAnimationFrame(frameId);
+      window.clearTimeout(exitTimer);
       window.removeEventListener("resize", resize);
       overlay.removeEventListener("click", startExit);
     };
   }, [onComplete, onTransitionStart]);
 
   return (
-    <div
-      ref={overlayRef}
-      className="intro-loader"
-      aria-hidden="true"
-    >
+    <div ref={overlayRef} className="intro-loader" aria-hidden="true">
       <canvas ref={canvasRef} />
       <span className="sr-only">Mathews Shaji</span>
     </div>
@@ -275,7 +274,7 @@ export function PixelNameMark({ visible }: { visible: boolean }) {
     canvas.height = Math.ceil(height * dpr);
     context.setTransform(dpr, 0, 0, dpr, 0, 0);
     context.clearRect(0, 0, width, height);
-    context.fillStyle = "rgb(248, 248, 248)";
+    context.fillStyle = getComputedStyle(canvas).getPropertyValue("--foreground").trim();
 
     for (let column = 0; column < COLUMNS.length; column++) {
       const columnData = COLUMNS[column] ?? [];
