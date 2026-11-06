@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useCallback, useState } from "react";
-import { AsciiPortrait } from "@/components/AsciiPortrait";
+import { useCallback, useState, type ReactNode } from "react";
+import { AsciiPortrait, RevealText } from "@/components/AsciiPortrait";
 import { IntroName, PixelNameMark } from "@/components/IntroName";
 import { ProjectRow } from "@/components/ProjectRow";
 import { bio, community, links, projects, roles } from "@/data/portfolio";
@@ -75,7 +75,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-function SectionLabel({ children }: { children: string }) {
+function SectionLabel({ children }: { children: ReactNode }) {
   return (
     <h2 className="mb-10 text-xs lowercase tracking-[0.4em] text-muted-foreground">{children}</h2>
   );
@@ -83,14 +83,17 @@ function SectionLabel({ children }: { children: string }) {
 
 function Index() {
   const [introComplete, setIntroComplete] = useState(false);
+  const [portraitActive, setPortraitActive] = useState(false);
+  const startReveal = useCallback(() => setPortraitActive(true), []);
 
   const completeIntro = useCallback(() => {
+    setPortraitActive(true);
     setIntroComplete(true);
   }, []);
 
   return (
     <main className="scanlines min-h-screen bg-background font-mono text-foreground">
-      {!introComplete && <IntroName onComplete={completeIntro} />}
+      {!introComplete && <IntroName onComplete={completeIntro} onTransitionStart={startReveal} />}
       <div className="mx-auto max-w-6xl px-5 md:px-10">
         <header className="sticky top-0 z-40 grid grid-cols-[minmax(0,1fr)_auto] items-center bg-background py-6 text-xs tracking-[0.3em] text-muted-foreground">
           <PixelNameMark visible />
@@ -99,26 +102,34 @@ function Index() {
 
         <section className="grid min-h-[calc(100svh-4rem)] grid-cols-1 content-center gap-10 py-6 md:grid-cols-[minmax(0,1.35fr)_minmax(15rem,0.65fr)] md:items-center md:gap-8 lg:gap-14">
           <div className="min-w-0 overflow-hidden">
-            <AsciiPortrait />
+            <AsciiPortrait active={portraitActive} />
           </div>
           <div className="min-w-0">
             <div className="mb-10 md:mb-12">
-              <h1 className="text-xl md:text-[clamp(1.15rem,2.2vh,1.875rem)]">Mathews Shaji</h1>
+              <h1 className="hero-title text-xl md:text-[clamp(1.15rem,2.2vh,1.875rem)]">
+                <RevealText active={portraitActive}>Mathews Shaji</RevealText>
+              </h1>
               <p className="mt-2 text-[0.65rem] leading-relaxed tracking-[0.2em] text-muted-foreground">
-                backend-leaning full-stack developer
+                <RevealText active={portraitActive}>
+                  backend-leaning full-stack developer
+                </RevealText>
               </p>
             </div>
-            <SectionLabel>biography</SectionLabel>
-            <div className="max-w-xl text-[clamp(0.65rem,1.3vh,0.8rem)] leading-[1.8]">
+            <SectionLabel>
+              <RevealText active={portraitActive}>biography</RevealText>
+            </SectionLabel>
+            <div className="hero-bio max-w-xl text-[clamp(0.65rem,1.3vh,0.8rem)] leading-[1.8]">
               {bio.map((line, i) =>
                 line === "" ? (
                   <div key={i} className="h-3 md:h-[1.5vh]" />
                 ) : line === "Guinness World Record" ? (
                   <p key={i} className="text-yellow-500">
-                    {line}
+                    <RevealText active={portraitActive}>{line}</RevealText>
                   </p>
                 ) : (
-                  <p key={i}>{line}</p>
+                  <p key={i}>
+                    <RevealText active={portraitActive}>{line}</RevealText>
+                  </p>
                 ),
               )}
             </div>

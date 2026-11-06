@@ -19,7 +19,7 @@ function usePrefersReducedMotion() {
  * Progressive per-character reveal: every glyph gets a random "arrival time",
  * biased slightly by its row so the portrait resolves out of noise top-down.
  */
-function useAsciiReveal(source: string, duration = 2600) {
+function useAsciiReveal(source: string, active: boolean, duration = 2600) {
   const reduced = usePrefersReducedMotion();
   const [frame, setFrame] = useState(source);
   const rafRef = useRef<number | null>(null);
@@ -43,7 +43,11 @@ function useAsciiReveal(source: string, duration = 2600) {
       setFrame(source);
       return;
     }
-    const start = performance.now();
+    if (!active) {
+      setFrame(source.replace(/[^\n ]/g, " "));
+      return;
+    }
+    const start = performance.now() - 700;
     const tick = (now: number) => {
       const t = Math.min(1, (now - start) / duration);
       const eased = t * t * (3 - 2 * t);
@@ -64,17 +68,25 @@ function useAsciiReveal(source: string, duration = 2600) {
       setFrame(out);
       if (t < 1) rafRef.current = requestAnimationFrame(tick);
     };
-    rafRef.current = requestAnimationFrame(tick);
+    tick(performance.now());
     return () => {
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
     };
-  }, [chars, thresholds, rows, source, duration, reduced]);
+  }, [chars, thresholds, rows, source, duration, reduced, active]);
 
-  return frame;
+  return !active && !reduced ? source.replace(/[^\n ]/g, " ") : frame;
 }
 
-function Frame({ source, className }: { source: string; className: string }) {
-  const text = useAsciiReveal(source);
+function Frame({
+  source,
+  className,
+  active,
+}: {
+  source: string;
+  className: string;
+  active: boolean;
+}) {
+  const text = useAsciiReveal(source, active);
   return (
     <pre
       aria-hidden="true"
@@ -85,11 +97,17 @@ function Frame({ source, className }: { source: string; className: string }) {
   );
 }
 
-export function AsciiPortrait() {
+export function AsciiPortrait({ active = true }: { active?: boolean }) {
   return (
     <div className="ascii-portrait-box">
-      <Frame source={asciiPortraitDesktop} className="ascii-portrait-art" />
+      <Frame source={asciiPortraitDesktop} className="ascii-portrait-art" active={active} />
       <span className="sr-only">ASCII portrait of Mathews Shaji</span>
     </div>
+  );
+}
+
+export function RevealText({ children, active }: { children: string; active: boolean }) {
+  return (
+    <span className={`content-reveal${active ? " content-reveal--active" : ""}`}>{children}</span>
   );
 }

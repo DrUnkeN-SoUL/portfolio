@@ -23,13 +23,12 @@ const INVERT_DURATION = 1800; // matches the standalone demo's wipe speed
 const INVERT_END = INVERT_START + INVERT_DURATION; // 4050ms
 const DOCK_START = 4150;
 const DOCK_DURATION = 850;
-const FINISH_AT = 5200;
 
 // Ring Storm: width of the travelling wavefront, and how many steps a tile grows in.
 const STORM_BAND = 0.2;
 const STORM_STEPS = 3;
 
-// Smooth exit duration
+// Match the quick backdrop clearing in the cancellation reference.
 const EXIT_DURATION = 600;
 
 function buildColumns(text: string) {
@@ -100,7 +99,6 @@ export function IntroName({
     let height = 0;
     let dpr = 1;
     let frameId = 0;
-    let exitTimer = 0;
     let start = 0;
 
     // --- Ring Storm field ------------------------------------------------
@@ -118,8 +116,9 @@ export function IntroName({
         for (let o = 0; o < sizes.length; o++) {
           const size = sizes[o]!;
           const grid = grids[o]!;
-          const x = u * size;
-          const y = v * size;
+          // Edge tiles extend past the viewport; keep noise samples inside the grid.
+          const x = Math.max(0, Math.min(1, u)) * size;
+          const y = Math.max(0, Math.min(1, v)) * size;
           const xi = Math.floor(x);
           const yi = Math.floor(y);
           let fx = x - xi;
@@ -164,10 +163,10 @@ export function IntroName({
       const key = `${tile}:${originX}:${originY}:${w}:${h}:${Math.round(ox)}:${Math.round(oy)}`;
       if (storm && stormKey === key) return storm;
 
-      const colStart = Math.floor(-originX / tile) - 1;
-      const colEnd = Math.ceil((w - originX) / tile) + 1;
-      const rowStart = Math.floor(-originY / tile) - 1;
-      const rowEnd = Math.ceil((h - originY) / tile) + 1;
+      const colStart = Math.floor(-originX / tile);
+      const colEnd = Math.ceil((w - originX) / tile);
+      const rowStart = Math.floor(-originY / tile);
+      const rowEnd = Math.ceil((h - originY) / tile);
       const cols = colEnd - colStart;
       const rows = rowEnd - rowStart;
       const t = new Float32Array(cols * rows);
@@ -195,24 +194,84 @@ export function IntroName({
       return storm;
     };
 
-    const startExit = (skip = false) => {
+    const startExit = (dockName = false) => {
       if (leavingRef.current || completedRef.current) return;
       leavingRef.current = true;
       cancelAnimationFrame(frameId);
-      if (skip) overlay.classList.add("intro-loader--skipping");
       overlay.classList.add("intro-loader--leaving");
       onTransitionStart?.();
 
-      exitTimer = window.setTimeout(() => {
+      // Clear the current intro as a single wash, matching cancellation.
+      // The content underneath stays sharp and fully opaque.
+      const snapshot = document.createElement("canvas");
+      snapshot.width = canvas.width;
+      snapshot.height = canvas.height;
+      const snapshotContext = snapshot.getContext("2d");
+      if (!snapshotContext) {
         completedRef.current = true;
-        cancelAnimationFrame(frameId);
         onComplete();
-      }, EXIT_DURATION);
+        return;
+      }
+      snapshotContext.fillStyle = backdrop.style.backgroundColor;
+      snapshotContext.fillRect(0, 0, snapshot.width, snapshot.height);
+      snapshotContext.drawImage(mosaic, 0, 0);
+      if (!dockName) snapshotContext.drawImage(canvas, 0, 0);
+      backdrop.style.visibility = "hidden";
+
+      const dockRect = document
+        .querySelector<HTMLElement>("[data-name-dock]")
+        ?.getBoundingClientRect();
+      const largeCell = Math.max(4, Math.min(15, Math.floor((width * 0.88) / COLUMNS.length)));
+      const startX = (width - COLUMNS.length * largeCell) / 2;
+      const startY = (height - ROWS * largeCell) / 2;
+      const dockX = dockRect?.left ?? (width >= 768 ? 40 : 20);
+      const dockY = dockRect?.top ?? 24;
+      const exitStart = performance.now();
+      const reveal = (time: number) => {
+        const progress = Math.min(1, (time - exitStart) / EXIT_DURATION);
+        context.globalCompositeOperation = "source-over";
+        context.clearRect(0, 0, width, height);
+        // Fast ease-out: the content appears immediately beneath the wash,
+        // then the remaining veil clears without a second content animation.
+        context.globalAlpha = Math.pow(1 - progress, 3);
+        context.drawImage(snapshot, 0, 0, width, height);
+        context.globalAlpha = 1;
+        // Keep the moving name above the dissolving backdrop.
+        if (dockName) {
+          const dockProgress = easeInOutQuad(Math.min(1, (time - exitStart) / DOCK_DURATION));
+          const cell = largeCell + (DOCK_CELL - largeCell) * dockProgress;
+          const x = startX + (dockX - startX) * dockProgress;
+          const y = startY + (dockY - startY) * dockProgress;
+          context.fillStyle = "rgb(248, 248, 248)";
+          for (let column = 0; column < COLUMNS.length; column++) {
+            for (let row = 0; row < ROWS; row++) {
+              if (COLUMNS[column]?.[row]) {
+                context.fillRect(
+                  x + column * cell,
+                  y + row * cell,
+                  Math.max(1, cell - 1),
+                  Math.max(1, cell - 1),
+                );
+              }
+            }
+          }
+        }
+        if (progress < 1 || (dockName && time - exitStart < DOCK_DURATION)) {
+          frameId = requestAnimationFrame(reveal);
+        } else {
+          completedRef.current = true;
+          onComplete();
+        }
+      };
+      // Paint the opaque first frame immediately: hiding the DOM backdrop and
+      // waiting for another animation frame would flash the page underneath.
+      reveal(exitStart);
     };
 
-    const skipIntro = () => startExit(true);
+    const skipIntro = () => startExit();
 
     const resize = () => {
+      if (leavingRef.current) return;
       width = window.innerWidth;
       height = window.innerHeight;
       dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -249,7 +308,7 @@ export function IntroName({
       const dockRaw = Math.max(0, Math.min(1, (elapsed - DOCK_START) / DOCK_DURATION));
       const dockEase = easeInOutQuad(dockRaw);
 
-      // Fade the backdrop separately at the end so the docked name stays solid.
+      // Keep the backdrop solid until the pixel reveal begins.
       backdrop.style.backgroundColor = background;
       context.clearRect(0, 0, width, height);
 
@@ -285,17 +344,8 @@ export function IntroName({
       );
       const wavefront = invertProgress * (1 + STORM_BAND);
 
-      const tileInk = (px: number, py: number): boolean => {
-        if (invertProgress >= 1) return true;
-        if (invertProgress <= 0) return false;
-        const col = Math.floor((px - originX) / tile) - field.colStart;
-        const row = Math.floor((py - originY) / tile) - field.rowStart;
-        if (col < 0 || row < 0 || col >= field.cols || row >= field.rows) return false;
-        const threshold = field.t[row * field.cols + col]!;
-        return (wavefront - threshold) / STORM_BAND >= 0.5;
-      };
-
       mosaicContext.clearRect(0, 0, width, height);
+      const inkTiles = new Path2D();
       if (invertProgress > 0 && invertProgress < 1) {
         mosaicContext.fillStyle = ink;
         const tileDevice = Math.round(tile * dpr);
@@ -321,9 +371,10 @@ export function IntroName({
               top += Math.round((tileDevice - size) / 2);
             }
 
-            mosaicContext.fillRect(left / dpr, top / dpr, size / dpr, size / dpr);
+            inkTiles.rect(left / dpr, top / dpr, size / dpr, size / dpr);
           }
         }
+        mosaicContext.fill(inkTiles);
       }
 
       // Draw the pixel letters
@@ -337,9 +388,6 @@ export function IntroName({
         if (settled) {
           for (let row = 0; row < ROWS; row++) {
             if (columnData[row]) {
-              context.fillStyle = tileInk(x + column * cell + cell / 2, y + row * cell + cell / 2)
-                ? paper
-                : ink;
               context.fillRect(
                 x + column * cell,
                 y + row * cell,
@@ -364,6 +412,15 @@ export function IntroName({
         }
       }
 
+      // Invert only the letter pixels actually covered by a growing ink tile.
+      // Reusing the mosaic path keeps the white letters aligned with the fill.
+      if (invertProgress > 0 && invertProgress < 1) {
+        context.globalCompositeOperation = "source-atop";
+        context.fillStyle = paper;
+        context.fill(inkTiles);
+        context.globalCompositeOperation = "source-over";
+      }
+
       // Subtle atmospheric ASCII dust, fading out smoothly during inversion
       if (!dockRaw && invertProgress < 1) {
         context.font = "10px 'JetBrains Mono', monospace";
@@ -381,9 +438,9 @@ export function IntroName({
         context.globalAlpha = 1;
       }
 
-      // Automatically trigger smooth departure when sequence finishes
-      if (elapsed >= FINISH_AT) {
-        startExit();
+      // Start clearing the backdrop and docking the name together.
+      if (elapsed >= DOCK_START) {
+        startExit(true);
         return;
       }
 
@@ -399,7 +456,6 @@ export function IntroName({
 
     return () => {
       cancelAnimationFrame(frameId);
-      window.clearTimeout(exitTimer);
       window.removeEventListener("resize", resize);
       overlay.removeEventListener("click", skipIntro);
     };
