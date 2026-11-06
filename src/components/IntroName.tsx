@@ -19,11 +19,15 @@ const ROWS = 7;
 const BUILD_START = 300;
 const BUILD_END = 2100;
 const INVERT_START = 2250;
-const INVERT_DURATION = 700; // Silky 700ms smooth gradient transition
-const INVERT_END = INVERT_START + INVERT_DURATION; // 2950ms
-const DOCK_START = 3100;
+const INVERT_DURATION = 1800; // matches the standalone demo's wipe speed
+const INVERT_END = INVERT_START + INVERT_DURATION; // 4050ms
+const DOCK_START = 4150;
 const DOCK_DURATION = 850;
-const FINISH_AT = 4100;
+const FINISH_AT = 5200;
+
+// Ring Storm: width of the travelling wavefront, and how many steps a tile grows in.
+const STORM_BAND = 0.2;
+const STORM_STEPS = 3;
 
 // Smooth exit duration
 const EXIT_DURATION = 600;
@@ -99,6 +103,98 @@ export function IntroName({
     let exitTimer = 0;
     let start = 0;
 
+    // --- Ring Storm field ------------------------------------------------
+    // Value-noise fbm, seeded once per mount (same shape as the standalone demo).
+    const fbm = (() => {
+      const sizes = [8, 16, 32];
+      const amps = [0.4, 0.35, 0.25];
+      const grids = sizes.map((size) => {
+        const grid = new Float32Array((size + 1) * (size + 1));
+        for (let i = 0; i < grid.length; i++) grid[i] = Math.random();
+        return grid;
+      });
+      return (u: number, v: number) => {
+        let sum = 0;
+        for (let o = 0; o < sizes.length; o++) {
+          const size = sizes[o]!;
+          const grid = grids[o]!;
+          const x = u * size;
+          const y = v * size;
+          const xi = Math.floor(x);
+          const yi = Math.floor(y);
+          let fx = x - xi;
+          let fy = y - yi;
+          fx = fx * fx * (3 - 2 * fx);
+          fy = fy * fy * (3 - 2 * fy);
+          const xi1 = Math.min(xi + 1, size);
+          const yi1 = Math.min(yi + 1, size);
+          const a = grid[yi * (size + 1) + xi]!;
+          const b = grid[yi * (size + 1) + xi1]!;
+          const c = grid[yi1 * (size + 1) + xi]!;
+          const d = grid[yi1 * (size + 1) + xi1]!;
+          const top = a + (b - a) * fx;
+          const bottom = c + (d - c) * fx;
+          sum += (top + (bottom - top) * fy) * amps[o]!;
+        }
+        return sum;
+      };
+    })();
+
+    type StormField = {
+      t: Float32Array;
+      cols: number;
+      rows: number;
+      colStart: number;
+      rowStart: number;
+    };
+
+    let storm: StormField | null = null;
+    let stormKey = "";
+
+    // Reveal order per tile: Chebyshev ring from the name, roughened by fbm + noise.
+    const getStorm = (
+      tile: number,
+      originX: number,
+      originY: number,
+      w: number,
+      h: number,
+      ox: number,
+      oy: number,
+    ): StormField => {
+      const key = `${tile}:${originX}:${originY}:${w}:${h}:${Math.round(ox)}:${Math.round(oy)}`;
+      if (storm && stormKey === key) return storm;
+
+      const colStart = Math.floor(-originX / tile) - 1;
+      const colEnd = Math.ceil((w - originX) / tile) + 1;
+      const rowStart = Math.floor(-originY / tile) - 1;
+      const rowEnd = Math.ceil((h - originY) / tile) + 1;
+      const cols = colEnd - colStart;
+      const rows = rowEnd - rowStart;
+      const t = new Float32Array(cols * rows);
+      const maxC = Math.max(Math.max(ox, w - ox), Math.max(oy, h - oy)) || 1;
+
+      let lo = Infinity;
+      let hi = -Infinity;
+      let i = 0;
+      for (let row = rowStart; row < rowEnd; row++) {
+        for (let col = colStart; col < colEnd; col++) {
+          const cx = originX + col * tile + tile / 2;
+          const cy = originY + row * tile + tile / 2;
+          const ring = Math.max(Math.abs(cx - ox), Math.abs(cy - oy)) / maxC;
+          const value = ring * 0.62 + fbm(cx / w, cy / h) * 0.16 + Math.random() * 0.22;
+          t[i++] = value;
+          if (value < lo) lo = value;
+          if (value > hi) hi = value;
+        }
+      }
+      const span = hi - lo || 1;
+      for (let k = 0; k < t.length; k++) t[k] = (t[k]! - lo) / span;
+
+      storm = { t, cols, rows, colStart, rowStart };
+      stormKey = key;
+      return storm;
+    };
+
     const startExit = (skip = false) => {
       if (leavingRef.current || completedRef.current) return;
       leavingRef.current = true;
@@ -173,32 +269,59 @@ export function IntroName({
       const x = startX + (dockX - startX) * dockEase;
       const y = startY + (dockY - startY) * dockEase;
 
-      // Keep the published dissolve, using smaller square pixels.
+      // Ring Storm dissolve: a square wave expands from the name's centre. Each tile
+      // grows from its own centre, so the still-paper backdrop reads as a border.
       const tile = largeCell * 2;
       const originX = Math.floor(startX);
       const originY = Math.floor(startY);
-      const isDark = (column: number, row: number) => {
-        const seed = Math.sin(column * 127.1 + row * 311.7) * 43758.5453;
-        return (
-          invertProgress >= 1 || (invertProgress > 0 && invertProgress > seed - Math.floor(seed))
-        );
+      const field = getStorm(
+        tile,
+        originX,
+        originY,
+        width,
+        height,
+        startX + largeWidth / 2,
+        startY + (ROWS * largeCell) / 2,
+      );
+      const wavefront = invertProgress * (1 + STORM_BAND);
+
+      const tileInk = (px: number, py: number): boolean => {
+        if (invertProgress >= 1) return true;
+        if (invertProgress <= 0) return false;
+        const col = Math.floor((px - originX) / tile) - field.colStart;
+        const row = Math.floor((py - originY) / tile) - field.rowStart;
+        if (col < 0 || row < 0 || col >= field.cols || row >= field.rows) return false;
+        const threshold = field.t[row * field.cols + col]!;
+        return (wavefront - threshold) / STORM_BAND >= 0.5;
       };
+
       mosaicContext.clearRect(0, 0, width, height);
       if (invertProgress > 0 && invertProgress < 1) {
         mosaicContext.fillStyle = ink;
-        for (let row = Math.floor(-originY / tile); row * tile + originY < height; row++) {
-          for (
-            let column = Math.floor(-originX / tile);
-            column * tile + originX < width;
-            column++
-          ) {
-            if (isDark(column, row)) {
-              const left = Math.round((originX + column * tile) * dpr) / dpr;
-              const top = Math.round((originY + row * tile) * dpr) / dpr;
-              const right = Math.round((originX + (column + 1) * tile) * dpr) / dpr;
-              const bottom = Math.round((originY + (row + 1) * tile) * dpr) / dpr;
-              mosaicContext.fillRect(left, top, right - left, bottom - top);
+        const tileDevice = Math.round(tile * dpr);
+        for (let row = 0; row < field.rows; row++) {
+          for (let col = 0; col < field.cols; col++) {
+            const threshold = field.t[row * field.cols + col]!;
+            const s = (wavefront - threshold) / STORM_BAND;
+            if (s <= 0) continue;
+
+            const gridColumn = field.colStart + col;
+            const gridRow = field.rowStart + row;
+
+            // Rects are computed in device pixels: CSS-space rounding leaves 1px
+            // seams between settled tiles, which read as a pale grid over the ink.
+            let left = Math.round((originX + gridColumn * tile) * dpr);
+            let top = Math.round((originY + gridRow * tile) * dpr);
+            let size = tileDevice + 1; // one device pixel of overlap kills the seam
+
+            if (s < 1) {
+              const quantum = Math.max(1, Math.ceil(s * STORM_STEPS)) / STORM_STEPS;
+              size = Math.max(1, Math.round(tileDevice * quantum));
+              left += Math.round((tileDevice - size) / 2);
+              top += Math.round((tileDevice - size) / 2);
             }
+
+            mosaicContext.fillRect(left / dpr, top / dpr, size / dpr, size / dpr);
           }
         }
       }
@@ -214,10 +337,7 @@ export function IntroName({
         if (settled) {
           for (let row = 0; row < ROWS; row++) {
             if (columnData[row]) {
-              context.fillStyle = isDark(
-                Math.floor((x + column * cell + cell / 2 - originX) / tile),
-                Math.floor((y + row * cell + cell / 2 - originY) / tile),
-              )
+              context.fillStyle = tileInk(x + column * cell + cell / 2, y + row * cell + cell / 2)
                 ? paper
                 : ink;
               context.fillRect(

@@ -22,20 +22,28 @@ export const Route = createFileRoute("/")({
       { property: "og:image", content: "/og-image.png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
-      { property: "og:image:alt", content: "Mathews Shaji — pixel M favicon mark, black and amber" },
+      {
+        property: "og:image:alt",
+        content: "Mathews Shaji — pixel M favicon mark, black and amber",
+      },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: title },
       { name: "twitter:description", content: description },
       { name: "twitter:image", content: "/twitter-image.png" },
-      { name: "twitter:image:alt", content: "Mathews Shaji — pixel M favicon mark, black and amber" },
-      { name: "keywords", content: "Mathews Shaji, full-stack developer, backend developer, DevOps engineer, Python, Go, Rust, FastAPI, TypeScript, AWS, GCP, Azure, multi-tenant APIs, data pipelines, cloud infrastructure, observability" },
+      {
+        name: "twitter:image:alt",
+        content: "Mathews Shaji — pixel M favicon mark, black and amber",
+      },
+      {
+        name: "keywords",
+        content:
+          "Mathews Shaji, full-stack developer, backend developer, DevOps engineer, Python, Go, Rust, FastAPI, TypeScript, AWS, GCP, Azure, multi-tenant APIs, data pipelines, cloud infrastructure, observability",
+      },
       { name: "theme-color", content: "#0d0d0d" },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { name: "author", content: "Mathews Shaji" },
     ],
-    links: [
-      { rel: "canonical", href: "/" },
-    ],
+    links: [{ rel: "canonical", href: "/" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -47,11 +55,19 @@ export const Route = createFileRoute("/")({
           description: description,
           url: "/",
           image: "/og-image.png",
-          sameAs: [
-            "https://github.com/DrUnkeN-SoUL",
-            "https://linkedin.com/in/mathews-shaji",
+          sameAs: ["https://github.com/DrUnkeN-SoUL", "https://linkedin.com/in/mathews-shaji"],
+          knowsAbout: [
+            "Python",
+            "Go",
+            "Rust",
+            "FastAPI",
+            "TypeScript",
+            "AWS",
+            "GCP",
+            "Azure",
+            "DevOps",
+            "Cloud Infrastructure",
           ],
-          knowsAbout: ["Python", "Go", "Rust", "FastAPI", "TypeScript", "AWS", "GCP", "Azure", "DevOps", "Cloud Infrastructure"],
         }),
       },
     ],
@@ -61,45 +77,31 @@ export const Route = createFileRoute("/")({
 
 function SectionLabel({ children }: { children: string }) {
   return (
-    <h2 className="mb-10 text-xs lowercase tracking-[0.4em] text-muted-foreground">
-      {children}
-    </h2>
+    <h2 className="mb-10 text-xs lowercase tracking-[0.4em] text-muted-foreground">{children}</h2>
   );
 }
 
 function Index() {
-  const [introStarted, setIntroStarted] = useState(false);
   const [introComplete, setIntroComplete] = useState(false);
 
-  const handleTransitionStart = useCallback(() => setIntroStarted(true), []);
   const completeIntro = useCallback(() => {
-    setIntroStarted(true);
     setIntroComplete(true);
   }, []);
 
   return (
     <main className="scanlines min-h-screen bg-background font-mono text-foreground">
-      {!introComplete && (
-        <IntroName
-          onComplete={completeIntro}
-          onTransitionStart={handleTransitionStart}
-        />
-      )}
+      {!introComplete && <IntroName onComplete={completeIntro} />}
       <div className="mx-auto max-w-6xl px-5 md:px-10">
         <header className="sticky top-0 z-40 grid grid-cols-[minmax(0,1fr)_auto] items-center bg-background py-6 text-xs tracking-[0.3em] text-muted-foreground">
-          <PixelNameMark visible={introStarted} />
-          <span
-            className={`transition-opacity delay-150 duration-500 ${introStarted ? "opacity-100" : "opacity-0"}`}
-          >
-            ind · utc+5:30
-          </span>
+          <PixelNameMark visible />
+          <span>ind · utc+5:30</span>
         </header>
 
         <section className="grid min-h-[calc(100svh-4rem)] grid-cols-1 content-center gap-10 py-6 md:grid-cols-[minmax(0,1.35fr)_minmax(15rem,0.65fr)] md:items-center md:gap-8 lg:gap-14">
-          <div className={`min-w-0 overflow-hidden transition-opacity duration-700 ${introStarted ? "opacity-100" : "opacity-0"}`}>
+          <div className="min-w-0 overflow-hidden">
             <AsciiPortrait />
           </div>
-          <div className={`min-w-0 transition-all delay-150 duration-700 ${introStarted ? "translate-y-0 opacity-100" : "translate-y-3 opacity-0"}`}>
+          <div className="min-w-0">
             <div className="mb-10 md:mb-12">
               <h1 className="text-xl md:text-[clamp(1.15rem,2.2vh,1.875rem)]">Mathews Shaji</h1>
               <p className="mt-2 text-[0.65rem] leading-relaxed tracking-[0.2em] text-muted-foreground">
