@@ -24,6 +24,41 @@ export const metrics = [
   { value: "1", label: "guinness world record" },
 ];
 
+/**
+ * Canonical skill list. Feeds the homepage `knowsAbout` structured data, so
+ * only list things the rest of this file (or public/llm.txt) already backs up.
+ */
+export const skills = [
+  "Python",
+  "FastAPI",
+  "Go",
+  "Rust",
+  "TypeScript",
+  "React",
+  "Next.js",
+  "PostgreSQL",
+  "MySQL",
+  "Redis",
+  "SQLAlchemy",
+  "AWS",
+  "GCP",
+  "Azure",
+  "Terraform",
+  "Ansible",
+  "Docker",
+  "Kubernetes",
+  "Helm",
+  "GitHub Actions",
+  "Prometheus",
+  "Grafana",
+  "Loki",
+  "eBPF",
+  "OpenAI",
+  "Amazon Bedrock",
+  "Multi-tenant architecture",
+  "Observability",
+];
+
 export type Role = {
   period: string;
   title: string;
@@ -142,10 +177,17 @@ export const community = [
   "CNCF Kochi — volunteered at Kubernetes Community Day 2026",
 ];
 
-export const links = [
+export type ProfileLink = {
+  label: string;
+  href: string;
+  /** `me` marks identity links (GitHub, LinkedIn) for verification. */
+  rel?: "me";
+};
+
+export const links: ProfileLink[] = [
   { label: "Email", href: "mailto:mail@mathewsshaji.com" },
-  { label: "GitHub", href: "https://github.com/DrUnkeN-SoUL" },
-  { label: "LinkedIn", href: "https://linkedin.com/in/mathews-shaji" },
+  { label: "GitHub", href: "https://github.com/DrUnkeN-SoUL", rel: "me" },
+  { label: "LinkedIn", href: "https://linkedin.com/in/mathews-shaji", rel: "me" },
   { label: "Writing", href: "https://blog.mathewsshaji.com" },
   { label: "Résumé", href: "https://mathewsshaji.com/Mathews_Shaji_Resume.pdf" },
 ];

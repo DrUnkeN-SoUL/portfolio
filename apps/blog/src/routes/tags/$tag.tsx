@@ -3,6 +3,7 @@ import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { SITE } from "@mathews/ui";
 import { BlogFooter, BlogHeader } from "@/components/site-chrome";
 import { formatPostDate, getPostsByTag } from "@/lib/posts";
+import { pageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/tags/$tag")({
   loader: ({ params }) => {
@@ -17,16 +18,7 @@ export const Route = createFileRoute("/tags/$tag")({
     const url = `${SITE.blog}/tags/${encodeURIComponent(params.tag)}`;
 
     return {
-      meta: [
-        { title },
-        { name: "description", content: description },
-        { property: "og:title", content: title },
-        { property: "og:description", content: description },
-        { property: "og:type", content: "website" },
-        { property: "og:url", content: url },
-        { name: "twitter:title", content: title },
-        { name: "twitter:description", content: description },
-      ],
+      meta: pageMeta({ title, description, url }),
       links: [{ rel: "canonical", href: url }],
     };
   },

@@ -11,9 +11,7 @@ import { useEffect, type ReactNode } from "react";
 import { SITE, SITE_FONT_LINKS } from "@mathews/ui";
 import appCss from "@mathews/ui/styles.css?url";
 
-const blogTitle = "Writing — Mathews Shaji";
-const blogDescription =
-  "Notes on backend systems, data pipelines, cloud infrastructure and the occasional side project.";
+import { BLOG_DESCRIPTION, BLOG_NAME, OG_IMAGE, OG_IMAGE_ALT } from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -64,22 +62,24 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: blogTitle },
-      { name: "description", content: blogDescription },
+      { title: BLOG_NAME },
+      { name: "description", content: BLOG_DESCRIPTION },
       { name: "author", content: "Mathews Shaji" },
       { name: "theme-color", content: "#0d0d0d" },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { property: "og:site_name", content: "Mathews Shaji" },
       { property: "og:type", content: "website" },
-      { property: "og:title", content: blogTitle },
-      { property: "og:description", content: blogDescription },
-      { property: "og:image", content: `${SITE.blog}/og-image.png` },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
+      { property: "og:locale", content: "en_IN" },
+      { property: "og:title", content: BLOG_NAME },
+      { property: "og:description", content: BLOG_DESCRIPTION },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:secure_url", content: OG_IMAGE },
+      { property: "og:image:alt", content: OG_IMAGE_ALT },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: blogTitle },
-      { name: "twitter:description", content: blogDescription },
-      { name: "twitter:image", content: `${SITE.blog}/twitter-image.png` },
+      { name: "twitter:title", content: BLOG_NAME },
+      { name: "twitter:description", content: BLOG_DESCRIPTION },
+      { name: "twitter:image", content: OG_IMAGE },
+      { name: "twitter:image:alt", content: OG_IMAGE_ALT },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -90,6 +90,9 @@ export const Route = createRootRoute({
         title: "Mathews Shaji — writing",
         href: `${SITE.blog}/rss.xml`,
       },
+      // Identity signals: the same person owns both sites.
+      { rel: "me", href: "https://github.com/DrUnkeN-SoUL" },
+      { rel: "me", href: "https://linkedin.com/in/mathews-shaji" },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon", sizes: "any" },
       { rel: "apple-touch-icon", href: "/favicon.svg" },

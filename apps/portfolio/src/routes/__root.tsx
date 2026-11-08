@@ -10,8 +10,19 @@ import {
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
-import { SITE_FONT_LINKS } from "@mathews/ui";
+import { SITE, SITE_FONT_LINKS } from "@mathews/ui";
 import appCss from "@mathews/ui/styles.css?url";
+
+import {
+  GITHUB_URL,
+  HOME_DESCRIPTION,
+  HOME_TITLE,
+  LINKEDIN_URL,
+  OG_IMAGE,
+  OG_IMAGE_ALT,
+  RSS_URL,
+  SITE_NAME,
+} from "@/lib/seo";
 
 function NotFoundComponent() {
   return (
@@ -75,35 +86,27 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Mathews Shaji" },
-      {
-        name: "description",
-        content: "Backend-leaning full-stack developer working across AWS, GCP and Azure.",
-      },
-      { name: "author", content: "Mathews Shaji" },
-      {
-        name: "keywords",
-        content:
-          "Mathews Shaji, full-stack developer, backend developer, DevOps engineer, Python, Go, Rust, FastAPI, TypeScript, AWS, GCP, Azure",
-      },
+      { title: HOME_TITLE },
+      { name: "description", content: HOME_DESCRIPTION },
+      { name: "author", content: SITE_NAME },
       { name: "theme-color", content: "#0d0d0d" },
-      { name: "robots", content: "index, follow" },
-      { property: "og:title", content: "Mathews Shaji" },
-      {
-        property: "og:description",
-        content: "Backend-leaning full-stack developer working across AWS, GCP and Azure.",
-      },
+      { name: "robots", content: "index, follow, max-image-preview:large" },
+      { property: "og:site_name", content: SITE_NAME },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: "/og-image.png" },
+      { property: "og:locale", content: "en_IN" },
+      { property: "og:title", content: HOME_TITLE },
+      { property: "og:description", content: HOME_DESCRIPTION },
+      { property: "og:image", content: OG_IMAGE },
+      { property: "og:image:secure_url", content: OG_IMAGE },
+      { property: "og:image:type", content: "image/png" },
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: OG_IMAGE_ALT },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Mathews Shaji" },
-      {
-        name: "twitter:description",
-        content: "Backend-leaning full-stack developer working across AWS, GCP and Azure.",
-      },
-      { name: "twitter:image", content: "/twitter-image.png" },
+      { name: "twitter:title", content: HOME_TITLE },
+      { name: "twitter:description", content: HOME_DESCRIPTION },
+      { name: "twitter:image", content: OG_IMAGE },
+      { name: "twitter:image:alt", content: OG_IMAGE_ALT },
     ],
     links: [
       {
@@ -114,6 +117,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon", sizes: "any" },
       { rel: "apple-touch-icon", href: "/favicon.svg" },
+      // The blog is the long-form feed; advertise it from the portfolio too.
+      {
+        rel: "alternate",
+        type: "application/rss+xml",
+        title: `${SITE_NAME} — writing`,
+        href: RSS_URL,
+      },
+      // Identity signals for this person's profiles.
+      { rel: "me", href: GITHUB_URL },
+      { rel: "me", href: LINKEDIN_URL },
     ],
   }),
   shellComponent: RootShell,

@@ -5,71 +5,26 @@ import { AsciiPortrait, RevealText } from "@/components/AsciiPortrait";
 import { IntroName, PixelNameMark } from "@/components/IntroName";
 import { ProjectRow } from "@/components/ProjectRow";
 import { bio, community, links, projects, roles } from "@/data/portfolio";
-
-const title = "Mathews Shaji — Backend-leaning full-stack developer";
-const description =
-  "Mathews Shaji builds data pipelines, multi-tenant APIs and cloud infrastructure across AWS, GCP and Azure. Python, Go and Rust.";
+import { HOME_DESCRIPTION, HOME_TITLE, HOME_URL, KEYWORDS, PROFILE_JSON_LD } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
+      { title: HOME_TITLE },
+      { name: "description", content: HOME_DESCRIPTION },
+      { name: "keywords", content: KEYWORDS },
+      { property: "og:title", content: HOME_TITLE },
+      { property: "og:description", content: HOME_DESCRIPTION },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/" },
-      { property: "og:site_name", content: "Mathews Shaji" },
-      { property: "og:image", content: "/og-image.png" },
-      { property: "og:image:width", content: "1200" },
-      { property: "og:image:height", content: "630" },
-      {
-        property: "og:image:alt",
-        content: "Mathews Shaji — pixel M favicon mark, black and amber",
-      },
-      { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: title },
-      { name: "twitter:description", content: description },
-      { name: "twitter:image", content: "/twitter-image.png" },
-      {
-        name: "twitter:image:alt",
-        content: "Mathews Shaji — pixel M favicon mark, black and amber",
-      },
-      {
-        name: "keywords",
-        content:
-          "Mathews Shaji, full-stack developer, backend developer, DevOps engineer, Python, Go, Rust, FastAPI, TypeScript, AWS, GCP, Azure, multi-tenant APIs, data pipelines, cloud infrastructure, observability",
-      },
-      { name: "theme-color", content: "#0d0d0d" },
-      { name: "robots", content: "index, follow, max-image-preview:large" },
-      { name: "author", content: "Mathews Shaji" },
+      { property: "og:url", content: HOME_URL },
+      { name: "twitter:title", content: HOME_TITLE },
+      { name: "twitter:description", content: HOME_DESCRIPTION },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: HOME_URL }],
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Person",
-          name: "Mathews Shaji",
-          jobTitle: "Backend-leaning full-stack developer",
-          description: description,
-          url: "/",
-          image: "/og-image.png",
-          sameAs: ["https://github.com/DrUnkeN-SoUL", "https://linkedin.com/in/mathews-shaji"],
-          knowsAbout: [
-            "Python",
-            "Go",
-            "Rust",
-            "FastAPI",
-            "TypeScript",
-            "AWS",
-            "GCP",
-            "Azure",
-            "DevOps",
-            "Cloud Infrastructure",
-          ],
-        }),
+        children: JSON.stringify(PROFILE_JSON_LD),
       },
     ],
   }),
@@ -112,12 +67,10 @@ function Index() {
             <div className="mb-10 md:mb-12">
               <h1 className="hero-title text-xl md:text-[clamp(1.15rem,2.2vh,1.875rem)]">
                 <RevealText active={portraitActive}>Mathews Shaji</RevealText>
+                <span className="mt-2 block text-[0.65rem] leading-relaxed tracking-[0.2em] text-muted-foreground">
+                  <RevealText active={portraitActive}>Full-Stack &amp; DevOps Engineer</RevealText>
+                </span>
               </h1>
-              <p className="mt-2 text-[0.65rem] leading-relaxed tracking-[0.2em] text-muted-foreground">
-                <RevealText active={portraitActive}>
-                  backend-leaning full-stack developer
-                </RevealText>
-              </p>
             </div>
             <SectionLabel>
               <RevealText active={portraitActive}>biography</RevealText>
@@ -190,7 +143,7 @@ function Index() {
         <section className="py-24 md:py-32">
           <SectionLabel>contact</SectionLabel>
           <p className="max-w-md text-sm leading-8">
-            Open to backend, infrastructure and full-stack work.
+            Open to remote, full-time and contract work — backend, platform and full-stack roles.
           </p>
           <ul className="mt-8 flex flex-col gap-3 text-sm">
             {links.map((link) => (
@@ -198,7 +151,7 @@ function Index() {
                 <a
                   href={link.href}
                   target="_blank"
-                  rel="noreferrer noopener"
+                  rel={link.rel === "me" ? "me noreferrer noopener" : "noreferrer noopener"}
                   className="underline underline-offset-4 hover:no-underline"
                 >
                   {link.label} →
