@@ -180,13 +180,21 @@ The Dockerfile installs the Bun workspace at the repo root, builds
 ## Content and SEO locations
 
 - Portfolio copy: `apps/portfolio/src/data/portfolio.ts`
-- Portfolio SEO: `apps/portfolio/src/routes/index.tsx` and `__root.tsx`
+- Portfolio SEO (title, Open Graph, JSON-LD): `apps/portfolio/src/lib/seo.ts`, used by
+  `apps/portfolio/src/routes/index.tsx` and `__root.tsx`
 - Blog routes: `apps/blog/src/routes/`
+- Blog SEO helpers and default OG card: `apps/blog/src/lib/seo.ts`, `apps/blog/public/og-blog.png`
 - Blog front matter schema: `apps/blog/src/lib/frontmatter.ts`
 - Markdown -> HTML (Shiki at build time): `apps/blog/src/lib/markdown.ts`
 - Blog RSS/sitemap: `apps/blog/src/routes/rss[.]xml.ts` and `sitemap[.]xml.ts`
 - Shared design tokens and prose styles: `packages/ui/styles.css`
 - Pages CMS schema: `.pages.yml`
+- AI/agent profile: `apps/portfolio/public/llm.txt`, mirrored byte-for-byte as
+  `apps/portfolio/public/llms.txt` at <https://mathewsshaji.com/llms.txt>
 
-Per-post SEO includes canonical URLs, Open Graph and Twitter tags,
-`article:published_time`, and JSON-LD `BlogPosting` for Mathews Shaji.
+Per-post SEO includes absolute canonical and Open Graph/Twitter URLs (posts
+without a cover fall back to `og-blog.png`), `article:published_time`, and
+JSON-LD `BlogPosting` whose author is the same
+`https://mathewsshaji.com/#person` node the portfolio publishes. All of it is
+prerendered into the static HTML, since crawlers and link-preview bots do not
+run JavaScript.
