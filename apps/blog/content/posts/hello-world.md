@@ -8,8 +8,6 @@ tags:
 draft: false
 ---
 
-# Hello, world
-
 This is the first post on the writing section of my site. I spend most of my
 time building backends, data pipelines and infrastructure, and this is where I
 will write down the parts that are worth keeping.
