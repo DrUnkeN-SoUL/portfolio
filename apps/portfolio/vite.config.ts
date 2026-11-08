@@ -9,7 +9,7 @@ import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 // Vercel sets VERCEL=1 during builds. In that case Nitro must emit the Vercel
 // Build Output API (`.vercel/output`) instead of a standalone Node server.
 // Everywhere else (Docker, `node .output/server/index.mjs`) keeps node-server.
-const isVercel = Boolean(process.env.VERCEL);
+const isVercel = Boolean(process.env["VERCEL"]);
 
 export default defineConfig({
   tanstackStart: {

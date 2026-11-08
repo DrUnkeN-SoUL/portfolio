@@ -6,10 +6,12 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
 
-import appCss from "../styles.css?url";
+import { SITE_FONT_LINKS } from "@mathews/ui";
+import appCss from "@mathews/ui/styles.css?url";
 
 function NotFoundComponent() {
   return (
@@ -33,7 +35,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
 
@@ -76,18 +78,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Mathews Shaji" },
       {
         name: "description",
-        content:
-          "Backend-leaning full-stack developer working across AWS, GCP and Azure.",
+        content: "Backend-leaning full-stack developer working across AWS, GCP and Azure.",
       },
       { name: "author", content: "Mathews Shaji" },
-      { name: "keywords", content: "Mathews Shaji, full-stack developer, backend developer, DevOps engineer, Python, Go, Rust, FastAPI, TypeScript, AWS, GCP, Azure" },
+      {
+        name: "keywords",
+        content:
+          "Mathews Shaji, full-stack developer, backend developer, DevOps engineer, Python, Go, Rust, FastAPI, TypeScript, AWS, GCP, Azure",
+      },
       { name: "theme-color", content: "#0d0d0d" },
       { name: "robots", content: "index, follow" },
       { property: "og:title", content: "Mathews Shaji" },
       {
         property: "og:description",
-        content:
-          "Backend-leaning full-stack developer working across AWS, GCP and Azure.",
+        content: "Backend-leaning full-stack developer working across AWS, GCP and Azure.",
       },
       { property: "og:type", content: "website" },
       { property: "og:image", content: "/og-image.png" },
@@ -95,7 +99,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Mathews Shaji" },
-      { name: "twitter:description", content: "Backend-leaning full-stack developer working across AWS, GCP and Azure." },
+      {
+        name: "twitter:description",
+        content: "Backend-leaning full-stack developer working across AWS, GCP and Azure.",
+      },
       { name: "twitter:image", content: "/twitter-image.png" },
       { name: "twitter:site", content: "@Lovable" },
     ],
@@ -104,12 +111,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "stylesheet",
         href: appCss,
       },
-      { rel: "preconnect", href: "https://fonts.googleapis.com" },
-      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      {
-        rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap",
-      },
+      ...SITE_FONT_LINKS,
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon", sizes: "any" },
       { rel: "apple-touch-icon", href: "/favicon.svg" },

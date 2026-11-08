@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useCallback, useState, type ReactNode } from "react";
+import { SiteNav } from "@mathews/ui";
 import { AsciiPortrait, RevealText } from "@/components/AsciiPortrait";
 import { IntroName, PixelNameMark } from "@/components/IntroName";
 import { ProjectRow } from "@/components/ProjectRow";
@@ -97,7 +98,10 @@ function Index() {
       <div className="mx-auto max-w-6xl px-5 md:px-10">
         <header className="sticky top-0 z-40 grid grid-cols-[minmax(0,1fr)_auto] items-center bg-background py-6 text-xs tracking-[0.3em] text-muted-foreground">
           <PixelNameMark visible />
-          <span>ind · utc+5:30</span>
+          <div className="flex items-baseline gap-4">
+            <SiteNav current="portfolio" />
+            <span className="hidden sm:inline">ind · utc+5:30</span>
+          </div>
         </header>
 
         <section className="grid min-h-[calc(100svh-4rem)] grid-cols-1 content-center gap-10 py-6 md:grid-cols-[minmax(0,1.35fr)_minmax(15rem,0.65fr)] md:items-center md:gap-8 lg:gap-14">

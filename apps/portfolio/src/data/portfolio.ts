@@ -146,5 +146,6 @@ export const links = [
   { label: "Email", href: "mailto:mail@mathewsshaji.com" },
   { label: "GitHub", href: "https://github.com/DrUnkeN-SoUL" },
   { label: "LinkedIn", href: "https://linkedin.com/in/mathews-shaji" },
+  { label: "Writing", href: "https://blog.mathewsshaji.com" },
   { label: "Résumé", href: "https://mathewsshaji.com/Mathews_Shaji_Resume.pdf" },
 ];
