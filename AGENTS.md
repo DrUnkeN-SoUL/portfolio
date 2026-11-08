@@ -55,9 +55,8 @@ draft: true # optional, defaults to false
 cover: /images/blog/cover.png # optional, path under public/
 ---
 
-# A human title
-
-Markdown body.
+Markdown body. Do not repeat the title as a `# ` heading: the page renders
+the front-matter title as the only `<h1>`. Start sections at `## `.
 ```
 
 Required fields: `title`, `description`, `date`, `tags`, `draft`.

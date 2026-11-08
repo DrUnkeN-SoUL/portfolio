@@ -103,9 +103,32 @@ export function parsePost(raw: string, fileName: string): Post {
     );
   }
 
+  const body = parsed.content.trim();
+
+  if (hasLevelOneHeading(body)) {
+    throw new Error(
+      `[blog] content/posts/${fileName} has a "# " heading in the body. The page already renders the front-matter title as the only <h1>; start sections at "## ".`,
+    );
+  }
+
   return {
     ...result.data,
     slug,
-    body: parsed.content.trim(),
+    body,
   };
+}
+
+/** True when the Markdown body has an ATX level-1 heading outside fenced code. */
+function hasLevelOneHeading(body: string): boolean {
+  let fence: string | null = null;
+  for (const line of body.split("\n")) {
+    const marker = /^\s{0,3}(`{3,}|~{3,})/.exec(line)?.[1];
+    if (marker) {
+      if (fence === null) fence = marker[0];
+      else if (marker[0] === fence) fence = null;
+      continue;
+    }
+    if (fence === null && /^\s{0,3}#(\s|$)/.test(line)) return true;
+  }
+  return false;
 }
