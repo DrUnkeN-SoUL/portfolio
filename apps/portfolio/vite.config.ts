@@ -1,31 +1,56 @@
-// @lovable.dev/vite-tanstack-config already includes the following — do NOT add them manually
-// or the app will break with duplicate plugins:
-//   - TanStack devtools (dev-only, first), tanstackStart, viteReact, tailwindcss, tsConfigPaths,
-//     nitro (build-only using cloudflare as a default target), VITE_* env injection, @ path alias,
-//     React/TanStack dedupe, error logger plugins, and sandbox detection (port/host/strictPort).
-// You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
-import { defineConfig } from "@lovable.dev/vite-tanstack-config";
+import { fileURLToPath } from "node:url";
+
+import tailwindcss from "@tailwindcss/vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
+import { nitro } from "nitro/vite";
+import { defineConfig } from "vite";
+import tsConfigPaths from "vite-tsconfig-paths";
+
+const srcDir = fileURLToPath(new URL("./src", import.meta.url));
 
 // Vercel sets VERCEL=1 during builds. In that case Nitro must emit the Vercel
 // Build Output API (`.vercel/output`) instead of a standalone Node server.
 // Everywhere else (Docker, `node .output/server/index.mjs`) keeps node-server.
 const isVercel = Boolean(process.env["VERCEL"]);
 
-export default defineConfig({
-  tanstackStart: {
-    // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
-    // nitro/vite builds from this
-    server: { entry: "server" },
+export default defineConfig(({ command }) => ({
+  resolve: {
+    // `@/…` maps to src. Duplicates of React and TanStack packages break hooks
+    // and router context, so pin them to a single copy from the workspace root.
+    alias: { "@": srcDir },
+    dedupe: [
+      "react",
+      "react-dom",
+      "react/jsx-runtime",
+      "react/jsx-dev-runtime",
+      "@tanstack/react-query",
+      "@tanstack/query-core",
+    ],
   },
-  nitro: {
-    preset: isVercel ? "vercel" : "node-server",
-  },
-  vite: {
-    server: {
-      watch: {
-        usePolling: true,
-        interval: 100,
+  plugins: [
+    tailwindcss(),
+    tsConfigPaths({ projects: ["./tsconfig.json"] }),
+    tanstackStart({
+      // Server-only imports must never leak into the client bundle.
+      importProtection: {
+        behavior: "error",
+        client: {
+          files: ["**/server/**"],
+          specifiers: ["server-only"],
+        },
       },
-    },
+      // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR
+      // error wrapper). Only used for the build; Nitro builds from this.
+      server: { entry: "server" },
+    }),
+    // Nitro produces `.output` for Docker and the Vercel Build Output API on
+    // Vercel. It is build-only: `vite dev` keeps using Start's own SSR server.
+    ...(command === "build" ? [nitro({ preset: isVercel ? "vercel" : "node-server" })] : []),
+    viteReact(),
+  ],
+  server: {
+    host: "::",
+    port: 8080,
   },
-});
+}));

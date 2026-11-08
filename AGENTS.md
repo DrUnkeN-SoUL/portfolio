@@ -104,9 +104,10 @@ kebab-case filenames. Prefer `.webp` or compressed `.png`.
 - Keep the lockfile text-based (`bun.lock`). Do not switch to a binary lockfile.
 - Add app dependencies to the app's `package.json`, shared UI dependencies to
   `packages/ui/package.json`, and repo tooling to the root `package.json`.
-- The portfolio's `vite.config.ts` relies on `@lovable.dev/vite-tanstack-config`
-  to add TanStack Start, React, Tailwind, tsconfig paths and Nitro. Do not add
-  those plugins manually.
+- Both apps use a plain Vite config: TanStack Start, React, Tailwind,
+  `vite-tsconfig-paths`, and Nitro (portfolio only, build-only). Keep the plugin
+  list and the `@` alias in `vite.config.ts` in sync between the two apps; do not
+  wrap them in another config helper.
 
 ## Where things live
 
