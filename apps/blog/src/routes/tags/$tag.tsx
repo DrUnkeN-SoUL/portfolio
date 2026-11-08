@@ -26,7 +26,6 @@ export const Route = createFileRoute("/tags/$tag")({
         { property: "og:url", content: url },
         { name: "twitter:title", content: title },
         { name: "twitter:description", content: description },
-        { name: "robots", content: "noindex, follow" },
       ],
       links: [{ rel: "canonical", href: url }],
     };
