@@ -104,7 +104,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content: "Backend-leaning full-stack developer working across AWS, GCP and Azure.",
       },
       { name: "twitter:image", content: "/twitter-image.png" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
