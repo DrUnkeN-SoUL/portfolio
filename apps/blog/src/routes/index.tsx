@@ -1,42 +1,18 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 
-import { SITE } from "@mathews/ui";
 import { BlogFooter, BlogHeader } from "@/components/site-chrome";
 import { formatPostDate, getAllTags, posts } from "@/lib/posts";
-
-const title = "Writing — Mathews Shaji";
-const description =
-  "Notes on backend systems, data pipelines, cloud infrastructure and the occasional side project.";
+import { BLOG_DESCRIPTION, BLOG_JSON_LD, BLOG_NAME, BLOG_URL, pageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
-      { title },
-      { name: "description", content: description },
-      { property: "og:title", content: title },
-      { property: "og:description", content: description },
-      { property: "og:type", content: "website" },
-      { property: "og:url", content: `${SITE.blog}/` },
-      { name: "twitter:title", content: title },
-      { name: "twitter:description", content: description },
-    ],
-    links: [{ rel: "canonical", href: `${SITE.blog}/` }],
+    meta: pageMeta({ title: BLOG_NAME, description: BLOG_DESCRIPTION, url: BLOG_URL }),
+    links: [{ rel: "canonical", href: BLOG_URL }],
     scripts: [
       {
         type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Blog",
-          name: "Mathews Shaji — writing",
-          description,
-          url: `${SITE.blog}/`,
-          author: {
-            "@type": "Person",
-            name: "Mathews Shaji",
-            url: SITE.portfolio,
-          },
-        }),
+        children: JSON.stringify(BLOG_JSON_LD),
       },
     ],
   }),

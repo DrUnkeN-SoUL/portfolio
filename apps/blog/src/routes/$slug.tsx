@@ -3,6 +3,15 @@ import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 import { SITE } from "@mathews/ui";
 import { BlogFooter, BlogHeader } from "@/components/site-chrome";
 import { formatPostDate, getPostBySlug } from "@/lib/posts";
+import {
+  BLOG_ID,
+  BLOG_NAME,
+  BLOG_URL,
+  OG_IMAGE,
+  OG_IMAGE_ALT,
+  PERSON_ID,
+  pageMeta,
+} from "@/lib/seo";
 
 export const Route = createFileRoute("/$slug")({
   loader: ({ params }) => {
@@ -19,28 +28,29 @@ export const Route = createFileRoute("/$slug")({
     }
 
     const url = `${SITE.blog}/${post.slug}`;
-    const image = post.cover ? `${SITE.blog}${post.cover}` : `${SITE.blog}/twitter-image.png`;
+    const hasCover = Boolean(post.cover);
+    const image = post.cover ? `${SITE.blog}${post.cover}` : OG_IMAGE;
+    const imageAlt = hasCover ? `Cover image for ${post.title}` : OG_IMAGE_ALT;
     const published = post.date;
     const modified = post.updated ?? post.date;
     const title = `${post.title} — Mathews Shaji`;
 
     return {
       meta: [
-        { title },
-        { name: "description", content: post.description },
-        { property: "og:title", content: post.title },
-        { property: "og:description", content: post.description },
+        ...pageMeta({
+          title,
+          description: post.description,
+          url,
+          image,
+          imageAlt,
+          // Only the default card is a known 1200x630 PNG.
+          ...(hasCover ? { imageSize: null } : {}),
+        }),
         { property: "og:type", content: "article" },
-        { property: "og:url", content: url },
-        { property: "og:image", content: image },
         { property: "article:published_time", content: published },
         { property: "article:modified_time", content: modified },
         { property: "article:author", content: SITE.portfolio },
         ...post.tags.map((tag) => ({ property: "article:tag", content: tag })),
-        { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: post.title },
-        { name: "twitter:description", content: post.description },
-        { name: "twitter:image", content: image },
       ],
       links: [{ rel: "canonical", href: url }],
       scripts: [
@@ -57,15 +67,10 @@ export const Route = createFileRoute("/$slug")({
             mainEntityOfPage: { "@type": "WebPage", "@id": url },
             image,
             keywords: post.tags.join(", "),
-            author: {
-              "@type": "Person",
-              name: "Mathews Shaji",
-              url: SITE.portfolio,
-            },
-            publisher: {
-              "@type": "Person",
-              name: "Mathews Shaji",
-            },
+            inLanguage: "en",
+            author: { "@id": PERSON_ID },
+            publisher: { "@id": PERSON_ID },
+            isPartOf: { "@type": "Blog", "@id": BLOG_ID, name: BLOG_NAME, url: BLOG_URL },
           }),
         },
       ],

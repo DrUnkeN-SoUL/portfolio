@@ -10,6 +10,7 @@
   "timezone": "IST (UTC+5:30)",
   "email": "mail@mathewsshaji.com",
   "website": "https://mathewsshaji.com",
+  "blog": "https://blog.mathewsshaji.com",
   "github": "https://github.com/DrUnkeN-SoUL",
   "linkedin": "https://linkedin.com/in/mathews-shaji",
   "education": "BCA, Mahatma Gandhi University (2020–2023)",
