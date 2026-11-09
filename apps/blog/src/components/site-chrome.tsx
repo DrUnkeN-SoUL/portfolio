@@ -12,7 +12,7 @@ const RAIL_LABEL =
 export function BlogHeader() {
   return (
     <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto grid h-14 w-full max-w-[1200px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 font-mono text-[0.7rem] tracking-[0.22em] text-muted-foreground md:px-8">
+      <div className="mx-auto grid h-14 w-full max-w-[1320px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 font-mono text-[0.7rem] tracking-[0.22em] text-muted-foreground md:px-8">
         <Link
           to="/"
           className="flex min-w-0 items-baseline gap-2 transition-colors hover:text-foreground"
@@ -34,7 +34,7 @@ function TableOfContents({ toc }: { toc: Post["toc"] }) {
   return (
     <nav
       aria-label="On this page"
-      className="sticky top-14 hidden max-h-[calc(100vh-3.5rem)] max-w-[220px] self-start overflow-y-auto pt-[8.5rem] xl:block"
+      className="sticky top-14 hidden max-h-[calc(100vh-3.5rem)] w-[200px] self-start overflow-y-auto pt-[8.5rem] xl:block"
     >
       <p className={RAIL_LABEL}>On this page</p>
       <ul className="space-y-px border-l border-border">
@@ -95,8 +95,8 @@ export function BlogShell({
   return (
     <div className="flex min-h-screen flex-col">
       <BlogHeader />
-      <div className="mx-auto grid w-full flex-1 max-w-[1440px] grid-cols-1 px-5 md:px-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,820px)_minmax(0,1fr)] xl:gap-x-12">
-        <main className="mx-auto w-full max-w-[820px] min-w-0 xl:col-start-2">{children}</main>
+      <div className="mx-auto grid w-full max-w-[1320px] flex-1 grid-cols-1 px-5 md:px-8 xl:grid-cols-[minmax(0,1000px)_200px] xl:justify-between xl:gap-x-14">
+        <main className="w-full max-w-[1000px] min-w-0">{children}</main>
         {toc && <TableOfContents toc={toc} />}
       </div>
       <BlogFooter />
@@ -114,7 +114,7 @@ const FOOTER_LINKS = [
 export function BlogFooter() {
   return (
     <footer className="mt-24">
-      <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-6 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground md:px-8">
+      <div className="mx-auto flex w-full max-w-[1320px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-6 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground md:px-8">
         <span>© {new Date().getFullYear()} mathews shaji</span>
         <nav aria-label="Elsewhere" className="flex items-center gap-5">
           {FOOTER_LINKS.map((link) => (
