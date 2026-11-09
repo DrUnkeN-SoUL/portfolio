@@ -69,7 +69,7 @@ function BlogSidebar({ tag }: { tag?: string | undefined }) {
   return (
     <nav
       aria-label="Blog"
-      className="sticky top-14 hidden h-[calc(100dvh-3.5rem)] flex-col self-start pt-10 pb-6 lg:flex"
+      className="sticky top-14 hidden max-h-[calc(100dvh-3.5rem)] flex-col self-start pt-10 pb-6 lg:flex"
     >
       <button
         type="button"
