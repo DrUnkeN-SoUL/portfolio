@@ -8,8 +8,9 @@ const LINKS: Array<{ site: Site; label: string; href: string }> = [
 ];
 
 /**
- * Cross-site navigation. The current site is plain text; the other site is a
- * link. Styled to match the portfolio's small, wide-tracked header type.
+ * Cross-site navigation. The current site is plain, brightest text; the other
+ * site is a link in the same style as the rest of the nav, tinted amber on
+ * hover/focus. No arrows: the two labels read as one flat nav either way.
  */
 export function SiteNav({ current }: { current: Site }) {
   return (
@@ -23,12 +24,8 @@ export function SiteNav({ current }: { current: Site }) {
             {link.label}
           </span>
         ) : (
-          <a
-            key={link.site}
-            href={link.href}
-            className="underline-offset-4 transition-colors hover:text-foreground hover:underline"
-          >
-            {link.label} ↗
+          <a key={link.site} href={link.href} className="site-nav-link">
+            {link.label}
           </a>
         ),
       )}

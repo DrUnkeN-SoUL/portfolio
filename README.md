@@ -11,7 +11,7 @@ apps/blog/              static blog -> https://blog.mathewsshaji.com (Vercel pro
   public/images/blog/   post images
 packages/ui/            shared styles.css, fonts and cross-site nav
 .pages.yml              Pages CMS schema
-AGENTS.md               rules for coding agents (CLAUDE.md points here)
+AGENTS.md               rules for coding agents
 ```
 
 Both apps import the same `packages/ui/styles.css`, so the design tokens,
@@ -75,7 +75,7 @@ secrets in them.
 Images go in `apps/blog/public/images/blog/` and are referenced as
 `/images/blog/<file>`. Pages CMS uploads to the same folder.
 
-See `AGENTS.md` for the full agent/content rules.
+Agent-only rules (things this README does not cover) are in `AGENTS.md`.
 
 ## Editing from the browser with Pages CMS
 
