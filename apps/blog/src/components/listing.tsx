@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import { PostList } from "@/components/post-list";
-import { BlogShell, InlineSearch } from "@/components/site-chrome";
+import { BlogShell } from "@/components/site-chrome";
 import { PAGE_COUNT, getAllTags, getPage, posts } from "@/lib/posts";
 
 const PAGER_LINK =
@@ -19,7 +19,7 @@ function Pagination({ page }: { page: number }) {
   const numbers = Array.from({ length: PAGE_COUNT }, (_, i) => i + 1);
 
   return (
-    <nav aria-label="Pagination" className="flex items-center gap-1">
+    <nav aria-label="Pagination" className="flex items-center justify-center gap-1">
       {page > 1 && (
         <Link {...pageLink(page - 1)} rel="prev" className={PAGER_LINK}>
           ← newer
@@ -61,7 +61,6 @@ export function Listing({ page }: { page: number }) {
         <p className="mt-3 max-w-xl text-[0.975rem] leading-relaxed text-muted-foreground">
           Notes on backends, infrastructure and the details worth keeping.
         </p>
-        <InlineSearch className="mt-6" />
       </section>
 
       {posts.length === 0 ? (
@@ -72,10 +71,8 @@ export function Listing({ page }: { page: number }) {
         <PostList posts={pagePosts} />
       )}
 
-      <Pagination page={page} />
-
       {tags.length > 0 && (
-        <section className="mt-8 lg:hidden">
+        <section className="mb-8 lg:hidden">
           <h2 className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
             tags
           </h2>
@@ -95,6 +92,7 @@ export function Listing({ page }: { page: number }) {
           </ul>
         </section>
       )}
+      <Pagination page={page} />
     </BlogShell>
   );
 }

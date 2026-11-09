@@ -41,16 +41,19 @@ export function BlogHeader() {
   );
 }
 
-/** Search field for screens without the left rail; sits in the page body. */
-export function InlineSearch({ className = "" }: { className?: string }) {
+/**
+ * Floating search button for screens without the left rail. It sits at the
+ * bottom centre, inside the thumb's reach for one-handed use.
+ */
+function MobileSearchButton() {
   return (
     <button
       type="button"
       onClick={openSearch}
-      className={`flex h-10 w-full items-center gap-2.5 rounded-lg bg-white/[0.045] px-3.5 text-left text-[0.9rem] text-muted-foreground ring-1 ring-white/[0.06] transition-colors ring-inset hover:bg-white/[0.07] lg:hidden ${className}`}
+      className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-40 flex h-11 -translate-x-1/2 items-center gap-2 rounded-full bg-[#262626]/95 px-5 text-[0.9rem] text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-colors hover:bg-[#2c2c2c] lg:hidden"
     >
-      <SearchIcon className="size-4 shrink-0 opacity-70" />
-      Search posts…
+      <SearchIcon className="size-4 opacity-80" />
+      Search
     </button>
   );
 }
@@ -211,6 +214,7 @@ export function BlogShell({
         {hasToc && toc && <TableOfContents toc={toc} />}
       </div>
       <BlogFooter />
+      <MobileSearchButton />
       <SearchDialog />
     </div>
   );
@@ -264,7 +268,7 @@ export function BlogFooter() {
   return (
     <footer className="mt-8">
       <div
-        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-5 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
+        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 pb-20 font-mono lg:pb-5 text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
       >
         <span>© {new Date().getFullYear()} mathews shaji</span>
         <nav aria-label="Elsewhere" className="flex items-center gap-5">

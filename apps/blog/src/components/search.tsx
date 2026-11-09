@@ -127,7 +127,7 @@ export function SearchDialog() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-start justify-center bg-black/55 px-4 pt-[12vh] backdrop-blur-[2px]"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-[2px] sm:items-start sm:px-4 sm:pt-[12vh] sm:pb-0"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) setOpen(false);
       }}
@@ -136,9 +136,9 @@ export function SearchDialog() {
         role="dialog"
         aria-modal="true"
         aria-label="Search writing"
-        className="w-full max-w-[600px] overflow-hidden rounded-xl border border-border bg-card shadow-2xl shadow-black/50"
+        className="flex w-full max-w-[600px] flex-col-reverse overflow-hidden rounded-xl border border-border bg-card shadow-2xl shadow-black/50 sm:flex-col"
       >
-        <div className="flex items-center gap-3 border-b border-border px-4">
+        <div className="flex items-center gap-3 border-t border-border px-4 sm:border-t-0 sm:border-b">
           <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
           <input
             ref={inputRef}
@@ -166,7 +166,11 @@ export function SearchDialog() {
           </kbd>
         </div>
 
-        <ul className="max-h-[55vh] overflow-y-auto p-2" role="listbox" aria-label="Results">
+        <ul
+          className="max-h-[60dvh] overflow-y-auto p-2 sm:max-h-[55vh]"
+          role="listbox"
+          aria-label="Results"
+        >
           {results.length === 0 && (
             <li className="px-3 py-8 text-center text-[0.9rem] text-muted-foreground">
               No posts match “{query}”.
