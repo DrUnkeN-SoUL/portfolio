@@ -102,7 +102,7 @@ function PostPage() {
 
   return (
     <BlogShell slug={post.slug} toc={post.toc}>
-      <article className="pt-10 pb-4 md:pt-14">
+      <article className="pt-6 md:pt-12">
         <Link
           to="/"
           className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
@@ -110,7 +110,7 @@ function PostPage() {
           ← all writing
         </Link>
 
-        <header className="mt-8">
+        <header className="mt-5 md:mt-8">
           <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.4rem]">
             {post.title}
           </h1>

@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
 
 import { PostList } from "@/components/post-list";
-import { BlogShell } from "@/components/site-chrome";
+import { BlogShell, InlineSearch } from "@/components/site-chrome";
 import { PAGE_COUNT, getAllTags, getPage, posts } from "@/lib/posts";
 
 const PAGER_LINK =
@@ -19,13 +19,11 @@ function Pagination({ page }: { page: number }) {
   const numbers = Array.from({ length: PAGE_COUNT }, (_, i) => i + 1);
 
   return (
-    <nav aria-label="Pagination" className="mt-14 flex items-center justify-between gap-4">
-      {page > 1 ? (
+    <nav aria-label="Pagination" className="flex items-center gap-1">
+      {page > 1 && (
         <Link {...pageLink(page - 1)} rel="prev" className={PAGER_LINK}>
           ← newer
         </Link>
-      ) : (
-        <span />
       )}
       <ol className="flex items-center gap-1 font-mono text-[0.7rem]">
         {numbers.map((n) => (
@@ -40,12 +38,10 @@ function Pagination({ page }: { page: number }) {
           </li>
         ))}
       </ol>
-      {page < PAGE_COUNT ? (
+      {page < PAGE_COUNT && (
         <Link {...pageLink(page + 1)} rel="next" className={PAGER_LINK}>
           older →
         </Link>
-      ) : (
-        <span />
       )}
     </nav>
   );
@@ -58,18 +54,14 @@ export function Listing({ page }: { page: number }) {
 
   return (
     <BlogShell>
-      <section className="pt-12 pb-8 md:pt-16 md:pb-10">
-        <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.4rem]">
+      <section className="pt-8 pb-6 md:pt-10 md:pb-8">
+        <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.2rem]">
           Writing
         </h1>
         <p className="mt-3 max-w-xl text-[0.975rem] leading-relaxed text-muted-foreground">
           Notes on backends, infrastructure and the details worth keeping.
-          {PAGE_COUNT > 1 && (
-            <span className="ml-2 font-mono text-[0.7rem] tracking-[0.1em] text-muted-foreground/70">
-              page {page} of {PAGE_COUNT}
-            </span>
-          )}
         </p>
+        <InlineSearch className="mt-6" />
       </section>
 
       {posts.length === 0 ? (
@@ -83,7 +75,7 @@ export function Listing({ page }: { page: number }) {
       <Pagination page={page} />
 
       {tags.length > 0 && (
-        <section className="mt-12 lg:hidden">
+        <section className="mt-8 lg:hidden">
           <h2 className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
             tags
           </h2>

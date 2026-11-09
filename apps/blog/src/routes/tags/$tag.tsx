@@ -32,11 +32,11 @@ function TagPage() {
 
   return (
     <BlogShell tag={tag}>
-      <section className="pt-12 pb-8 md:pt-16 md:pb-10">
+      <section className="pt-8 pb-6 md:pt-10 md:pb-8">
         <p className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
           tag
         </p>
-        <h1 className="mt-3 text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.4rem]">
+        <h1 className="mt-3 text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.2rem]">
           #{tag}
         </h1>
         <p className="mt-3 text-[0.975rem] leading-relaxed text-muted-foreground">

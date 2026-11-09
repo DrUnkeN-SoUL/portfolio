@@ -23,26 +23,35 @@ export function BlogHeader() {
   return (
     <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
       <div
-        className={`${FRAME} grid h-14 grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 font-mono text-[0.7rem] tracking-[0.22em] text-muted-foreground`}
+        className={`${FRAME} flex h-14 items-center justify-between gap-3 font-mono text-[0.7rem] tracking-[0.14em] text-muted-foreground sm:tracking-[0.22em]`}
       >
         <Link
           to="/"
-          className="flex min-w-0 items-baseline gap-2 transition-colors hover:text-foreground"
+          className="flex shrink-0 items-baseline gap-2 whitespace-nowrap transition-colors hover:text-foreground"
         >
-          <span className="truncate text-foreground">mathews shaji</span>
+          <span className="text-foreground">mathews shaji</span>
           <span className="hidden text-muted-foreground sm:inline">/ writing</span>
         </Link>
-        <button
-          type="button"
-          onClick={openSearch}
-          aria-label="Search"
-          className="-m-2 p-2 transition-colors hover:text-foreground lg:hidden"
-        >
-          <SearchIcon className="size-4" />
-        </button>
-        <SiteNav current="blog" />
+        <SiteNav
+          current="blog"
+          className="flex items-baseline gap-3 text-[0.65rem] tracking-[0.16em] whitespace-nowrap text-muted-foreground sm:gap-4 sm:tracking-[0.3em]"
+        />
       </div>
     </header>
+  );
+}
+
+/** Search field for screens without the left rail; sits in the page body. */
+export function InlineSearch({ className = "" }: { className?: string }) {
+  return (
+    <button
+      type="button"
+      onClick={openSearch}
+      className={`flex h-10 w-full items-center gap-2.5 rounded-lg bg-white/[0.045] px-3.5 text-left text-[0.9rem] text-muted-foreground ring-1 ring-white/[0.06] transition-colors ring-inset hover:bg-white/[0.07] lg:hidden ${className}`}
+    >
+      <SearchIcon className="size-4 shrink-0 opacity-70" />
+      Search posts…
+    </button>
   );
 }
 
@@ -253,9 +262,9 @@ const SOCIAL_LINKS = [
 /** Site footer: full width, aligned with the header, pinned to the bottom. */
 export function BlogFooter() {
   return (
-    <footer className="mt-12">
+    <footer className="mt-8">
       <div
-        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-6 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
+        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-5 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
       >
         <span>© {new Date().getFullYear()} mathews shaji</span>
         <nav aria-label="Elsewhere" className="flex items-center gap-5">
