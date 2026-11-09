@@ -1,0 +1,70 @@
+# Pages CMS configuration — https://pagescms.org
+#
+# Edit posts in the browser at app.pagescms.org (install the Pages CMS GitHub
+# App on this repository). Paths are relative to the repository root because
+# the monorepo keeps the blog in apps/blog.
+
+media:
+  input: apps/blog/public/images/blog
+  output: /images/blog
+  rename: safe
+  categories: [image]
+
+content:
+  - name: posts
+    label: Writing
+    type: collection
+    path: apps/blog/content/posts
+    format: yaml-frontmatter
+    filename: "{primary}.md"
+    view:
+      primary: title
+      fields: [title, date, draft, tags]
+      sort: [date, title]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+
+      - name: description
+        label: Description
+        type: text
+        required: true
+        options:
+          rows: 3
+
+      - name: date
+        label: Published
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+
+      - name: updated
+        label: Updated (optional)
+        type: date
+        default: ""
+        options:
+          format: yyyy-MM-dd
+
+      - name: tags
+        label: Tags
+        type: string
+        list: true
+
+      - name: draft
+        label: Draft
+        type: boolean
+        default: true
+
+      - name: cover
+        label: Cover image (optional)
+        type: image
+
+      - name: body
+        label: Body
+        type: rich-text
