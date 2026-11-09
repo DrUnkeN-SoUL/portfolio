@@ -11,6 +11,9 @@ export type Post = {
   cover?: string;
   /** Markdown rendered and highlighted at build time. */
   html: string;
+  /** h2/h3 outline, ids match the rendered headings. */
+  toc: { id: string; text: string; depth: 2 | 3 }[];
+  readingMinutes: number;
 };
 
 /**
