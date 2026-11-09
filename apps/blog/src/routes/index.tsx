@@ -23,7 +23,7 @@ function Index() {
 
   return (
     <BlogShell>
-      <section className="pt-14 pb-10 md:pt-20 md:pb-14">
+      <section className="pt-12 pb-8 md:pt-16 md:pb-10">
         <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.4rem]">
           Writing
         </h1>
@@ -66,7 +66,7 @@ function Index() {
       )}
 
       {tags.length > 0 && (
-        <section className="mt-16">
+        <section className="mt-12">
           <h2 className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
             tags
           </h2>

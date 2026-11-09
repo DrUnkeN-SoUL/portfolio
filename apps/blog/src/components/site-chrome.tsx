@@ -93,7 +93,7 @@ export function BlogShell({
   toc?: Post["toc"] | undefined;
 }) {
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-dvh flex-col">
       <BlogHeader />
       <div className="mx-auto grid w-full max-w-[1320px] flex-1 grid-cols-1 px-5 md:px-8 xl:grid-cols-[minmax(0,1000px)_200px] xl:justify-between xl:gap-x-14">
         <main className="w-full max-w-[1000px] min-w-0">{children}</main>
@@ -113,7 +113,7 @@ const FOOTER_LINKS = [
 /** Site footer: full width, aligned with the header, pinned to the bottom. */
 export function BlogFooter() {
   return (
-    <footer className="mt-24">
+    <footer className="mt-12">
       <div className="mx-auto flex w-full max-w-[1320px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-6 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground md:px-8">
         <span>© {new Date().getFullYear()} mathews shaji</span>
         <nav aria-label="Elsewhere" className="flex items-center gap-5">
