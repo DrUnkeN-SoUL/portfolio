@@ -69,6 +69,12 @@ The text in quotes after the URL becomes the caption.
 
 ![A grey sample image](/images/blog/staging-demo-image.webp)
 
+### SVG
+
+SVG files work exactly like images, so a diagram exported from Excalidraw, Figma or draw.io can go in as an `.svg`. It stays sharp at any size.
+
+![A three-step build pipeline drawn as an SVG](/images/blog/staging-demo-diagram.svg "An SVG diagram")
+
 ### Video file
 
 Use image syntax with a `.mp4` or `.webm` file. The alt text becomes the caption.

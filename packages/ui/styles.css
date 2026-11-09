@@ -521,15 +521,44 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
 }
 
 /* GFM task lists */
+/* Task lists: custom boxes so done / open read differently at a glance.
+   Done items also fade and strike through, like Notion's to-do blocks. */
 .post-prose li:has(> input[type="checkbox"]) {
   list-style: none;
-  margin-left: -1.2em;
+  margin-left: -1.4em;
 }
 
 .post-prose input[type="checkbox"] {
-  margin-right: 0.5em;
-  accent-color: var(--muted-foreground);
-  vertical-align: baseline;
+  appearance: none;
+  display: inline-grid;
+  place-content: center;
+  width: 1rem;
+  height: 1rem;
+  margin: 0 0.6em 0 0;
+  vertical-align: -0.08em;
+  border: 1.5px solid oklch(1 0 0 / 35%);
+  border-radius: 4px;
+  background: transparent;
+}
+
+.post-prose input[type="checkbox"]:checked {
+  border-color: var(--amber);
+  background-color: var(--amber);
+}
+
+.post-prose input[type="checkbox"]:checked::after {
+  content: "";
+  width: 0.6rem;
+  height: 0.6rem;
+  background-color: var(--background);
+  -webkit-mask: var(--icon-check) center / contain no-repeat;
+  mask: var(--icon-check) center / contain no-repeat;
+}
+
+.post-prose li:has(> input[type="checkbox"]:checked) {
+  color: var(--muted-foreground);
+  text-decoration: line-through;
+  text-decoration-color: oklch(1 0 0 / 30%);
 }
 
 .post-prose blockquote {
@@ -627,9 +656,9 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
 
 /* Mermaid: show the source as plain text until the library swaps in an SVG. */
 .post-prose .post-diagram {
-  padding: 1.25rem;
-  border-radius: 6px;
-  background: var(--card);
+  padding: 1.5rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
   overflow-x: auto;
 }
 
@@ -742,6 +771,7 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
 }
 
 .post-prose {
+  --icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.3 5 8.7l4.5-5.2'/%3E%3C/svg%3E");
   --icon-external: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 2.5h5v5M9.5 2.5 3 9'/%3E%3C/svg%3E");
 }
 
