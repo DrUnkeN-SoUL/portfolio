@@ -75,7 +75,7 @@ secrets in them.
 Images go in `apps/blog/public/images/blog/` and are referenced as
 `/images/blog/<file>`. Pages CMS uploads to the same folder.
 
-See `AGENTS.md` for the full agent/content rules.
+Agent-only rules (things this README does not cover) are in `AGENTS.md`.
 
 ## Editing from the browser with Pages CMS
 
