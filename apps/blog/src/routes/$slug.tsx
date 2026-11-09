@@ -1,3 +1,5 @@
+import { Fragment } from "react";
+
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { SITE } from "@mathews/ui";
@@ -79,6 +81,14 @@ export const Route = createFileRoute("/$slug")({
   component: PostPage,
 });
 
+function MetaDot() {
+  return (
+    <span aria-hidden="true" className="text-muted-foreground/50">
+      ·
+    </span>
+  );
+}
+
 function PostPage() {
   const { slug } = Route.useParams();
   const post = getPostBySlug(slug);
@@ -88,42 +98,50 @@ function PostPage() {
   }
 
   return (
-    <main className="scanlines min-h-screen bg-background font-mono text-foreground">
-      <div className="mx-auto max-w-3xl px-5 md:px-10">
+    <main className="min-h-screen">
+      <div className="mx-auto w-full max-w-[768px] px-6">
         <BlogHeader />
 
-        <article className="py-16 md:py-24">
+        <article className="pt-8 pb-4 md:pt-14">
           <Link
             to="/"
-            className="text-[0.65rem] tracking-[0.3em] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
           >
             ← all writing
           </Link>
 
-          <header className="mt-10 border-b border-border pb-8">
-            <h1 className="hero-title max-w-2xl text-xl md:text-[clamp(1.35rem,3vh,2.25rem)]">
+          <header className="mt-8">
+            <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.4rem]">
               {post.title}
             </h1>
-            <p className="mt-5 max-w-prose text-sm leading-relaxed text-muted-foreground">
+            <p className="mt-4 text-[1.05rem] leading-[1.6] text-muted-foreground">
               {post.description}
             </p>
-            <div className="mt-6 flex flex-wrap items-baseline gap-x-5 gap-y-2 text-[0.65rem] tracking-[0.18em] text-muted-foreground">
+            <div className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-2 font-mono text-[0.7rem] text-muted-foreground">
               <time dateTime={post.date}>{formatPostDate(post.date)}</time>
-              {post.updated && <span>updated {formatPostDate(post.updated)}</span>}
-              {post.draft && <span className="text-yellow-500">draft</span>}
-              {post.tags.length > 0 && (
-                <span className="flex flex-wrap items-baseline gap-x-3">
-                  {post.tags.map((tag) => (
-                    <Link
-                      key={tag}
-                      to="/tags/$tag"
-                      params={{ tag }}
-                      className="underline-offset-4 hover:text-foreground hover:underline"
-                    >
-                      #{tag}
-                    </Link>
-                  ))}
-                </span>
+              {post.updated && (
+                <>
+                  <MetaDot />
+                  <span>updated {formatPostDate(post.updated)}</span>
+                </>
+              )}
+              {post.tags.map((tag) => (
+                <Fragment key={tag}>
+                  <MetaDot />
+                  <Link
+                    to="/tags/$tag"
+                    params={{ tag }}
+                    className="transition-colors hover:text-foreground"
+                  >
+                    #{tag}
+                  </Link>
+                </Fragment>
+              ))}
+              {post.draft && (
+                <>
+                  <MetaDot />
+                  <span className="text-amber">draft</span>
+                </>
               )}
             </div>
           </header>
@@ -132,12 +150,21 @@ function PostPage() {
             <img
               src={post.cover}
               alt={post.title}
-              className="mt-10 w-full border border-border"
+              className="mt-10 w-full rounded-md"
               loading="lazy"
             />
           )}
 
           <div className="post-prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
+
+          <div className="mt-16 border-t border-border pt-5">
+            <Link
+              to="/"
+              className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
+            >
+              ← all writing
+            </Link>
+          </div>
         </article>
 
         <BlogFooter />

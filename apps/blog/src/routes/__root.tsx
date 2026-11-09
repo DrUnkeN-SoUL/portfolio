@@ -16,16 +16,20 @@ import { ANALYTICS_SCRIPTS, SITE_ICON_LINKS } from "@mathews/ui/head";
 
 function NotFoundComponent() {
   return (
-    <main className="scanlines flex min-h-screen items-center justify-center bg-background px-5 font-mono text-foreground">
+    <main className="flex min-h-screen items-center justify-center px-6">
       <div className="max-w-md text-center">
-        <p className="text-[0.65rem] tracking-[0.3em] text-muted-foreground">error / 404</p>
-        <h1 className="hero-title mt-4 text-xl">page not found</h1>
-        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+        <p className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground">
+          error / 404
+        </p>
+        <h1 className="mt-4 text-[1.6rem] leading-tight font-semibold tracking-[-0.02em]">
+          Page not found
+        </h1>
+        <p className="mt-3 text-[0.975rem] leading-relaxed text-muted-foreground">
           The post or tag you are looking for does not exist.
         </p>
         <Link
           to="/"
-          className="mt-8 inline-block text-xs underline underline-offset-4 hover:no-underline"
+          className="mt-8 inline-block font-mono text-[0.7rem] text-muted-foreground transition-colors hover:text-foreground"
         >
           ← all writing
         </Link>
@@ -38,18 +42,25 @@ function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
 
   return (
-    <main className="scanlines flex min-h-screen items-center justify-center bg-background px-5 font-mono text-foreground">
+    <main className="flex min-h-screen items-center justify-center px-6">
       <div className="max-w-md text-center">
-        <p className="text-[0.65rem] tracking-[0.3em] text-muted-foreground">error / 500</p>
-        <h1 className="hero-title mt-4 text-xl">this page didn't load</h1>
-        <p className="mt-4 text-xs leading-relaxed text-muted-foreground">
+        <p className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground">
+          error / 500
+        </p>
+        <h1 className="mt-4 text-[1.6rem] leading-tight font-semibold tracking-[-0.02em]">
+          This page didn't load
+        </h1>
+        <p className="mt-3 text-[0.975rem] leading-relaxed text-muted-foreground">
           Something went wrong on our end. Try refreshing or head back to the index.
         </p>
-        <div className="mt-8 flex justify-center gap-4 text-xs">
-          <button onClick={reset} className="underline underline-offset-4 hover:no-underline">
+        <div className="mt-8 flex justify-center gap-5 font-mono text-[0.7rem]">
+          <button
+            onClick={reset}
+            className="text-muted-foreground transition-colors hover:text-foreground"
+          >
             try again
           </button>
-          <Link to="/" className="underline underline-offset-4 hover:no-underline">
+          <Link to="/" className="text-muted-foreground transition-colors hover:text-foreground">
             all writing
           </Link>
         </div>
@@ -66,7 +77,7 @@ export const Route = createRootRoute({
       { title: BLOG_NAME },
       { name: "description", content: BLOG_DESCRIPTION },
       { name: "author", content: "Mathews Shaji" },
-      { name: "theme-color", content: "#0d0d0d" },
+      { name: "theme-color", content: "#191919" },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { property: "og:site_name", content: "Mathews Shaji" },
       { property: "og:type", content: "website" },
@@ -110,7 +121,8 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
+      {/* `.blog-surface` scopes the Notion-dark reading tokens to the blog. */}
+      <body className="blog-surface">
         {children}
         <Scripts />
       </body>
