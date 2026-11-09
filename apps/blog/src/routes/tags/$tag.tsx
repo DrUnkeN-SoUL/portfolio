@@ -1,8 +1,9 @@
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { SITE } from "@mathews/ui";
+import { PostList } from "@/components/post-list";
 import { BlogShell } from "@/components/site-chrome";
-import { formatPostDate, getPostsByTag } from "@/lib/posts";
+import { getPostsByTag } from "@/lib/posts";
 import { pageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/tags/$tag")({
@@ -43,27 +44,7 @@ function TagPage() {
         </p>
       </section>
 
-      <ul className="-mx-3 flex flex-col gap-1">
-        {posts.map((post) => (
-          <li key={post.slug}>
-            <Link
-              to="/$slug"
-              params={{ slug: post.slug }}
-              className="block rounded-md px-3 py-4 transition-colors hover:bg-white/[0.03] focus-visible:bg-white/[0.05] focus-visible:outline-none"
-            >
-              <span className="block text-[1.125rem] leading-snug font-medium text-foreground">
-                {post.title}
-              </span>
-              <span className="mt-1 block text-[0.9rem] leading-relaxed text-muted-foreground">
-                {post.description}
-              </span>
-              <span className="mt-1.5 block font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground/85">
-                <time dateTime={post.date}>{formatPostDate(post.date)}</time>
-              </span>
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <PostList posts={posts} />
 
       <div className="mt-12">
         <Link

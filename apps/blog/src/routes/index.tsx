@@ -1,7 +1,8 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
 
+import { PostList } from "@/components/post-list";
 import { BlogShell } from "@/components/site-chrome";
-import { formatPostDate, getAllTags, posts } from "@/lib/posts";
+import { getAllTags, posts } from "@/lib/posts";
 import { BLOG_DESCRIPTION, BLOG_JSON_LD, BLOG_NAME, BLOG_URL, pageMeta } from "@/lib/seo";
 
 export const Route = createFileRoute("/")({
@@ -37,32 +38,7 @@ function Index() {
           Nothing published yet. Check back soon.
         </p>
       ) : (
-        <ul className="-mx-3 flex flex-col gap-1">
-          {posts.map((post) => (
-            <li key={post.slug}>
-              <Link
-                to="/$slug"
-                params={{ slug: post.slug }}
-                className="block rounded-md px-3 py-4 transition-colors hover:bg-white/[0.03] focus-visible:bg-white/[0.05] focus-visible:outline-none"
-              >
-                <span className="block text-[1.125rem] leading-snug font-medium text-foreground">
-                  {post.title}
-                </span>
-                <span className="mt-1 block text-[0.9rem] leading-relaxed text-muted-foreground">
-                  {post.description}
-                </span>
-                <span className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground/85">
-                  <time dateTime={post.date}>{formatPostDate(post.date)}</time>
-                  {post.tags.length > 0 && (
-                    <span className="text-muted-foreground/70">
-                      {post.tags.map((tag) => `#${tag}`).join("  ")}
-                    </span>
-                  )}
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <PostList posts={posts} />
       )}
 
       {tags.length > 0 && (
