@@ -10,6 +10,17 @@ export type LoadedPosts = {
 };
 
 /**
+ * Whether a build includes drafts: yes on Vercel preview (staging)
+ * deployments, never on production. Locally, `BLOG_DRAFTS=1 bun run build`
+ * opts in; the dev server always shows drafts.
+ */
+export function includeDrafts(): boolean {
+  const vercelEnv = process.env["VERCEL_ENV"];
+  if (vercelEnv) return vercelEnv !== "production";
+  return process.env["BLOG_DRAFTS"] === "1";
+}
+
+/**
  * Read posts straight from disk (no Vite). Used by `check:content`,
  * `new-post` and the Vite config that builds the prerender page list.
  */

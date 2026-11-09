@@ -6,11 +6,14 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
+import { rehypeBlog } from "./rehype-blog.ts";
+
 const processor = unified()
   .use(remarkParse)
   .use(remarkGfm)
   .use(remarkRehype, { allowDangerousHtml: false })
   .use(rehypeSlug)
+  .use(rehypeBlog)
   .use(rehypeShiki, {
     theme: "github-dark",
     langs: [

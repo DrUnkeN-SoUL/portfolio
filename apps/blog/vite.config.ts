@@ -7,12 +7,12 @@ import { defineConfig } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 
 import { blogContentPlugin } from "./plugins/blog-content.ts";
-import { loadPostsFromDisk } from "./scripts/content.ts";
+import { includeDrafts, loadPostsFromDisk } from "./scripts/content.ts";
 
 const appRoot = fileURLToPath(new URL(".", import.meta.url));
 const srcDir = fileURLToPath(new URL("./src", import.meta.url));
 
-const { posts, errors } = await loadPostsFromDisk(appRoot, { includeDrafts: false });
+const { posts, errors } = await loadPostsFromDisk(appRoot, { includeDrafts: includeDrafts() });
 
 if (errors.length > 0) {
   throw new Error(`Invalid blog content:\n${errors.join("\n")}`);

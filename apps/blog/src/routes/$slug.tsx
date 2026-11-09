@@ -3,8 +3,9 @@ import { Fragment } from "react";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { SITE } from "@mathews/ui";
-import { BlogShell } from "@/components/site-chrome";
+import { BlogShell, InlineToc } from "@/components/site-chrome";
 import { formatPostDate, getPostBySlug } from "@/lib/posts";
+import { useMermaid } from "@/lib/use-post-enhancements";
 import {
   BLOG_ID,
   BLOG_NAME,
@@ -49,6 +50,7 @@ export const Route = createFileRoute("/$slug")({
           ...(hasCover ? { imageSize: null } : {}),
         }),
         { property: "og:type", content: "article" },
+        ...(post.draft ? [{ name: "robots", content: "noindex, nofollow" }] : []),
         { property: "article:published_time", content: published },
         { property: "article:modified_time", content: modified },
         { property: "article:author", content: SITE.portfolio },
@@ -92,6 +94,7 @@ function MetaDot() {
 function PostPage() {
   const { slug } = Route.useParams();
   const post = getPostBySlug(slug);
+  useMermaid(slug);
 
   if (!post) {
     return null;
@@ -153,6 +156,8 @@ function PostPage() {
             loading="lazy"
           />
         )}
+
+        <InlineToc toc={post.toc} />
 
         <div className="post-prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
       </article>

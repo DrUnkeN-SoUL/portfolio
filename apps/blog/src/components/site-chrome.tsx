@@ -4,6 +4,7 @@ import { Link } from "@tanstack/react-router";
 
 import { SiteNav } from "@mathews/ui";
 import type { Post } from "@/lib/posts";
+import { useActiveHeading } from "@/lib/use-post-enhancements";
 
 const RAIL_LABEL =
   "mb-3 pl-3 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground/70 uppercase";
@@ -27,6 +28,7 @@ export function BlogHeader() {
 
 /** Right rail: "on this page" outline for posts with sections (xl and up). */
 function TableOfContents({ toc }: { toc: Post["toc"] }) {
+  const active = useActiveHeading(toc.map((entry) => entry.id));
   if (toc.length < 2) return null;
 
   return (
@@ -40,7 +42,8 @@ function TableOfContents({ toc }: { toc: Post["toc"] }) {
           <li key={entry.id}>
             <a
               href={`#${entry.id}`}
-              className={`-ml-px block border-l border-transparent py-1 pr-2 text-[0.8125rem] leading-snug text-muted-foreground transition-colors hover:border-foreground/40 hover:text-foreground ${entry.depth === 3 ? "pl-6" : "pl-3"}`}
+              aria-current={entry.id === active ? "location" : undefined}
+              className={`-ml-px block border-l py-1 pr-2 text-[0.8125rem] leading-snug transition-colors hover:text-foreground ${entry.id === active ? "border-foreground/70 text-foreground" : "border-transparent text-muted-foreground hover:border-foreground/40"} ${entry.depth === 3 ? "pl-6" : "pl-3"}`}
             >
               {entry.text}
             </a>
@@ -48,6 +51,32 @@ function TableOfContents({ toc }: { toc: Post["toc"] }) {
         ))}
       </ul>
     </nav>
+  );
+}
+
+/** Collapsible outline at the top of a post, for screens without the rail. */
+export function InlineToc({ toc }: { toc: Post["toc"] }) {
+  if (toc.length < 2) return null;
+
+  return (
+    <details className="group mt-8 rounded-md bg-white/[0.03] px-4 py-3 xl:hidden">
+      <summary className="cursor-pointer list-none font-mono text-[0.65rem] tracking-[0.2em] text-muted-foreground uppercase select-none">
+        <span className="inline-block transition-transform group-open:rotate-90">›</span> On this
+        page
+      </summary>
+      <ul className="mt-3 space-y-1">
+        {toc.map((entry) => (
+          <li key={entry.id} className={entry.depth === 3 ? "pl-4" : ""}>
+            <a
+              href={`#${entry.id}`}
+              className="text-[0.9rem] text-muted-foreground transition-colors hover:text-foreground"
+            >
+              {entry.text}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </details>
   );
 }
 
@@ -64,26 +93,42 @@ export function BlogShell({
   toc?: Post["toc"] | undefined;
 }) {
   return (
-    <div className="min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <BlogHeader />
-      <div className="mx-auto grid w-full max-w-[1440px] grid-cols-1 px-5 md:px-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,820px)_minmax(0,1fr)] xl:gap-x-12">
-        <main className="mx-auto w-full max-w-[820px] min-w-0 xl:col-start-2">
-          {children}
-          <BlogFooter />
-        </main>
+      <div className="mx-auto grid w-full flex-1 max-w-[1440px] grid-cols-1 px-5 md:px-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,820px)_minmax(0,1fr)] xl:gap-x-12">
+        <main className="mx-auto w-full max-w-[820px] min-w-0 xl:col-start-2">{children}</main>
         {toc && <TableOfContents toc={toc} />}
       </div>
+      <BlogFooter />
     </div>
   );
 }
 
+const FOOTER_LINKS = [
+  { label: "portfolio", href: "https://mathewsshaji.com", external: false },
+  { label: "github", href: "https://github.com/DrUnkeN-SoUL", external: true },
+  { label: "linkedin", href: "https://linkedin.com/in/mathews-shaji", external: true },
+];
+
+/** Site footer: full width, aligned with the header, pinned to the bottom. */
 export function BlogFooter() {
   return (
-    <footer className="mt-24 flex flex-wrap items-baseline justify-between gap-3 py-8 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground">
-      <span>© {new Date().getFullYear()} mathews shaji</span>
-      <a href="https://mathewsshaji.com" className="site-nav-link">
-        portfolio
-      </a>
+    <footer className="mt-24 border-t border-border">
+      <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-6 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground md:px-8">
+        <span>© {new Date().getFullYear()} mathews shaji</span>
+        <nav aria-label="Elsewhere" className="flex items-center gap-5">
+          {FOOTER_LINKS.map((link) => (
+            <a
+              key={link.label}
+              href={link.href}
+              className="site-nav-link"
+              {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+            >
+              {link.label}
+            </a>
+          ))}
+        </nav>
+      </div>
     </footer>
   );
 }

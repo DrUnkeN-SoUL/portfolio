@@ -154,8 +154,8 @@
   --font-sans: "JetBrains Mono", ui-monospace, monospace;
   /* Reading stack for long-form blog text. No additional web fonts. */
   --font-reading:
-    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
-    "Apple Color Emoji", Arial, sans-serif;
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji",
+    Arial, sans-serif;
   --color-amber: var(--amber);
 }
 
@@ -594,6 +594,78 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   max-width: 100%;
   height: auto;
   border-radius: 6px;
+}
+
+.post-prose video,
+.post-prose iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 6px;
+  background: var(--card);
+}
+
+.post-prose .post-embed {
+  aspect-ratio: 16 / 9;
+}
+
+.post-prose .post-embed iframe {
+  height: 100%;
+}
+
+.post-prose figure {
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
+}
+
+.post-prose figcaption {
+  margin-top: 0.6rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+/* Mermaid: show the source as plain text until the library swaps in an SVG. */
+.post-prose .post-diagram {
+  padding: 1.25rem;
+  border-radius: 6px;
+  background: var(--card);
+  overflow-x: auto;
+}
+
+.post-prose pre.mermaid {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.post-prose pre.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.post-prose h2,
+.post-prose h3 {
+  scroll-margin-top: 5rem;
+}
+
+.post-prose .heading-anchor {
+  margin-left: 0.4em;
+  font-weight: 400;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  border: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.post-prose h2:hover .heading-anchor,
+.post-prose h3:hover .heading-anchor,
+.post-prose .heading-anchor:focus-visible {
+  opacity: 1;
 }
 
 .post-prose hr {
