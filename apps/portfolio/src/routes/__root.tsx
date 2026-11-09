@@ -23,6 +23,7 @@ import {
   RSS_URL,
   SITE_NAME,
 } from "@/lib/seo";
+import { ANALYTICS_SCRIPTS, SITE_ICON_LINKS } from "@mathews/ui/head";
 
 function NotFoundComponent() {
   return (
@@ -114,9 +115,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       ...SITE_FONT_LINKS,
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon", sizes: "any" },
-      { rel: "apple-touch-icon", href: "/favicon.svg" },
+      ...SITE_ICON_LINKS,
       // The blog is the long-form feed; advertise it from the portfolio too.
       {
         rel: "alternate",
@@ -128,6 +127,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "me", href: GITHUB_URL },
       { rel: "me", href: LINKEDIN_URL },
     ],
+    scripts: [...ANALYTICS_SCRIPTS],
   }),
   shellComponent: RootShell,
   component: RootComponent,

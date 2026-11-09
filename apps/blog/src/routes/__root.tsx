@@ -12,6 +12,7 @@ import { SITE, SITE_FONT_LINKS } from "@mathews/ui";
 import appCss from "@mathews/ui/styles.css?url";
 
 import { BLOG_DESCRIPTION, BLOG_NAME, OG_IMAGE, OG_IMAGE_ALT } from "@/lib/seo";
+import { ANALYTICS_SCRIPTS, SITE_ICON_LINKS } from "@mathews/ui/head";
 
 function NotFoundComponent() {
   return (
@@ -93,10 +94,9 @@ export const Route = createRootRoute({
       // Identity signals: the same person owns both sites.
       { rel: "me", href: "https://github.com/DrUnkeN-SoUL" },
       { rel: "me", href: "https://linkedin.com/in/mathews-shaji" },
-      { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon", sizes: "any" },
-      { rel: "apple-touch-icon", href: "/favicon.svg" },
+      ...SITE_ICON_LINKS,
     ],
+    scripts: [...ANALYTICS_SCRIPTS],
   }),
   shellComponent: RootShell,
   component: RootComponent,
