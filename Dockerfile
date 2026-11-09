@@ -4,21 +4,29 @@ RUN npm install -g bun
 
 WORKDIR /app
 
-COPY package.json bun.lock ./
+# Install the whole workspace from the root lockfile. Copying every workspace
+# manifest first keeps this layer cacheable.
+COPY package.json bun.lock bunfig.toml ./
+COPY apps/portfolio/package.json apps/portfolio/package.json
+COPY apps/blog/package.json apps/blog/package.json
+COPY packages/ui/package.json packages/ui/package.json
 
 RUN bun install --frozen-lockfile
 
 COPY . .
 
-RUN bun run build
+RUN bun run build:portfolio
 
 FROM node:26-slim
 
 WORKDIR /app
 
-COPY --from=build /app/.output ./.output
+# The portfolio is built with Nitro's node-server preset by default.
+COPY --from=build /app/apps/portfolio/.output ./.output
 COPY --from=build /app/package.json ./package.json
 COPY --from=build /app/node_modules ./node_modules
+# Keep the workspace symlink target available in case something resolves it.
+COPY --from=build /app/packages/ui ./packages/ui
 
 EXPOSE 3000
 
