@@ -59,7 +59,7 @@ function MobileSearchButton() {
 }
 
 /** Left rail (lg and up): search, every post and every tag. */
-function BlogSidebar({ slug, tag }: { slug?: string | undefined; tag?: string | undefined }) {
+function BlogSidebar({ tag }: { tag?: string | undefined }) {
   const tags = getAllTags();
   const [shortcut, setShortcut] = useState("Ctrl K");
   useEffect(() => {
@@ -96,12 +96,7 @@ function BlogSidebar({ slug, tag }: { slug?: string | undefined; tag?: string | 
       <ul className="mb-7 space-y-px">
         {posts.slice(0, SIDEBAR_POSTS).map((post) => (
           <li key={post.slug}>
-            <Link
-              to="/$slug"
-              params={{ slug: post.slug }}
-              title={post.title}
-              className={`${SIDE_LINK} ${post.slug === slug ? SIDE_ACTIVE : ""}`}
-            >
+            <Link to="/$slug" params={{ slug: post.slug }} title={post.title} className={SIDE_LINK}>
               {post.title}
             </Link>
           </li>
@@ -192,30 +187,42 @@ export function InlineToc({ toc }: { toc: Post["toc"] }) {
  */
 export function BlogShell({
   children,
-  slug,
   tag,
   toc,
 }: {
   children: ReactNode;
-  slug?: string | undefined;
   tag?: string | undefined;
+  /** Set on post pages: no sidebar or search, just the post and its outline. */
   toc?: Post["toc"] | undefined;
 }) {
+  const isPost = toc !== undefined;
   const hasToc = Boolean(toc && toc.length >= 2);
 
   return (
     <div className="flex min-h-dvh flex-col">
       <BlogHeader />
-      <div
-        className={`${FRAME} grid flex-1 grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-x-12 ${hasToc ? "xl:grid-cols-[220px_minmax(0,1fr)_200px]" : ""}`}
-      >
-        <BlogSidebar slug={slug} tag={tag} />
-        <main className="w-full max-w-[1000px] min-w-0">{children}</main>
-        {hasToc && toc && <TableOfContents toc={toc} />}
-      </div>
-      <BlogFooter />
-      <MobileSearchButton />
-      <SearchDialog />
+      {isPost ? (
+        <div
+          className={`${FRAME} grid flex-1 grid-cols-1 ${hasToc ? "xl:grid-cols-[minmax(0,1000px)_200px] xl:justify-between xl:gap-x-14" : ""}`}
+        >
+          <main className="w-full max-w-[1000px] min-w-0">{children}</main>
+          {hasToc && toc && <TableOfContents toc={toc} />}
+        </div>
+      ) : (
+        <div
+          className={`${FRAME} grid flex-1 grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-x-12`}
+        >
+          <BlogSidebar tag={tag} />
+          <main className="w-full max-w-[1000px] min-w-0">{children}</main>
+        </div>
+      )}
+      <BlogFooter roomForSearch={!isPost} />
+      {!isPost && (
+        <>
+          <MobileSearchButton />
+          <SearchDialog />
+        </>
+      )}
     </div>
   );
 }
@@ -264,11 +271,11 @@ const SOCIAL_LINKS = [
 ];
 
 /** Site footer: full width, aligned with the header, pinned to the bottom. */
-export function BlogFooter() {
+export function BlogFooter({ roomForSearch = false }: { roomForSearch?: boolean }) {
   return (
     <footer className="mt-8">
       <div
-        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 pb-20 font-mono lg:pb-5 text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
+        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 ${roomForSearch ? "pb-20 lg:pb-5" : "pb-5"} font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
       >
         <span>© {new Date().getFullYear()} mathews shaji</span>
         <nav aria-label="Elsewhere" className="flex items-center gap-5">
