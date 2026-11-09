@@ -33,11 +33,11 @@ function Index() {
       </section>
 
       {posts.length === 0 ? (
-        <p className="border-t border-border pt-6 text-[0.95rem] text-muted-foreground">
+        <p className="text-[0.95rem] text-muted-foreground">
           Nothing published yet. Check back soon.
         </p>
       ) : (
-        <ul className="-mx-3 flex flex-col divide-y divide-border">
+        <ul className="-mx-3 flex flex-col gap-1">
           {posts.map((post) => (
             <li key={post.slug}>
               <Link
@@ -66,7 +66,7 @@ function Index() {
       )}
 
       {tags.length > 0 && (
-        <section className="mt-16 border-t border-border pt-6">
+        <section className="mt-16">
           <h2 className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
             tags
           </h2>

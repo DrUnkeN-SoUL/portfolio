@@ -30,7 +30,7 @@ function TagPage() {
   const posts = getPostsByTag(tag);
 
   return (
-    <BlogShell tag={tag}>
+    <BlogShell>
       <section className="pt-14 pb-10 md:pt-20 md:pb-14">
         <p className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
           tag
@@ -43,7 +43,7 @@ function TagPage() {
         </p>
       </section>
 
-      <ul className="-mx-3 flex flex-col divide-y divide-border">
+      <ul className="-mx-3 flex flex-col gap-1">
         {posts.map((post) => (
           <li key={post.slug}>
             <Link
@@ -65,7 +65,7 @@ function TagPage() {
         ))}
       </ul>
 
-      <div className="mt-12 border-t border-border pt-5">
+      <div className="mt-12">
         <Link
           to="/"
           className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"

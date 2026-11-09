@@ -98,7 +98,7 @@ function PostPage() {
   }
 
   return (
-    <BlogShell slug={post.slug} toc={post.toc}>
+    <BlogShell toc={post.toc}>
       <article className="pt-10 pb-4 md:pt-14">
         <Link
           to="/"
@@ -155,15 +155,6 @@ function PostPage() {
         )}
 
         <div className="post-prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
-
-        <div className="mt-16 border-t border-border pt-5">
-          <Link
-            to="/"
-            className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
-          >
-            ← all writing
-          </Link>
-        </div>
       </article>
     </BlogShell>
   );
