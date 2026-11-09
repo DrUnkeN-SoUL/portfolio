@@ -102,14 +102,29 @@ Agent-only rules (things this README does not cover) are in `AGENTS.md`.
    (`DrUnkeN-SoUL/portfolio`, or whichever account owns it):
    <https://github.com/apps/pages-cms>.
 2. Open <https://app.pagescms.org> and sign in with GitHub.
-3. Select this repository and the branch you want to edit (`master` for
-   published content, or a branch to preview changes).
+3. Select this repository and the branch you want to edit: `staging` to
+   preview first, or `master` to publish straight away.
 4. The **Writing** collection is read from `.pages.yml`: create/edit posts,
    upload cover images to `apps/blog/public/images/blog`, and commit from the
    Pages CMS UI. Each save is a normal git commit and triggers a Vercel build.
 
 Pages CMS only needs repository access; there is no database or server for the
 blog.
+
+## Branches: staging and production
+
+| Branch    | Deploys to                                                                                  |
+| --------- | ------------------------------------------------------------------------------------------- |
+| `master`  | Production: `mathewsshaji.com`, `blog.mathewsshaji.com`                                     |
+| `staging` | Vercel previews (Vercel login required), e.g. `blog-git-staging-mathews-profile.vercel.app` |
+
+Work lands on `staging` (or a branch off it), gets checked on the preview, then
+ships with a pull request from `staging` into `master`. Keep `staging` after
+merging; it is long-lived.
+
+Production builds never include drafts, and `scripts/prune-staging.ts` drops
+`apps/blog/public/images/blog/staging-*` media from the production output, so
+staging-only content can live in git without reaching the live site.
 
 ## Deploying to Vercel (one repo, two projects)
 

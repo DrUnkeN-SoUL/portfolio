@@ -12,6 +12,7 @@ and deployment; this file only adds what README does not cover.
   Unknown fields fail the build, so keep `apps/blog/src/lib/frontmatter.ts` and
   `.pages.yml` in sync when changing the schema.
 - Image filenames: lowercase kebab-case; prefer `.webp` or compressed `.png`.
+- Staging-only demo media must be named `staging-*`; production builds drop it.
 
 ## Before committing
 
@@ -19,8 +20,11 @@ and deployment; this file only adds what README does not cover.
 2. Never commit `.env` files, tokens or keys. Drafts are public in git too.
 3. Do not hand-edit generated files: `apps/*/src/routeTree.gen.ts`,
    `apps/*/dist/`, `apps/*/.output/`, `.vercel/`.
-4. Work on a branch and open a pull request; do not push to `master` (it
-   deploys both sites to production).
+4. Push to `staging` (or a branch off it) and open a pull request into
+   `master`; never push to `master` (it deploys both sites to production).
+   Never delete `staging` when merging.
+5. No AI attribution: no `Co-Authored-By` trailers or "generated with" lines
+   in commits or pull requests.
 
 ## Dependencies and config
 

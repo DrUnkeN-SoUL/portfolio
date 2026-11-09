@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "vite dev",
-    "build": "bun run check:content && vite build",
+    "build": "bun run check:content && vite build && bun run scripts/prune-staging.ts",
     "preview": "vite preview",
     "check:content": "bun run scripts/check-content.ts",
     "new-post": "bun run scripts/new-post.ts"
