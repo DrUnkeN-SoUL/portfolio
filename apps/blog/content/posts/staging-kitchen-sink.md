@@ -4,6 +4,7 @@ description: A draft test post showing every content type, so layout changes can
 date: 2026-11-09
 tags: [staging, test]
 draft: true
+cover: /images/blog/staging-demo-cover.jpg
 ---
 
 This post is a **draft**, so it only exists on staging (Vercel preview deployments) and on the local dev server. Production never builds it. Use it to check typography, media, diagrams and navigation after a design change.

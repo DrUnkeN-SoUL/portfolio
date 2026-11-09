@@ -151,9 +151,11 @@ function PostPage() {
         {post.cover && (
           <img
             src={post.cover}
-            alt={post.title}
-            className="mt-10 w-full rounded-md"
-            loading="lazy"
+            alt=""
+            width={1200}
+            height={630}
+            className="mt-10 aspect-[1200/630] w-full rounded-lg object-cover"
+            fetchPriority="high"
           />
         )}
 
