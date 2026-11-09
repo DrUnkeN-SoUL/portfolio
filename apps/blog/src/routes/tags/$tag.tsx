@@ -30,56 +30,52 @@ function TagPage() {
   const posts = getPostsByTag(tag);
 
   return (
-    <main className="scanlines min-h-screen bg-background font-mono text-foreground">
-      <div className="mx-auto max-w-4xl px-5 md:px-10">
+    <main className="min-h-screen">
+      <div className="mx-auto w-full max-w-[860px] px-6 pb-8">
         <BlogHeader />
 
-        <section className="py-20 md:py-28">
-          <p className="text-xs lowercase tracking-[0.4em] text-muted-foreground">tag</p>
-          <h1 className="hero-title mt-4 text-xl md:text-[clamp(1.15rem,2.2vh,1.875rem)]">
+        <section className="pt-14 pb-10 md:pt-20 md:pb-14">
+          <p className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
+            tag
+          </p>
+          <h1 className="mt-3 text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.4rem]">
             #{tag}
           </h1>
-          <p className="mt-6 text-xs leading-relaxed text-muted-foreground">
+          <p className="mt-3 text-[0.975rem] leading-relaxed text-muted-foreground">
             {posts.length} {posts.length === 1 ? "post" : "posts"}
           </p>
+        </section>
 
-          <ul className="mt-16 flex flex-col border-b border-border">
-            {posts.map((post, index) => (
-              <li key={post.slug} className="border-t border-border">
-                <Link
-                  to="/$slug"
-                  params={{ slug: post.slug }}
-                  className="group grid grid-cols-[2.5rem_1fr] items-baseline gap-4 py-6"
-                >
-                  <span className="text-[0.65rem] text-muted-foreground">
-                    [{String(index + 1).padStart(2, "0")}]
-                  </span>
-                  <span className="flex min-w-0 flex-col gap-2">
-                    <span className="text-base tracking-tight text-foreground group-hover:underline">
-                      {post.title}
-                    </span>
-                    <span className="max-w-prose text-xs leading-relaxed text-muted-foreground">
-                      {post.description}
-                    </span>
-                    <time
-                      dateTime={post.date}
-                      className="text-[0.65rem] tracking-[0.18em] text-muted-foreground"
-                    >
-                      {formatPostDate(post.date)}
-                    </time>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+        <ul className="-mx-3 flex flex-col divide-y divide-border">
+          {posts.map((post) => (
+            <li key={post.slug}>
+              <Link
+                to="/$slug"
+                params={{ slug: post.slug }}
+                className="block rounded-md px-3 py-4 transition-colors hover:bg-white/[0.03] focus-visible:bg-white/[0.05] focus-visible:outline-none"
+              >
+                <span className="block text-[1.125rem] leading-snug font-medium text-foreground">
+                  {post.title}
+                </span>
+                <span className="mt-1 block text-[0.9rem] leading-relaxed text-muted-foreground">
+                  {post.description}
+                </span>
+                <span className="mt-1.5 block font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground/85">
+                  <time dateTime={post.date}>{formatPostDate(post.date)}</time>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
 
+        <div className="mt-12 border-t border-border pt-5">
           <Link
             to="/"
-            className="mt-10 inline-block text-[0.65rem] tracking-[0.3em] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+            className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
           >
             ← all writing
           </Link>
-        </section>
+        </div>
 
         <BlogFooter />
       </div>
