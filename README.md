@@ -11,7 +11,7 @@ apps/blog/              static blog -> https://blog.mathewsshaji.com (Vercel pro
   public/images/blog/   post images
 packages/ui/            shared styles.css, fonts and cross-site nav
 .pages.yml              Pages CMS schema
-AGENTS.md               rules for coding agents (CLAUDE.md points here)
+AGENTS.md               rules for coding agents
 ```
 
 Both apps import the same `packages/ui/styles.css`, so the design tokens,
