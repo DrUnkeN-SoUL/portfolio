@@ -73,6 +73,10 @@ dev server and on Vercel preview deployments (staging), and are excluded from
 production. Locally, `BLOG_DRAFTS=1 bun run build` includes them. Drafts are
 still public in git — do not put secrets in them.
 
+The blog home lists 10 posts per page (`/page/2`, …). Staging builds use 1
+per page so pagination is visible with few posts; `BLOG_PAGE_SIZE` overrides
+both.
+
 `content/posts/staging-kitchen-sink.md` is a permanent draft that uses every
 content type; open it on a preview deployment to check a design change.
 

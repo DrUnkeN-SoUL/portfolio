@@ -5,29 +5,32 @@ import { formatPostDate, type Post } from "@/lib/posts";
 /** Generated banner for posts without a cover: the title, set large. */
 function TitleBanner({ title }: { title: string }) {
   return (
-    <div className="absolute inset-0 flex flex-col justify-between bg-[radial-gradient(120%_90%_at_100%_0%,rgba(224,163,58,0.13),transparent_55%),linear-gradient(160deg,#262626,#1b1b1b)] p-5 sm:p-6">
+    <div
+      aria-hidden="true"
+      className="absolute inset-0 flex flex-col justify-between bg-[radial-gradient(120%_90%_at_100%_0%,rgba(224,163,58,0.13),transparent_55%),linear-gradient(160deg,#262626,#1b1b1b)] p-5 sm:p-6"
+    >
       <span className="font-mono text-[0.6rem] tracking-[0.22em] text-muted-foreground/70">
         mathews shaji / writing
       </span>
-      <h2 className="text-[1.35rem] leading-[1.2] font-semibold tracking-[-0.015em] text-white/90 sm:text-[1.6rem]">
+      <p className="line-clamp-3 text-[1.35rem] leading-[1.2] font-semibold tracking-[-0.015em] text-white/90 sm:text-[1.6rem]">
         {title}
-      </h2>
+      </p>
     </div>
   );
 }
 
 /**
- * Card with a full-width banner. Posts with a `cover` show it untouched with
- * the title underneath (covers often carry their own text); posts without
- * one get a generated title banner, so every card has the same shape.
+ * Card: a full-width banner (the cover, or a generated title banner), then
+ * title, description and meta. Cards in a row share subgrid rows, so those
+ * three line up even when one title or description wraps more than another.
  */
 function PostCard({ post }: { post: Post }) {
   return (
-    <li>
+    <li className="row-span-4 mb-12 grid grid-rows-subgrid gap-y-0">
       <Link
         to="/$slug"
         params={{ slug: post.slug }}
-        className="group block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/40"
+        className="group row-span-4 grid grid-rows-subgrid gap-y-0 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/40"
       >
         <div className="relative aspect-[1200/630] overflow-hidden rounded-xl bg-[#202020] ring-1 ring-white/[0.07] transition-[box-shadow] group-hover:ring-white/[0.16]">
           {post.cover ? (
@@ -50,15 +53,13 @@ function PostCard({ post }: { post: Post }) {
           )}
         </div>
 
-        {post.cover && (
-          <h2 className="mt-4 text-[1.15rem] leading-snug font-semibold tracking-[-0.01em] text-foreground">
-            {post.title}
-          </h2>
-        )}
-        <p className="mt-2 line-clamp-2 text-[0.92rem] leading-relaxed text-muted-foreground">
+        <h2 className="mt-4 text-[1.15rem] leading-snug font-semibold tracking-[-0.01em] text-foreground">
+          {post.title}
+        </h2>
+        <p className="mt-1.5 line-clamp-2 self-start text-[0.92rem] leading-relaxed text-muted-foreground">
           {post.description}
         </p>
-        <p className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground/80">
+        <p className="mt-1.5 flex flex-wrap items-baseline self-start gap-x-3 gap-y-1 font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground/80">
           <time dateTime={post.date}>{formatPostDate(post.date)}</time>
           <span>{post.readingMinutes} min read</span>
           {post.tags.length > 0 && (
@@ -74,7 +75,7 @@ function PostCard({ post }: { post: Post }) {
 
 export function PostList({ posts }: { posts: Post[] }) {
   return (
-    <ul className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2">
+    <ul className="grid grid-cols-1 gap-x-8 gap-y-0 sm:grid-cols-2">
       {posts.map((post) => (
         <PostCard key={post.slug} post={post} />
       ))}

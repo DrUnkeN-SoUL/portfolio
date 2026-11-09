@@ -21,6 +21,16 @@ export function includeDrafts(): boolean {
 }
 
 /**
+ * Posts per listing page. Staging (Vercel previews) uses 1 so pagination is
+ * visible with only a couple of posts; override with BLOG_PAGE_SIZE.
+ */
+export function postsPerPage(): number {
+  const fromEnv = Number(process.env["BLOG_PAGE_SIZE"]);
+  if (Number.isInteger(fromEnv) && fromEnv > 0) return fromEnv;
+  return process.env["VERCEL_ENV"] === "preview" ? 1 : 10;
+}
+
+/**
  * Read posts straight from disk (no Vite). Used by `check:content`,
  * `new-post` and the Vite config that builds the prerender page list.
  */

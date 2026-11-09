@@ -7,7 +7,7 @@ import { defineConfig } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 
 import { blogContentPlugin } from "./plugins/blog-content.ts";
-import { includeDrafts, loadPostsFromDisk } from "./scripts/content.ts";
+import { includeDrafts, loadPostsFromDisk, postsPerPage } from "./scripts/content.ts";
 
 const appRoot = fileURLToPath(new URL(".", import.meta.url));
 const srcDir = fileURLToPath(new URL("./src", import.meta.url));
@@ -20,8 +20,12 @@ if (errors.length > 0) {
 
 const tags = [...new Set(posts.flatMap((post) => post.tags))].sort((a, b) => a.localeCompare(b));
 
+const pageSize = postsPerPage();
+const pageCount = Math.max(1, Math.ceil(posts.length / pageSize));
+
 const pages = [
   { path: "/" },
+  ...Array.from({ length: pageCount - 1 }, (_, i) => ({ path: `/page/${i + 2}` })),
   ...posts.map((post) => ({ path: `/${post.slug}` })),
   ...tags.map((tag) => ({ path: `/tags/${encodeURIComponent(tag)}` })),
   { path: "/rss.xml" },
@@ -33,6 +37,7 @@ const pages = [
 // TanStack Start writes into `dist/client`. Vercel deploys that folder as a
 // static site (see apps/blog/vercel.json).
 export default defineConfig(() => ({
+  define: { __BLOG_PAGE_SIZE__: JSON.stringify(pageSize) },
   resolve: {
     alias: { "@": srcDir },
     dedupe: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime"],
