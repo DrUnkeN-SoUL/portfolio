@@ -124,8 +124,8 @@ function hasLevelOneHeading(body: string): boolean {
   for (const line of body.split("\n")) {
     const marker = /^\s{0,3}(`{3,}|~{3,})/.exec(line)?.[1];
     if (marker) {
-      if (fence === null) fence = marker[0];
-      else if (marker[0] === fence) fence = null;
+      if (fence === null) fence = marker.charAt(0);
+      else if (marker.charAt(0) === fence) fence = null;
       continue;
     }
     if (fence === null && /^\s{0,3}#(\s|$)/.test(line)) return true;

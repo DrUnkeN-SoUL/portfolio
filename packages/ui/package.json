@@ -10,7 +10,8 @@
     ".": "./src/index.ts",
     "./styles.css": "./styles.css",
     "./fonts": "./src/fonts.ts",
-    "./site-nav": "./src/site-nav.tsx"
+    "./site-nav": "./src/site-nav.tsx",
+    "./head": "./src/head.ts"
   },
   "dependencies": {
     "tailwindcss": "^4.2.1",
