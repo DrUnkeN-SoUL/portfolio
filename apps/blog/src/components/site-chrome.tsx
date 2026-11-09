@@ -81,14 +81,9 @@ export function BlogFooter() {
   return (
     <footer className="mt-24 flex flex-wrap items-baseline justify-between gap-3 py-8 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground">
       <span>© {new Date().getFullYear()} mathews shaji</span>
-      <div className="flex items-baseline gap-4">
-        <a href="/rss.xml" className="site-nav-link">
-          rss
-        </a>
-        <a href="https://mathewsshaji.com" className="site-nav-link">
-          portfolio
-        </a>
-      </div>
+      <a href="https://mathewsshaji.com" className="site-nav-link">
+        portfolio
+      </a>
     </footer>
   );
 }
