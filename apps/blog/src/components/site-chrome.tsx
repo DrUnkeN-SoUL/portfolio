@@ -42,18 +42,18 @@ export function BlogHeader() {
 }
 
 /**
- * Floating search button for screens without the left rail. It sits at the
- * bottom centre, inside the thumb's reach for one-handed use.
+ * Floating search button for screens without the left rail: bottom-right,
+ * inside the thumb's reach for one-handed use.
  */
 function MobileSearchButton() {
   return (
     <button
       type="button"
       onClick={openSearch}
-      className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-40 flex h-11 -translate-x-1/2 items-center gap-2 rounded-full bg-[#262626]/95 px-5 text-[0.9rem] text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-colors hover:bg-[#2c2c2c] lg:hidden"
+      aria-label="Search"
+      className="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 grid size-12 place-items-center rounded-full bg-[#262626]/95 text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-colors hover:bg-[#2c2c2c] lg:hidden"
     >
-      <SearchIcon className="size-4 opacity-80" />
-      Search
+      <SearchIcon className="size-[18px]" />
     </button>
   );
 }
@@ -69,12 +69,12 @@ function BlogSidebar({ tag }: { tag?: string | undefined }) {
   return (
     <nav
       aria-label="Blog"
-      className="sticky top-14 hidden max-h-[calc(100vh-3.5rem)] self-start overflow-y-auto py-10 lg:block"
+      className="sticky top-14 hidden h-[calc(100dvh-3.5rem)] flex-col self-start pt-10 pb-6 lg:flex"
     >
       <button
         type="button"
         onClick={openSearch}
-        className="group mb-6 flex h-9 w-full items-center gap-2.5 rounded-lg bg-white/[0.045] px-3 text-left text-[0.85rem] text-muted-foreground ring-1 ring-white/[0.06] transition-colors ring-inset hover:bg-white/[0.07] hover:text-foreground"
+        className="group mb-6 flex h-9 w-full shrink-0 items-center gap-2.5 rounded-lg bg-white/[0.045] px-3 text-left text-[0.85rem] text-muted-foreground ring-1 ring-white/[0.06] transition-colors ring-inset hover:bg-white/[0.07] hover:text-foreground"
       >
         <SearchIcon className="size-[15px] shrink-0 opacity-70 group-hover:opacity-100" />
         <span className="flex-1">Search…</span>
@@ -85,43 +85,53 @@ function BlogSidebar({ tag }: { tag?: string | undefined }) {
 
       <Link
         to="/"
-        className={`${SIDE_LINK} mb-6 font-medium`}
+        className={`${SIDE_LINK} mb-6 shrink-0 font-medium`}
         activeProps={{ className: SIDE_ACTIVE }}
         activeOptions={{ exact: true }}
       >
         All writing
       </Link>
 
-      <p className={SIDE_LABEL}>Recent</p>
-      <ul className="mb-7 space-y-px">
-        {posts.slice(0, SIDEBAR_POSTS).map((post) => (
-          <li key={post.slug}>
-            <Link to="/$slug" params={{ slug: post.slug }} title={post.title} className={SIDE_LINK}>
-              {post.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
+      {/* Search and "All writing" stay put; only the lists below scroll. */}
+      <div className="quiet-scroll -mr-3 min-h-0 flex-1 overflow-y-auto pr-3">
+        <p className={SIDE_LABEL}>Recent</p>
+        <ul className="mb-7 space-y-px">
+          {posts.slice(0, SIDEBAR_POSTS).map((post) => (
+            <li key={post.slug}>
+              <Link
+                to="/$slug"
+                params={{ slug: post.slug }}
+                title={post.title}
+                className={SIDE_LINK}
+              >
+                {post.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
 
-      {tags.length > 0 && (
-        <>
-          <p className={SIDE_LABEL}>Tags</p>
-          <ul className="space-y-px">
-            {tags.map(({ tag: name, count }) => (
-              <li key={name}>
-                <Link
-                  to="/tags/$tag"
-                  params={{ tag: name }}
-                  className={`${SIDE_LINK} flex justify-between gap-3 ${name === tag ? SIDE_ACTIVE : ""}`}
-                >
-                  <span className="truncate">#{name}</span>
-                  <span className="font-mono text-[0.7rem] text-muted-foreground/60">{count}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </>
-      )}
+        {tags.length > 0 && (
+          <>
+            <p className={SIDE_LABEL}>Tags</p>
+            <ul className="space-y-px">
+              {tags.map(({ tag: name, count }) => (
+                <li key={name}>
+                  <Link
+                    to="/tags/$tag"
+                    params={{ tag: name }}
+                    className={`${SIDE_LINK} flex justify-between gap-3 ${name === tag ? SIDE_ACTIVE : ""}`}
+                  >
+                    <span className="truncate">#{name}</span>
+                    <span className="font-mono text-[0.7rem] text-muted-foreground/60">
+                      {count}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </>
+        )}
+      </div>
     </nav>
   );
 }
@@ -134,7 +144,7 @@ function TableOfContents({ toc }: { toc: Post["toc"] }) {
   return (
     <nav
       aria-label="On this page"
-      className="sticky top-14 hidden max-h-[calc(100vh-3.5rem)] w-[200px] self-start overflow-y-auto pt-[8.5rem] xl:block"
+      className="quiet-scroll sticky top-14 hidden max-h-[calc(100dvh-3.5rem)] w-[200px] self-start overflow-y-auto pt-[8.5rem] pb-6 xl:block"
     >
       <p className={RAIL_LABEL}>On this page</p>
       <ul className="space-y-px border-l border-border">

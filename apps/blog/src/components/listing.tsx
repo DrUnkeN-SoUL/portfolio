@@ -19,7 +19,7 @@ function Pagination({ page }: { page: number }) {
   const numbers = Array.from({ length: PAGE_COUNT }, (_, i) => i + 1);
 
   return (
-    <nav aria-label="Pagination" className="flex items-center justify-center gap-1">
+    <nav aria-label="Pagination" className="hidden items-center justify-center gap-1 lg:flex">
       {page > 1 && (
         <Link {...pageLink(page - 1)} rel="prev" className={PAGER_LINK}>
           ← newer
@@ -42,6 +42,45 @@ function Pagination({ page }: { page: number }) {
         <Link {...pageLink(page + 1)} rel="next" className={PAGER_LINK}>
           older →
         </Link>
+      )}
+    </nav>
+  );
+}
+
+/**
+ * Phone pager: a compact pill pinned to the bottom centre, beside the search
+ * button, so paging works one-handed. Larger screens use the inline pager.
+ */
+function MobilePager({ page }: { page: number }) {
+  if (PAGE_COUNT <= 1) return null;
+  const arrow =
+    "grid size-10 place-items-center rounded-full text-[1.05rem] text-foreground transition-colors hover:bg-white/[0.06]";
+
+  return (
+    <nav
+      aria-label="Pagination"
+      className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-40 flex h-12 -translate-x-1/2 items-center gap-1 rounded-full bg-[#262626]/95 px-1 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
+    >
+      {page > 1 ? (
+        <Link {...pageLink(page - 1)} rel="prev" aria-label="Newer posts" className={arrow}>
+          ‹
+        </Link>
+      ) : (
+        <span aria-hidden="true" className={`${arrow} opacity-25`}>
+          ‹
+        </span>
+      )}
+      <span className="px-2 font-mono text-[0.72rem] tracking-[0.08em] whitespace-nowrap text-muted-foreground">
+        <span className="text-foreground">{page}</span> / {PAGE_COUNT}
+      </span>
+      {page < PAGE_COUNT ? (
+        <Link {...pageLink(page + 1)} rel="next" aria-label="Older posts" className={arrow}>
+          ›
+        </Link>
+      ) : (
+        <span aria-hidden="true" className={`${arrow} opacity-25`}>
+          ›
+        </span>
       )}
     </nav>
   );
@@ -93,6 +132,7 @@ export function Listing({ page }: { page: number }) {
         </section>
       )}
       <Pagination page={page} />
+      <MobilePager page={page} />
     </BlogShell>
   );
 }
