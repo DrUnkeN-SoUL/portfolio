@@ -9,5 +9,7 @@ declare module "virtual:blog-posts" {
     draft: boolean;
     cover?: string;
     html: string;
+    toc: Array<{ id: string; text: string; depth: 2 | 3 }>;
+    readingMinutes: number;
   }>;
 }

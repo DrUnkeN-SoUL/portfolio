@@ -3,7 +3,7 @@ import { Fragment } from "react";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { SITE } from "@mathews/ui";
-import { BlogFooter, BlogHeader } from "@/components/site-chrome";
+import { BlogShell } from "@/components/site-chrome";
 import { formatPostDate, getPostBySlug } from "@/lib/posts";
 import {
   BLOG_ID,
@@ -98,77 +98,73 @@ function PostPage() {
   }
 
   return (
-    <main className="min-h-screen">
-      <div className="mx-auto w-full max-w-[768px] px-6">
-        <BlogHeader />
+    <BlogShell slug={post.slug} toc={post.toc}>
+      <article className="pt-10 pb-4 md:pt-14">
+        <Link
+          to="/"
+          className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
+        >
+          ← all writing
+        </Link>
 
-        <article className="pt-8 pb-4 md:pt-14">
+        <header className="mt-8">
+          <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.4rem]">
+            {post.title}
+          </h1>
+          <p className="mt-4 text-[1.05rem] leading-[1.6] text-muted-foreground">
+            {post.description}
+          </p>
+          <div className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-2 font-mono text-[0.7rem] text-muted-foreground">
+            <time dateTime={post.date}>{formatPostDate(post.date)}</time>
+            <MetaDot />
+            <span>{post.readingMinutes} min read</span>
+            {post.updated && (
+              <>
+                <MetaDot />
+                <span>updated {formatPostDate(post.updated)}</span>
+              </>
+            )}
+            {post.tags.map((tag) => (
+              <Fragment key={tag}>
+                <MetaDot />
+                <Link
+                  to="/tags/$tag"
+                  params={{ tag }}
+                  className="transition-colors hover:text-foreground"
+                >
+                  #{tag}
+                </Link>
+              </Fragment>
+            ))}
+            {post.draft && (
+              <>
+                <MetaDot />
+                <span className="text-amber">draft</span>
+              </>
+            )}
+          </div>
+        </header>
+
+        {post.cover && (
+          <img
+            src={post.cover}
+            alt={post.title}
+            className="mt-10 w-full rounded-md"
+            loading="lazy"
+          />
+        )}
+
+        <div className="post-prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
+
+        <div className="mt-16 border-t border-border pt-5">
           <Link
             to="/"
             className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
           >
             ← all writing
           </Link>
-
-          <header className="mt-8">
-            <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.4rem]">
-              {post.title}
-            </h1>
-            <p className="mt-4 text-[1.05rem] leading-[1.6] text-muted-foreground">
-              {post.description}
-            </p>
-            <div className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-2 font-mono text-[0.7rem] text-muted-foreground">
-              <time dateTime={post.date}>{formatPostDate(post.date)}</time>
-              {post.updated && (
-                <>
-                  <MetaDot />
-                  <span>updated {formatPostDate(post.updated)}</span>
-                </>
-              )}
-              {post.tags.map((tag) => (
-                <Fragment key={tag}>
-                  <MetaDot />
-                  <Link
-                    to="/tags/$tag"
-                    params={{ tag }}
-                    className="transition-colors hover:text-foreground"
-                  >
-                    #{tag}
-                  </Link>
-                </Fragment>
-              ))}
-              {post.draft && (
-                <>
-                  <MetaDot />
-                  <span className="text-amber">draft</span>
-                </>
-              )}
-            </div>
-          </header>
-
-          {post.cover && (
-            <img
-              src={post.cover}
-              alt={post.title}
-              className="mt-10 w-full rounded-md"
-              loading="lazy"
-            />
-          )}
-
-          <div className="post-prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
-
-          <div className="mt-16 border-t border-border pt-5">
-            <Link
-              to="/"
-              className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
-            >
-              ← all writing
-            </Link>
-          </div>
-        </article>
-
-        <BlogFooter />
-      </div>
-    </main>
+        </div>
+      </article>
+    </BlogShell>
   );
 }
