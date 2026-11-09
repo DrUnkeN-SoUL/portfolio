@@ -1,7 +1,7 @@
 import path from "node:path";
 import type { Plugin } from "vite";
 
-import { loadPostsFromDisk } from "../scripts/content.ts";
+import { includeDrafts, loadPostsFromDisk } from "../scripts/content.ts";
 import { renderMarkdown } from "../src/lib/markdown.ts";
 
 const VIRTUAL_ID = "virtual:blog-posts";
@@ -40,7 +40,11 @@ function extractToc(html: string): TocEntry[] {
   return [...html.matchAll(HEADING)].map((match) => ({
     depth: match[1] === "3" ? 3 : 2,
     id: match[2] ?? "",
-    text: decodeEntities((match[3] ?? "").replace(/<[^>]+>/g, "")).trim(),
+    text: decodeEntities(
+      (match[3] ?? "")
+        .replace(/<a [^>]*class="heading-anchor"[^>]*>[\s\S]*?<\/a>/g, "")
+        .replace(/<[^>]+>/g, ""),
+    ).trim(),
   }));
 }
 
@@ -62,9 +66,12 @@ async function renderPost(body: string) {
 }
 
 export function blogContentPlugin(root: string): Plugin {
+  let isDevServer = false;
+
   async function buildModule(): Promise<string> {
-    const includeDrafts = process.env["NODE_ENV"] !== "production";
-    const { posts, errors } = await loadPostsFromDisk(root, { includeDrafts });
+    const { posts, errors } = await loadPostsFromDisk(root, {
+      includeDrafts: isDevServer || includeDrafts(),
+    });
 
     if (errors.length > 0) {
       throw new Error(`Invalid blog content:\n${errors.join("\n")}`);
@@ -89,6 +96,9 @@ export function blogContentPlugin(root: string): Plugin {
 
   return {
     name: "blog-content",
+    configResolved(config) {
+      isDevServer = config.command === "serve";
+    },
     resolveId(id) {
       if (id === VIRTUAL_ID) return RESOLVED_ID;
       return null;

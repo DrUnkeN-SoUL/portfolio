@@ -8,7 +8,7 @@ media:
   input: apps/blog/public/images/blog
   output: /images/blog
   rename: safe
-  categories: [image]
+  categories: [image, video]
 
 content:
   - name: posts

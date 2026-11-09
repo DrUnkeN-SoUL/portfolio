@@ -3,8 +3,9 @@ import { Fragment } from "react";
 import { Link, createFileRoute, notFound } from "@tanstack/react-router";
 
 import { SITE } from "@mathews/ui";
-import { BlogShell } from "@/components/site-chrome";
+import { BlogShell, InlineToc } from "@/components/site-chrome";
 import { formatPostDate, getPostBySlug } from "@/lib/posts";
+import { useMermaid } from "@/lib/use-post-enhancements";
 import {
   BLOG_ID,
   BLOG_NAME,
@@ -49,6 +50,7 @@ export const Route = createFileRoute("/$slug")({
           ...(hasCover ? { imageSize: null } : {}),
         }),
         { property: "og:type", content: "article" },
+        ...(post.draft ? [{ name: "robots", content: "noindex, nofollow" }] : []),
         { property: "article:published_time", content: published },
         { property: "article:modified_time", content: modified },
         { property: "article:author", content: SITE.portfolio },
@@ -92,14 +94,15 @@ function MetaDot() {
 function PostPage() {
   const { slug } = Route.useParams();
   const post = getPostBySlug(slug);
+  useMermaid(slug);
 
   if (!post) {
     return null;
   }
 
   return (
-    <BlogShell slug={post.slug} toc={post.toc}>
-      <article className="pt-10 pb-4 md:pt-14">
+    <BlogShell toc={post.toc}>
+      <article className="pt-6 md:pt-12">
         <Link
           to="/"
           className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
@@ -107,7 +110,7 @@ function PostPage() {
           ← all writing
         </Link>
 
-        <header className="mt-8">
+        <header className="mt-5 md:mt-8">
           <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.4rem]">
             {post.title}
           </h1>
@@ -148,22 +151,17 @@ function PostPage() {
         {post.cover && (
           <img
             src={post.cover}
-            alt={post.title}
-            className="mt-10 w-full rounded-md"
-            loading="lazy"
+            alt=""
+            width={1200}
+            height={630}
+            className="mt-10 aspect-[1200/630] w-full rounded-lg object-cover"
+            fetchPriority="high"
           />
         )}
 
-        <div className="post-prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
+        <InlineToc toc={post.toc} />
 
-        <div className="mt-16 border-t border-border pt-5">
-          <Link
-            to="/"
-            className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
-          >
-            ← all writing
-          </Link>
-        </div>
+        <div className="post-prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
       </article>
     </BlogShell>
   );

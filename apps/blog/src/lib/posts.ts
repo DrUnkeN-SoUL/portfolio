@@ -22,6 +22,15 @@ export type Post = {
  */
 export const posts = generatedPosts as Post[];
 
+export const PAGE_SIZE = __BLOG_PAGE_SIZE__;
+export const PAGE_COUNT = Math.max(1, Math.ceil(posts.length / PAGE_SIZE));
+
+/** Posts for a 1-based listing page; empty when the page is out of range. */
+export function getPage(page: number): Post[] {
+  if (!Number.isInteger(page) || page < 1 || page > PAGE_COUNT) return [];
+  return posts.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+}
+
 export function getPostBySlug(slug: string): Post | undefined {
   return posts.find((post) => post.slug === slug);
 }

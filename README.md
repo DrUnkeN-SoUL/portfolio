@@ -68,12 +68,31 @@ Body in Markdown.
 
 `bun run check:content` validates titles, descriptions, dates, tags, draft
 flags and filenames. The blog build runs it first, so an invalid post fails the
-build. `draft: true` posts are visible locally but are excluded from production
-builds and route generation. Drafts are still public in git — do not put
-secrets in them.
+build. `draft: true` posts show (with a "draft" badge and `noindex`) on the
+dev server and on Vercel preview deployments (staging), and are excluded from
+production. Locally, `BLOG_DRAFTS=1 bun run build` includes them. Drafts are
+still public in git — do not put secrets in them.
 
-Images go in `apps/blog/public/images/blog/` and are referenced as
+The blog home lists 10 posts per page (`/page/2`, …). Staging builds use 1
+per page so pagination is visible with few posts; `BLOG_PAGE_SIZE` overrides
+both.
+
+`content/posts/staging-kitchen-sink.md` is a permanent draft that uses every
+content type; open it on a preview deployment to check a design change.
+
+Media goes in `apps/blog/public/images/blog/` and is referenced as
 `/images/blog/<file>`. Pages CMS uploads to the same folder.
+
+| Want               | Write                                                      |
+| ------------------ | ---------------------------------------------------------- |
+| Image with caption | `![alt](/images/blog/x.webp "Caption")`                    |
+| Video file         | `![caption](/images/blog/x.mp4)` (`.mp4`, `.webm`, `.mov`) |
+| YouTube / Vimeo    | `![caption](https://www.youtube.com/watch?v=ID)`           |
+| Diagram            | a ` ```mermaid ` code block                                |
+| Link to a section  | `[text](#section-heading-slug)`                            |
+
+External links open in a new tab; in-page and same-site links do not. Override
+with a link title: `[text](/ "newtab:")` or `[text](https://x.com "sametab:")`.
 
 Agent-only rules (things this README does not cover) are in `AGENTS.md`.
 
@@ -83,14 +102,29 @@ Agent-only rules (things this README does not cover) are in `AGENTS.md`.
    (`DrUnkeN-SoUL/portfolio`, or whichever account owns it):
    <https://github.com/apps/pages-cms>.
 2. Open <https://app.pagescms.org> and sign in with GitHub.
-3. Select this repository and the branch you want to edit (`master` for
-   published content, or a branch to preview changes).
+3. Select this repository and the branch you want to edit: `staging` to
+   preview first, or `master` to publish straight away.
 4. The **Writing** collection is read from `.pages.yml`: create/edit posts,
    upload cover images to `apps/blog/public/images/blog`, and commit from the
    Pages CMS UI. Each save is a normal git commit and triggers a Vercel build.
 
 Pages CMS only needs repository access; there is no database or server for the
 blog.
+
+## Branches: staging and production
+
+| Branch    | Deploys to                                                                                  |
+| --------- | ------------------------------------------------------------------------------------------- |
+| `master`  | Production: `mathewsshaji.com`, `blog.mathewsshaji.com`                                     |
+| `staging` | Vercel previews (Vercel login required), e.g. `blog-git-staging-mathews-profile.vercel.app` |
+
+Work lands on `staging` (or a branch off it), gets checked on the preview, then
+ships with a pull request from `staging` into `master`. Keep `staging` after
+merging; it is long-lived.
+
+Production builds never include drafts, and `scripts/prune-staging.ts` drops
+`apps/blog/public/images/blog/staging-*` media from the production output, so
+staging-only content can live in git without reaching the live site.
 
 ## Deploying to Vercel (one repo, two projects)
 
@@ -99,27 +133,27 @@ GitHub repo and set a different **Root Directory** for each.
 
 ### Project 1 — portfolio (`mathewsshaji.com`)
 
-| Setting | Value |
-| --- | --- |
-| Root Directory | `apps/portfolio` |
-| Framework Preset | TanStack Start (or Other) |
-| Install Command | `cd ../.. && bun install --frozen-lockfile` |
-| Build Command | `bun run build` |
-| Output Directory | leave empty — Nitro writes `.vercel/output` when `VERCEL=1` |
-| Include files outside Root Directory | **on** (needed for `packages/ui`) |
-| Domain | `mathewsshaji.com` |
+| Setting                              | Value                                                       |
+| ------------------------------------ | ----------------------------------------------------------- |
+| Root Directory                       | `apps/portfolio`                                            |
+| Framework Preset                     | TanStack Start (or Other)                                   |
+| Install Command                      | `cd ../.. && bun install --frozen-lockfile`                 |
+| Build Command                        | `bun run build`                                             |
+| Output Directory                     | leave empty — Nitro writes `.vercel/output` when `VERCEL=1` |
+| Include files outside Root Directory | **on** (needed for `packages/ui`)                           |
+| Domain                               | `mathewsshaji.com`                                          |
 
 ### Project 2 — blog (`blog.mathewsshaji.com`)
 
-| Setting | Value |
-| --- | --- |
-| Root Directory | `apps/blog` |
-| Framework Preset | Other (static) |
-| Install Command | `cd ../.. && bun install --frozen-lockfile` |
-| Build Command | `bun run build` |
-| Output Directory | `dist/client` |
-| Include files outside Root Directory | **on** (needed for `packages/ui`) |
-| Domain | `blog.mathewsshaji.com` |
+| Setting                              | Value                                       |
+| ------------------------------------ | ------------------------------------------- |
+| Root Directory                       | `apps/blog`                                 |
+| Framework Preset                     | Other (static)                              |
+| Install Command                      | `cd ../.. && bun install --frozen-lockfile` |
+| Build Command                        | `bun run build`                             |
+| Output Directory                     | `dist/client`                               |
+| Include files outside Root Directory | **on** (needed for `packages/ui`)           |
+| Domain                               | `blog.mathewsshaji.com`                     |
 
 `apps/blog/vercel.json` pins the framework, install command, build command and
 output directory, so the dashboard values only need the Root Directory and the

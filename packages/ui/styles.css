@@ -154,8 +154,8 @@
   --font-sans: "JetBrains Mono", ui-monospace, monospace;
   /* Reading stack for long-form blog text. No additional web fonts. */
   --font-reading:
-    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica,
-    "Apple Color Emoji", Arial, sans-serif;
+    ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, "Apple Color Emoji",
+    Arial, sans-serif;
   --color-amber: var(--amber);
 }
 
@@ -521,15 +521,44 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
 }
 
 /* GFM task lists */
+/* Task lists: custom boxes so done / open read differently at a glance.
+   Done items also fade and strike through, like Notion's to-do blocks. */
 .post-prose li:has(> input[type="checkbox"]) {
   list-style: none;
-  margin-left: -1.2em;
+  margin-left: -1.4em;
 }
 
 .post-prose input[type="checkbox"] {
-  margin-right: 0.5em;
-  accent-color: var(--muted-foreground);
-  vertical-align: baseline;
+  appearance: none;
+  display: inline-grid;
+  place-content: center;
+  width: 1rem;
+  height: 1rem;
+  margin: 0 0.6em 0 0;
+  vertical-align: -0.08em;
+  border: 1.5px solid oklch(1 0 0 / 35%);
+  border-radius: 4px;
+  background: transparent;
+}
+
+.post-prose input[type="checkbox"]:checked {
+  border-color: var(--amber);
+  background-color: var(--amber);
+}
+
+.post-prose input[type="checkbox"]:checked::after {
+  content: "";
+  width: 0.6rem;
+  height: 0.6rem;
+  background-color: var(--background);
+  -webkit-mask: var(--icon-check) center / contain no-repeat;
+  mask: var(--icon-check) center / contain no-repeat;
+}
+
+.post-prose li:has(> input[type="checkbox"]:checked) {
+  color: var(--muted-foreground);
+  text-decoration: line-through;
+  text-decoration-color: oklch(1 0 0 / 30%);
 }
 
 .post-prose blockquote {
@@ -596,33 +625,154 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   border-radius: 6px;
 }
 
+.post-prose video,
+.post-prose iframe {
+  display: block;
+  width: 100%;
+  border: 0;
+  border-radius: 6px;
+  background: var(--card);
+}
+
+.post-prose .post-embed {
+  aspect-ratio: 16 / 9;
+}
+
+.post-prose .post-embed iframe {
+  height: 100%;
+}
+
+.post-prose figure {
+  margin-top: 1.75em;
+  margin-bottom: 1.75em;
+}
+
+.post-prose figcaption {
+  margin-top: 0.6rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--muted-foreground);
+}
+
+/* Mermaid: show the source as plain text until the library swaps in an SVG. */
+.post-prose .post-diagram {
+  padding: 1.5rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+.post-prose pre.mermaid {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  text-align: center;
+  color: var(--muted-foreground);
+}
+
+.post-prose pre.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.post-prose h2,
+.post-prose h3 {
+  scroll-margin-top: 5rem;
+}
+
+.post-prose .heading-anchor {
+  margin-left: 0.4em;
+  font-weight: 400;
+  color: var(--muted-foreground);
+  text-decoration: none;
+  border: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.post-prose h2:hover .heading-anchor,
+.post-prose h3:hover .heading-anchor,
+.post-prose .heading-anchor:focus-visible {
+  opacity: 1;
+}
+
 .post-prose hr {
   border: 0;
   border-top: 1px solid var(--border);
   margin: 2.25em 0;
 }
 
-.post-prose table {
-  display: block;
-  width: max-content;
-  max-width: 100%;
+/* Tables: rounded frame that scrolls sideways on narrow screens, horizontal
+   row rules only, quieter header, tabular figures so numbers line up. */
+.post-prose .post-table {
   overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.post-prose table {
+  width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
 }
 
 .post-prose th,
 .post-prose td {
-  border: 1px solid var(--border);
-  padding: 0.45rem 0.7rem;
+  padding: 0.65rem 1rem;
   text-align: left;
   vertical-align: top;
 }
 
+.post-prose :is(th, td)[align="right"] {
+  text-align: right;
+}
+
+.post-prose :is(th, td)[align="center"] {
+  text-align: center;
+}
+
 .post-prose th {
-  font-weight: 600;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
   background-color: oklch(1 0 0 / 3%);
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
+}
+
+.post-prose tbody tr + tr td {
+  border-top: 1px solid oklch(1 0 0 / 5.5%);
+}
+
+.post-prose tbody tr:hover td {
+  background-color: oklch(1 0 0 / 2%);
+}
+
+/* External links get a small "opens elsewhere" mark after the text. */
+.post-prose a.external::after {
+  content: "";
+  display: inline-block;
+  width: 0.62em;
+  height: 0.62em;
+  margin-left: 0.22em;
+  vertical-align: 0.05em;
+  background-color: currentColor;
+  opacity: 0.55;
+  -webkit-mask: var(--icon-external) center / contain no-repeat;
+  mask: var(--icon-external) center / contain no-repeat;
+  transition: opacity 150ms ease-out;
+}
+
+.post-prose a.external:hover::after {
+  opacity: 1;
+}
+
+.post-prose {
+  --icon-check: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2.5 6.3 5 8.7l4.5-5.2'/%3E%3C/svg%3E");
+  --icon-external: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 2.5h5v5M9.5 2.5 3 9'/%3E%3C/svg%3E");
 }
 
 /* Notion's reading measure is ~708px; the article column lands near it. */
@@ -631,4 +781,28 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
     font-size: 1.0625rem;
     line-height: 1.7;
   }
+}
+
+/* Side panels scroll on their own; the bar stays invisible until hovered. */
+.quiet-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  overscroll-behavior: contain;
+}
+
+.quiet-scroll:hover {
+  scrollbar-color: oklch(1 0 0 / 14%) transparent;
+}
+
+.quiet-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.quiet-scroll::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: transparent;
+}
+
+.quiet-scroll:hover::-webkit-scrollbar-thumb {
+  background: oklch(1 0 0 / 14%);
 }

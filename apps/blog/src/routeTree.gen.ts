@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as RssDotxmlRouteImport } from './routes/rss[.]xml'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PagePageRouteImport } from './routes/page/$page'
 import { Route as TagsTagRouteImport } from './routes/tags/$tag'
 
 const IndexRoute = IndexRouteImport.update({
@@ -35,6 +36,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PagePageRoute = PagePageRouteImport.update({
+  id: '/page/$page',
+  path: '/page/$page',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TagsTagRoute = TagsTagRouteImport.update({
   id: '/tags/$tag',
   path: '/tags/$tag',
@@ -46,6 +52,7 @@ export interface FileRoutesByFullPath {
   '/$slug': typeof SlugRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/page/$page': typeof PagePageRoute
   '/tags/$tag': typeof TagsTagRoute
 }
 export interface FileRoutesByTo {
@@ -53,6 +60,7 @@ export interface FileRoutesByTo {
   '/$slug': typeof SlugRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/page/$page': typeof PagePageRoute
   '/tags/$tag': typeof TagsTagRoute
 }
 export interface FileRoutesById {
@@ -61,14 +69,24 @@ export interface FileRoutesById {
   '/$slug': typeof SlugRoute
   '/rss.xml': typeof RssDotxmlRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/page/$page': typeof PagePageRoute
   '/tags/$tag': typeof TagsTagRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$slug' | '/rss.xml' | '/sitemap.xml' | '/tags/$tag'
+  fullPaths:
+    '/' | '/$slug' | '/rss.xml' | '/sitemap.xml' | '/page/$page' | '/tags/$tag'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$slug' | '/rss.xml' | '/sitemap.xml' | '/tags/$tag'
-  id: '__root__' | '/' | '/$slug' | '/rss.xml' | '/sitemap.xml' | '/tags/$tag'
+  to:
+    '/' | '/$slug' | '/rss.xml' | '/sitemap.xml' | '/page/$page' | '/tags/$tag'
+  id:
+    | '__root__'
+    | '/'
+    | '/$slug'
+    | '/rss.xml'
+    | '/sitemap.xml'
+    | '/page/$page'
+    | '/tags/$tag'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -76,6 +94,7 @@ export interface RootRouteChildren {
   SlugRoute: typeof SlugRoute
   RssDotxmlRoute: typeof RssDotxmlRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  PagePageRoute: typeof PagePageRoute
   TagsTagRoute: typeof TagsTagRoute
 }
 
@@ -109,6 +128,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/page/$page': {
+      id: '/page/$page'
+      path: '/page/$page'
+      fullPath: '/page/$page'
+      preLoaderRoute: typeof PagePageRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/tags/$tag': {
       id: '/tags/$tag'
       path: '/tags/$tag'
@@ -124,6 +150,7 @@ const rootRouteChildren: RootRouteChildren = {
   SlugRoute: SlugRoute,
   RssDotxmlRoute: RssDotxmlRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
+  PagePageRoute: PagePageRoute,
   TagsTagRoute: TagsTagRoute,
 }
 export const routeTree = rootRouteImport

@@ -12,11 +12,14 @@ const LINKS: Array<{ site: Site; label: string; href: string }> = [
  * site is a link in the same style as the rest of the nav, tinted amber on
  * hover/focus. No arrows: the two labels read as one flat nav either way.
  */
-export function SiteNav({ current }: { current: Site }) {
+export function SiteNav({ current, className }: { current: Site; className?: string }) {
   return (
     <nav
       aria-label="Sites"
-      className="flex items-baseline gap-4 text-[0.65rem] tracking-[0.3em] text-muted-foreground"
+      className={
+        className ??
+        "flex items-baseline gap-4 text-[0.65rem] tracking-[0.3em] text-muted-foreground"
+      }
     >
       {LINKS.map((link) =>
         link.site === current ? (
