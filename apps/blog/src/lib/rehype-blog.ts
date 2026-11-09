@@ -177,6 +177,11 @@ function walk(parent: Root | Element) {
       }
     }
 
+    // Tables scroll inside a rounded frame instead of overflowing the column.
+    if (child.tagName === "table") {
+      return el("div", { className: ["post-table"] }, [child]);
+    }
+
     if (child.tagName === "img") return toMedia(child) ?? child;
     if (child.tagName === "a") transformLink(child);
 

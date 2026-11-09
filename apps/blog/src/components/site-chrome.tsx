@@ -113,7 +113,7 @@ const FOOTER_LINKS = [
 /** Site footer: full width, aligned with the header, pinned to the bottom. */
 export function BlogFooter() {
   return (
-    <footer className="mt-24 border-t border-border">
+    <footer className="mt-24">
       <div className="mx-auto flex w-full max-w-[1200px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-6 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground md:px-8">
         <span>© {new Date().getFullYear()} mathews shaji</span>
         <nav aria-label="Elsewhere" className="flex items-center gap-5">

@@ -674,27 +674,75 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   margin: 2.25em 0;
 }
 
-.post-prose table {
-  display: block;
-  width: max-content;
-  max-width: 100%;
+/* Tables: rounded frame that scrolls sideways on narrow screens, horizontal
+   row rules only, quieter header, tabular figures so numbers line up. */
+.post-prose .post-table {
   overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.post-prose table {
+  width: 100%;
   border-collapse: collapse;
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
 }
 
 .post-prose th,
 .post-prose td {
-  border: 1px solid var(--border);
-  padding: 0.45rem 0.7rem;
+  padding: 0.65rem 1rem;
   text-align: left;
   vertical-align: top;
 }
 
+.post-prose :is(th, td)[align="right"] {
+  text-align: right;
+}
+
+.post-prose :is(th, td)[align="center"] {
+  text-align: center;
+}
+
 .post-prose th {
-  font-weight: 600;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--muted-foreground);
   background-color: oklch(1 0 0 / 3%);
+  border-bottom: 1px solid var(--border);
   white-space: nowrap;
+}
+
+.post-prose tbody tr + tr td {
+  border-top: 1px solid oklch(1 0 0 / 5.5%);
+}
+
+.post-prose tbody tr:hover td {
+  background-color: oklch(1 0 0 / 2%);
+}
+
+/* External links get a small "opens elsewhere" mark after the text. */
+.post-prose a.external::after {
+  content: "";
+  display: inline-block;
+  width: 0.62em;
+  height: 0.62em;
+  margin-left: 0.22em;
+  vertical-align: 0.05em;
+  background-color: currentColor;
+  opacity: 0.55;
+  -webkit-mask: var(--icon-external) center / contain no-repeat;
+  mask: var(--icon-external) center / contain no-repeat;
+  transition: opacity 150ms ease-out;
+}
+
+.post-prose a.external:hover::after {
+  opacity: 1;
+}
+
+.post-prose {
+  --icon-external: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 2.5h5v5M9.5 2.5 3 9'/%3E%3C/svg%3E");
 }
 
 /* Notion's reading measure is ~708px; the article column lands near it. */
