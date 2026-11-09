@@ -101,7 +101,7 @@ function PostPage() {
   }
 
   return (
-    <BlogShell toc={post.toc}>
+    <BlogShell slug={post.slug} toc={post.toc}>
       <article className="pt-10 pb-4 md:pt-14">
         <Link
           to="/"

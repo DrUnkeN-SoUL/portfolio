@@ -2,44 +2,71 @@ import { Link } from "@tanstack/react-router";
 
 import { formatPostDate, type Post } from "@/lib/posts";
 
-/** One row in a post list: text on the left, cover thumbnail on the right. */
-function PostListItem({ post }: { post: Post }) {
+/** Generated banner for posts without a cover: the title, set large. */
+function TitleBanner({ title }: { title: string }) {
+  return (
+    <div className="absolute inset-0 flex flex-col justify-between bg-[radial-gradient(120%_90%_at_100%_0%,rgba(224,163,58,0.13),transparent_55%),linear-gradient(160deg,#262626,#1b1b1b)] p-5 sm:p-6">
+      <span className="font-mono text-[0.6rem] tracking-[0.22em] text-muted-foreground/70">
+        mathews shaji / writing
+      </span>
+      <h2 className="text-[1.35rem] leading-[1.2] font-semibold tracking-[-0.015em] text-white/90 sm:text-[1.6rem]">
+        {title}
+      </h2>
+    </div>
+  );
+}
+
+/**
+ * Card with a full-width banner. Posts with a `cover` show it untouched with
+ * the title underneath (covers often carry their own text); posts without
+ * one get a generated title banner, so every card has the same shape.
+ */
+function PostCard({ post }: { post: Post }) {
   return (
     <li>
       <Link
         to="/$slug"
         params={{ slug: post.slug }}
-        className="group flex items-start gap-4 rounded-md px-3 py-4 transition-colors hover:bg-white/[0.03] focus-visible:bg-white/[0.05] focus-visible:outline-none sm:gap-6"
+        className="group block rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/40"
       >
-        <span className="min-w-0 flex-1">
-          <span className="block text-[1.125rem] leading-snug font-medium text-foreground">
-            {post.title}
-          </span>
-          <span className="mt-1 block text-[0.9rem] leading-relaxed text-muted-foreground">
-            {post.description}
-          </span>
-          <span className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground/85">
-            <time dateTime={post.date}>{formatPostDate(post.date)}</time>
-            {post.tags.length > 0 && (
-              <span className="text-muted-foreground/70">
-                {post.tags.map((tag) => `#${tag}`).join("  ")}
-              </span>
-            )}
-            {post.draft && <span className="text-amber">draft</span>}
-          </span>
-        </span>
+        <div className="relative aspect-[1200/630] overflow-hidden rounded-xl bg-[#202020] ring-1 ring-white/[0.07] transition-[box-shadow] group-hover:ring-white/[0.16]">
+          {post.cover ? (
+            <img
+              src={post.cover}
+              alt=""
+              width={1200}
+              height={630}
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+          ) : (
+            <TitleBanner title={post.title} />
+          )}
+          {post.draft && (
+            <span className="absolute top-3 right-3 rounded bg-amber/90 px-1.5 py-0.5 font-mono text-[0.6rem] tracking-[0.1em] text-black uppercase">
+              draft
+            </span>
+          )}
+        </div>
 
         {post.cover && (
-          <img
-            src={post.cover}
-            alt=""
-            width={1200}
-            height={630}
-            loading="lazy"
-            decoding="async"
-            className="aspect-[1200/630] w-24 shrink-0 rounded-md object-cover opacity-90 ring-1 ring-white/[0.06] transition-opacity group-hover:opacity-100 sm:w-44"
-          />
+          <h2 className="mt-4 text-[1.15rem] leading-snug font-semibold tracking-[-0.01em] text-foreground">
+            {post.title}
+          </h2>
         )}
+        <p className="mt-2 line-clamp-2 text-[0.92rem] leading-relaxed text-muted-foreground">
+          {post.description}
+        </p>
+        <p className="mt-1.5 flex flex-wrap items-baseline gap-x-3 gap-y-1 font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground/80">
+          <time dateTime={post.date}>{formatPostDate(post.date)}</time>
+          <span>{post.readingMinutes} min read</span>
+          {post.tags.length > 0 && (
+            <span className="text-muted-foreground/65">
+              {post.tags.map((tag) => `#${tag}`).join("  ")}
+            </span>
+          )}
+        </p>
       </Link>
     </li>
   );
@@ -47,9 +74,9 @@ function PostListItem({ post }: { post: Post }) {
 
 export function PostList({ posts }: { posts: Post[] }) {
   return (
-    <ul className="-mx-3 flex flex-col gap-1">
+    <ul className="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2">
       {posts.map((post) => (
-        <PostListItem key={post.slug} post={post} />
+        <PostCard key={post.slug} post={post} />
       ))}
     </ul>
   );

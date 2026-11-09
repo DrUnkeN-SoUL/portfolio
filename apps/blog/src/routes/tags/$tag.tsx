@@ -31,7 +31,7 @@ function TagPage() {
   const posts = getPostsByTag(tag);
 
   return (
-    <BlogShell>
+    <BlogShell tag={tag}>
       <section className="pt-12 pb-8 md:pt-16 md:pb-10">
         <p className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
           tag

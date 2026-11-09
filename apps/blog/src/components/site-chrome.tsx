@@ -1,18 +1,28 @@
-import type { ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 
 import { Link } from "@tanstack/react-router";
 
 import { SiteNav } from "@mathews/ui";
-import type { Post } from "@/lib/posts";
+import { SearchDialog, SearchIcon } from "@/components/search";
+import { getAllTags, posts, type Post } from "@/lib/posts";
+import { openSearch } from "@/lib/search-events";
 import { useActiveHeading } from "@/lib/use-post-enhancements";
 
+const FRAME = "mx-auto w-full max-w-[1440px] px-5 md:px-8";
 const RAIL_LABEL =
   "mb-3 pl-3 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground/70 uppercase";
+const SIDE_LABEL =
+  "mb-2 px-2 font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground/70 uppercase";
+const SIDE_LINK =
+  "block truncate rounded-[5px] px-2 py-[5px] text-[0.875rem] leading-snug text-muted-foreground transition-colors hover:bg-white/[0.045] hover:text-foreground";
+const SIDE_ACTIVE = "bg-white/[0.06] text-foreground";
 
 export function BlogHeader() {
   return (
     <header className="sticky top-0 z-40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
-      <div className="mx-auto grid h-14 w-full max-w-[1320px] grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 font-mono text-[0.7rem] tracking-[0.22em] text-muted-foreground md:px-8">
+      <div
+        className={`${FRAME} grid h-14 grid-cols-[minmax(0,1fr)_auto_auto] items-center gap-4 font-mono text-[0.7rem] tracking-[0.22em] text-muted-foreground`}
+      >
         <Link
           to="/"
           className="flex min-w-0 items-baseline gap-2 transition-colors hover:text-foreground"
@@ -20,9 +30,88 @@ export function BlogHeader() {
           <span className="truncate text-foreground">mathews shaji</span>
           <span className="hidden text-muted-foreground sm:inline">/ writing</span>
         </Link>
+        <button
+          type="button"
+          onClick={openSearch}
+          aria-label="Search"
+          className="-m-2 p-2 transition-colors hover:text-foreground lg:hidden"
+        >
+          <SearchIcon className="size-4" />
+        </button>
         <SiteNav current="blog" />
       </div>
     </header>
+  );
+}
+
+/** Left rail (lg and up): search, every post and every tag. */
+function BlogSidebar({ slug, tag }: { slug?: string | undefined; tag?: string | undefined }) {
+  const tags = getAllTags();
+  const [shortcut, setShortcut] = useState("Ctrl K");
+  useEffect(() => {
+    if (/Mac|iPhone|iPad/.test(navigator.platform)) setShortcut("⌘K");
+  }, []);
+
+  return (
+    <nav
+      aria-label="Blog"
+      className="sticky top-14 hidden max-h-[calc(100vh-3.5rem)] self-start overflow-y-auto py-10 lg:block"
+    >
+      <button
+        type="button"
+        onClick={openSearch}
+        className="mb-6 flex w-full items-center gap-2 rounded-md border border-border bg-white/[0.02] px-2.5 py-[7px] text-left text-[0.85rem] text-muted-foreground transition-colors hover:border-white/15 hover:text-foreground"
+      >
+        <SearchIcon className="size-3.5 shrink-0" />
+        <span className="flex-1">Search</span>
+        <kbd className="font-mono text-[0.62rem] text-muted-foreground/70">{shortcut}</kbd>
+      </button>
+
+      <Link
+        to="/"
+        className={`${SIDE_LINK} mb-6 font-medium`}
+        activeProps={{ className: SIDE_ACTIVE }}
+        activeOptions={{ exact: true }}
+      >
+        All writing
+      </Link>
+
+      <p className={SIDE_LABEL}>Posts</p>
+      <ul className="mb-7 space-y-px">
+        {posts.map((post) => (
+          <li key={post.slug}>
+            <Link
+              to="/$slug"
+              params={{ slug: post.slug }}
+              title={post.title}
+              className={`${SIDE_LINK} ${post.slug === slug ? SIDE_ACTIVE : ""}`}
+            >
+              {post.title}
+            </Link>
+          </li>
+        ))}
+      </ul>
+
+      {tags.length > 0 && (
+        <>
+          <p className={SIDE_LABEL}>Tags</p>
+          <ul className="space-y-px">
+            {tags.map(({ tag: name, count }) => (
+              <li key={name}>
+                <Link
+                  to="/tags/$tag"
+                  params={{ tag: name }}
+                  className={`${SIDE_LINK} flex justify-between gap-3 ${name === tag ? SIDE_ACTIVE : ""}`}
+                >
+                  <span className="truncate">#{name}</span>
+                  <span className="font-mono text-[0.7rem] text-muted-foreground/60">{count}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </nav>
   );
 }
 
@@ -81,25 +170,35 @@ export function InlineToc({ toc }: { toc: Post["toc"] }) {
 }
 
 /**
- * Page frame shared by every blog route: header, one centred reading column,
- * and (xl and up) an "on this page" outline in the right margin. The outline
- * sits in its own grid track so it never pushes the column off-centre.
+ * Page frame shared by every blog route: header; a left rail with search,
+ * posts and tags (lg+); the reading column; and an "on this page" outline on
+ * the right for posts with sections (xl+).
  */
 export function BlogShell({
   children,
+  slug,
+  tag,
   toc,
 }: {
   children: ReactNode;
+  slug?: string | undefined;
+  tag?: string | undefined;
   toc?: Post["toc"] | undefined;
 }) {
+  const hasToc = Boolean(toc && toc.length >= 2);
+
   return (
     <div className="flex min-h-dvh flex-col">
       <BlogHeader />
-      <div className="mx-auto grid w-full max-w-[1320px] flex-1 grid-cols-1 px-5 md:px-8 xl:grid-cols-[minmax(0,1000px)_200px] xl:justify-between xl:gap-x-14">
+      <div
+        className={`${FRAME} grid flex-1 grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-x-12 ${hasToc ? "xl:grid-cols-[220px_minmax(0,1fr)_200px]" : ""}`}
+      >
+        <BlogSidebar slug={slug} tag={tag} />
         <main className="w-full max-w-[1000px] min-w-0">{children}</main>
-        {toc && <TableOfContents toc={toc} />}
+        {hasToc && toc && <TableOfContents toc={toc} />}
       </div>
       <BlogFooter />
+      <SearchDialog />
     </div>
   );
 }
@@ -114,7 +213,9 @@ const FOOTER_LINKS = [
 export function BlogFooter() {
   return (
     <footer className="mt-12">
-      <div className="mx-auto flex w-full max-w-[1320px] flex-wrap items-center justify-between gap-x-6 gap-y-3 px-5 py-6 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground md:px-8">
+      <div
+        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 py-6 font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
+      >
         <span>© {new Date().getFullYear()} mathews shaji</span>
         <nav aria-label="Elsewhere" className="flex items-center gap-5">
           {FOOTER_LINKS.map((link) => (

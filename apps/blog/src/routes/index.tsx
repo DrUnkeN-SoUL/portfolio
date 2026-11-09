@@ -42,7 +42,7 @@ function Index() {
       )}
 
       {tags.length > 0 && (
-        <section className="mt-12">
+        <section className="mt-12 lg:hidden">
           <h2 className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
             tags
           </h2>
