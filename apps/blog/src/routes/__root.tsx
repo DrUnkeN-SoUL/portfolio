@@ -77,7 +77,7 @@ export const Route = createRootRoute({
       { title: BLOG_NAME },
       { name: "description", content: BLOG_DESCRIPTION },
       { name: "author", content: "Mathews Shaji" },
-      { name: "theme-color", content: "#030507" },
+      { name: "theme-color", content: "#05060a" },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { property: "og:site_name", content: "Mathews Shaji" },
       { property: "og:type", content: "website" },

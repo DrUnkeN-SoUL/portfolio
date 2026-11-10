@@ -11,7 +11,7 @@ function TagBanner({ tag }: { tag: string | undefined }) {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-0 flex flex-col justify-between bg-[radial-gradient(110%_90%_at_100%_0%,rgba(224,163,58,0.16),transparent_55%),radial-gradient(80%_70%_at_0%_100%,rgba(255,255,255,0.04),transparent_60%),linear-gradient(160deg,#0f1419,#070b0f)] p-5 sm:p-6"
+      className="absolute inset-0 flex flex-col justify-between bg-[radial-gradient(110%_90%_at_100%_0%,rgba(150,165,220,0.09),transparent_55%),radial-gradient(80%_70%_at_0%_100%,rgba(255,255,255,0.04),transparent_60%),linear-gradient(160deg,#13161d,#0a0c12)] p-5 sm:p-6"
     >
       <span className="font-mono text-[0.6rem] tracking-[0.22em] text-muted-foreground/60">
         mathews shaji / writing
