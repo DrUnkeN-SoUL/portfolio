@@ -1,21 +1,17 @@
-/**
- * Font links shared by the portfolio and the blog.
- *
- * Keep these in `head.links` so both sites load exactly the same typeface.
- */
+import monoFontUrl from "../fonts/jetbrains-mono-latin.woff2?url";
+
 export type SiteFontLink = {
   rel: string;
   href: string;
+  as?: "font";
+  type?: string;
   crossOrigin?: "anonymous";
 };
 
+/** The face itself is declared in styles.css. */
 export const SITE_FONT_LINKS: SiteFontLink[] = [
-  { rel: "preconnect", href: "https://fonts.googleapis.com" },
-  { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-  {
-    rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500&display=swap",
-  },
+  // Font fetches are always CORS; without crossOrigin the preload is discarded.
+  { rel: "preload", href: monoFontUrl, as: "font", type: "font/woff2", crossOrigin: "anonymous" },
 ];
 
 export const SITE = {

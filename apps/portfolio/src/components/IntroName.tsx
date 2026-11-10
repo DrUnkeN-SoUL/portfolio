@@ -13,14 +13,16 @@ const FONT: Record<string, string[]> = {
 };
 
 const NAME = "MATHEWS SHAJI";
+
+export const INTRO_SEEN_KEY = "intro-seen";
 const ROWS = 7;
 
-// Timing orchestrator (in ms)
+// Milliseconds.
 const BUILD_START = 300;
 const BUILD_END = 2100;
 const INVERT_START = 2250;
 const INVERT_DURATION = 1800; // matches the standalone demo's wipe speed
-const INVERT_END = INVERT_START + INVERT_DURATION; // 4050ms
+const INVERT_END = INVERT_START + INVERT_DURATION;
 const DOCK_START = 4150;
 const DOCK_DURATION = 850;
 
@@ -80,7 +82,13 @@ export function IntroName({
     if (!canvas || !overlay || !backdrop) return;
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) {
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem(INTRO_SEEN_KEY) !== null;
+    } catch {
+      // sessionStorage can be blocked
+    }
+    if (reduced || seen) {
       completedRef.current = true;
       onComplete();
       return;
@@ -101,7 +109,6 @@ export function IntroName({
     let frameId = 0;
     let start = 0;
 
-    // --- Ring Storm field ------------------------------------------------
     // Value-noise fbm, seeded once per mount (same shape as the standalone demo).
     const fbm = (() => {
       const sizes = [8, 16, 32];
@@ -269,6 +276,9 @@ export function IntroName({
     };
 
     const skipIntro = () => startExit();
+    const skipOnKey = (event: KeyboardEvent) => {
+      if (!event.metaKey && !event.ctrlKey && !event.altKey) skipIntro();
+    };
 
     const resize = () => {
       if (leavingRef.current) return;
@@ -291,7 +301,6 @@ export function IntroName({
       if (!start) start = time;
       const elapsed = time - start;
 
-      // Reveal solid dark tiles only during the original colour-change interval.
       let invertProgress = 0;
       if (elapsed >= INVERT_END) {
         invertProgress = 1;
@@ -308,11 +317,9 @@ export function IntroName({
       const dockRaw = Math.max(0, Math.min(1, (elapsed - DOCK_START) / DOCK_DURATION));
       const dockEase = easeInOutQuad(dockRaw);
 
-      // Keep the backdrop solid until the pixel reveal begins.
       backdrop.style.backgroundColor = background;
       context.clearRect(0, 0, width, height);
 
-      // Calculate dock targets
       const dock = document.querySelector<HTMLElement>("[data-name-dock]");
       const dockRect = dock?.getBoundingClientRect();
       const dockX = dockRect?.left ?? (width >= 768 ? 40 : 20);
@@ -377,7 +384,6 @@ export function IntroName({
         mosaicContext.fill(inkTiles);
       }
 
-      // Draw the pixel letters
       context.fillStyle = foreground;
       for (let column = 0; column < COLUMNS.length; column++) {
         const settleAt =
@@ -421,7 +427,6 @@ export function IntroName({
         context.globalCompositeOperation = "source-over";
       }
 
-      // Subtle atmospheric ASCII dust, fading out smoothly during inversion
       if (!dockRaw && invertProgress < 1) {
         context.font = "10px 'JetBrains Mono', monospace";
         context.fillStyle = foreground;
@@ -438,7 +443,6 @@ export function IntroName({
         context.globalAlpha = 1;
       }
 
-      // Start clearing the backdrop and docking the name together.
       if (elapsed >= DOCK_START) {
         startExit(true);
         return;
@@ -452,12 +456,18 @@ export function IntroName({
     resize();
     window.addEventListener("resize", resize);
     overlay.addEventListener("click", skipIntro);
+    window.addEventListener("keydown", skipOnKey);
+    window.addEventListener("wheel", skipIntro, { passive: true });
+    window.addEventListener("touchmove", skipIntro, { passive: true });
     frameId = requestAnimationFrame(draw);
 
     return () => {
       cancelAnimationFrame(frameId);
       window.removeEventListener("resize", resize);
       overlay.removeEventListener("click", skipIntro);
+      window.removeEventListener("keydown", skipOnKey);
+      window.removeEventListener("wheel", skipIntro);
+      window.removeEventListener("touchmove", skipIntro);
     };
   }, [onComplete, onTransitionStart]);
 

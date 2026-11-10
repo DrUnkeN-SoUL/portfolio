@@ -15,15 +15,6 @@ export const bio = [
   "Guinness World Record",
 ];
 
-export const metrics = [
-  { value: "20+", label: "ingestion pipelines built" },
-  { value: "3", label: "clouds in production" },
-  { value: "27+", label: "fastapi modules shipped" },
-  { value: "50+", label: "candidates mentored" },
-  { value: "6", label: "projects in production" },
-  { value: "1", label: "guinness world record" },
-];
-
 /**
  * Canonical skill list. Feeds the homepage `knowsAbout` structured data, so
  * only list things the rest of this file (or public/llm.txt) already backs up.
@@ -59,14 +50,7 @@ export const skills = [
   "Observability",
 ];
 
-export type Role = {
-  period: string;
-  title: string;
-  org: string;
-  line: string;
-};
-
-export const roles: Role[] = [
+export const roles = [
   {
     period: "Dec 2025",
     title: "Full-Stack Developer (Contract)",
@@ -177,14 +161,8 @@ export const community = [
   "CNCF Kochi — volunteered at Kubernetes Community Day 2026",
 ];
 
-export type ProfileLink = {
-  label: string;
-  href: string;
-  /** `me` marks identity links (GitHub, LinkedIn) for verification. */
-  rel?: "me";
-};
-
-export const links: ProfileLink[] = [
+// rel "me" marks identity links (GitHub, LinkedIn) for verification.
+export const links: { label: string; href: string; rel?: "me" }[] = [
   { label: "Email", href: "mailto:mail@mathewsshaji.com" },
   { label: "GitHub", href: "https://github.com/DrUnkeN-SoUL", rel: "me" },
   { label: "LinkedIn", href: "https://linkedin.com/in/mathews-shaji", rel: "me" },

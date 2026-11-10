@@ -3,21 +3,19 @@
 @source "../../apps/blog/src";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is(.dark *));
+/* Self-hosted variable file, Latin subset. Licence: fonts/OFL.txt. */
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 300 600;
+  font-display: swap;
+  src: url("./fonts/jetbrains-mono-latin.woff2") format("woff2");
+  unicode-range:
+    U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 
-/*
- * Design system definition.
- *
- * The @theme inline block maps CSS custom properties to Tailwind utility
- * classes (e.g. --color-primary -> bg-primary, text-primary).
- *
- * The :root and .dark blocks define the actual color values using oklch.
- * All colors MUST use oklch format.
- *
- * To add a new semantic color:
- * 1. Add the variable to :root (light value) and .dark (dark value)
- * 2. Register it in @theme inline as --color-<name>: var(--<name>)
- */
+@custom-variant dark (&:is(.dark *));
 
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
@@ -163,8 +161,13 @@ html {
   scroll-behavior: smooth;
 }
 
-html:has(.intro-loader) [data-name-dock] {
+html:not([data-intro-seen]):has(.intro-loader) [data-name-dock] {
   visibility: hidden;
+}
+
+/* Set before first paint when this tab has already played the intro. */
+html[data-intro-seen] .intro-loader {
+  display: none;
 }
 
 .intro-loader {
@@ -219,22 +222,20 @@ html:has(.intro-loader) [data-name-dock] {
   }
 }
 
-@utility ascii-frame {
-  letter-spacing: 0.06em;
-  flex: none;
-  text-shadow: 0 0 6px color-mix(in oklab, var(--color-foreground) 18%, transparent);
-}
-
 .ascii-portrait-box {
   container-type: inline-size;
   width: 100%;
 }
 
-/* 96 columns x 62 rows: scale the type to the container instead of
-   dropping detail on small screens. */
+/* 96 columns x 62 rows of 0.66em x 1.22em cells (JetBrains Mono advances
+   0.6em, plus 0.06em tracking). Sized here so the canvas holds its space
+   before JavaScript runs; AsciiPortrait.tsx draws on the same grid. */
 .ascii-portrait-art {
+  display: block;
+  width: 63.36em;
+  height: 75.64em;
   font-size: min(1.55cqw, 1.05vh, 0.68rem);
-  line-height: 1.22;
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--color-foreground) 26%, transparent));
 }
 
 @media (max-width: 767px) {
@@ -317,7 +318,7 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   }
 
   .hero-bio {
-    font-size: clamp(0.65rem, 1.365vh, 0.8rem);
+    font-size: clamp(0.8rem, 1.5vh, 0.9rem);
   }
 
   .ascii-portrait-art {
@@ -349,18 +350,9 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   }
 }
 
-/* ------------------------------------------------------------------ */
-/* Blog: Notion-like dark reading surface                             */
-/* ------------------------------------------------------------------ */
-
-/*
- * Both apps load this stylesheet, but only the blog paints `.blog-surface`.
- * It redefines the semantic tokens for the reading pages: a near-black canvas
- * with a faint midnight-blue cast (hue ~270) and soft grey type, while the
- * portfolio keeps its neutral near-black CRT look. Every value is a plain
- * `var(--token)` override, so the existing Tailwind utilities
- * (bg-background, text-muted-foreground, ...) pick them up unchanged.
- */
+/* Both apps load this stylesheet, but only the blog paints `.blog-surface`.
+   It overrides the semantic tokens, so the existing Tailwind utilities
+   (bg-background, text-muted-foreground, ...) pick them up unchanged. */
 .blog-surface {
   --background: oklch(0.146 0.0122 271); /* #080a10 */
   --foreground: oklch(0.8608 0.0043 271); /* #d0d1d4 */
@@ -391,8 +383,6 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   text-rendering: optimizeLegibility;
 }
 
-/* Cross-site link ("portfolio" / "writing"): plain label in the nav type,
-   amber on hover/focus, no arrows. */
 .site-nav-link {
   text-decoration: none;
   transition: color 150ms ease-out;
@@ -406,12 +396,12 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
 /* Touch area: small text links and icons keep their look but answer taps
    across 44px of height (and at least 40px of width), the size a thumb needs. */
 .tap-area,
-.blog-surface .site-nav-link {
+.site-nav-link {
   position: relative;
 }
 
 .tap-area::after,
-.blog-surface .site-nav-link::after {
+.site-nav-link::after {
   content: "";
   position: absolute;
   top: 50%;
@@ -420,10 +410,6 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   height: 2.75rem;
   transform: translate(-50%, -50%);
 }
-
-/* ------------------------------------------------------------------ */
-/* Long-form Markdown (blog)                                          */
-/* ------------------------------------------------------------------ */
 
 .post-prose {
   font-family: var(--font-reading);
@@ -538,7 +524,6 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   margin-top: 0.6em;
 }
 
-/* GFM task lists */
 /* Task lists: custom boxes so done / open read differently at a glance.
    Done items also fade and strike through, like Notion's to-do blocks. */
 .post-prose li:has(> input[type="checkbox"]) {
@@ -721,8 +706,6 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   margin: 2.25em 0;
 }
 
-/* Tables: rounded frame that scrolls sideways on narrow screens, horizontal
-   row rules only, quieter header, tabular figures so numbers line up. */
 .post-prose .post-table {
   overflow-x: auto;
   border: 1px solid var(--border);
@@ -793,7 +776,6 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   --icon-external: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='black' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4.5 2.5h5v5M9.5 2.5 3 9'/%3E%3C/svg%3E");
 }
 
-/* Notion's reading measure is ~708px; the article column lands near it. */
 @media (max-width: 767px) {
   .post-prose {
     font-size: 1.0625rem;

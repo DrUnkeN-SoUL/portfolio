@@ -20,7 +20,6 @@ import {
   LINKEDIN_URL,
   OG_IMAGE,
   OG_IMAGE_ALT,
-  RSS_URL,
   SITE_NAME,
 } from "@/lib/seo";
 import { ANALYTICS_SCRIPTS, SITE_ICON_LINKS } from "@mathews/ui/head";
@@ -90,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: HOME_TITLE },
       { name: "description", content: HOME_DESCRIPTION },
       { name: "author", content: SITE_NAME },
-      { name: "theme-color", content: "#0d0d0d" },
+      { name: "theme-color", content: "#010101" },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { property: "og:site_name", content: SITE_NAME },
       { property: "og:type", content: "website" },
@@ -121,9 +120,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         rel: "alternate",
         type: "application/rss+xml",
         title: `${SITE_NAME} — writing`,
-        href: RSS_URL,
+        href: `${SITE.blog}/rss.xml`,
       },
-      // Identity signals for this person's profiles.
       { rel: "me", href: GITHUB_URL },
       { rel: "me", href: LINKEDIN_URL },
     ],
@@ -137,8 +135,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: the inline script adds data-intro-seen before React loads.
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Before first paint, so a tab that already played the intro never flashes it. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem("intro-seen"))document.documentElement.setAttribute("data-intro-seen","")}catch(e){}`,
+          }}
+        />
         <HeadContent />
       </head>
       <body>
@@ -149,7 +154,9 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-function useScrollIndicator() {
+function RootComponent() {
+  const { queryClient } = Route.useRouteContext();
+
   useEffect(() => {
     const root = document.documentElement;
     let timer: number | undefined;
@@ -172,16 +179,9 @@ function useScrollIndicator() {
       root.classList.remove("is-scrolling");
     };
   }, []);
-}
-
-function RootComponent() {
-  const { queryClient } = Route.useRouteContext();
-
-  useScrollIndicator();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>
   );

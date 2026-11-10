@@ -7,18 +7,11 @@ import { nitro } from "nitro/vite";
 import { defineConfig } from "vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 
-const srcDir = fileURLToPath(new URL("./src", import.meta.url));
-
-// Vercel sets VERCEL=1 during builds. In that case Nitro must emit the Vercel
-// Build Output API (`.vercel/output`) instead of a standalone Node server.
-// Everywhere else (Docker, `node .output/server/index.mjs`) keeps node-server.
-const isVercel = Boolean(process.env["VERCEL"]);
-
 export default defineConfig(({ command }) => ({
   resolve: {
-    // `@/…` maps to src. Duplicates of React and TanStack packages break hooks
-    // and router context, so pin them to a single copy from the workspace root.
-    alias: { "@": srcDir },
+    // Duplicates of React and TanStack packages break hooks and router context, so pin them to a
+    // single copy.
+    alias: { "@": fileURLToPath(new URL("./src", import.meta.url)) },
     dedupe: [
       "react",
       "react-dom",
@@ -32,7 +25,6 @@ export default defineConfig(({ command }) => ({
     tailwindcss(),
     tsConfigPaths({ projects: ["./tsconfig.json"] }),
     tanstackStart({
-      // Server-only imports must never leak into the client bundle.
       importProtection: {
         behavior: "error",
         client: {
@@ -44,9 +36,12 @@ export default defineConfig(({ command }) => ({
       // error wrapper). Only used for the build; Nitro builds from this.
       server: { entry: "server" },
     }),
-    // Nitro produces `.output` for Docker and the Vercel Build Output API on
-    // Vercel. It is build-only: `vite dev` keeps using Start's own SSR server.
-    ...(command === "build" ? [nitro({ preset: isVercel ? "vercel" : "node-server" })] : []),
+    // Build-only: `vite dev` keeps using Start's own SSR server. Vercel sets
+    // VERCEL=1, where Nitro must emit the Build Output API (`.vercel/output`)
+    // instead of the standalone Node server used by Docker.
+    ...(command === "build"
+      ? [nitro({ preset: process.env["VERCEL"] ? "vercel" : "node-server" })]
+      : []),
     viteReact(),
   ],
   server: {

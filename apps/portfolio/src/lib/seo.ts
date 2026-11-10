@@ -3,14 +3,13 @@ import { SITE } from "@mathews/ui";
 import { skills } from "@/data/portfolio";
 
 /**
- * Homepage SEO. Everything here is server-rendered — crawlers and link-preview
- * bots do not run the client bundle, so absolute URLs matter.
+ * Server-rendered: crawlers and link-preview bots do not run the client bundle, so every URL here
+ * is absolute.
  */
 export const SITE_NAME = "Mathews Shaji";
 export const HOME_URL = `${SITE.portfolio}/`;
 export const PERSON_ID = `${SITE.portfolio}/#person`;
 export const WEBSITE_ID = `${SITE.portfolio}/#website`;
-export const PROFILE_PAGE_ID = `${SITE.portfolio}/#webpage`;
 
 export const HOME_TITLE = "Mathews Shaji — Full-Stack & DevOps Engineer, Kochi, India";
 
@@ -45,9 +44,7 @@ export const KEYWORDS = [
 export const GITHUB_URL = "https://github.com/DrUnkeN-SoUL";
 export const LINKEDIN_URL = "https://linkedin.com/in/mathews-shaji";
 export const EMAIL = "mail@mathewsshaji.com";
-export const RSS_URL = `${SITE.blog}/rss.xml`;
 
-/** schema.org graph for the homepage: who he is, the site, and this profile page. */
 export const PROFILE_JSON_LD = {
   "@context": "https://schema.org",
   "@graph": [
@@ -85,7 +82,7 @@ export const PROFILE_JSON_LD = {
     },
     {
       "@type": "ProfilePage",
-      "@id": PROFILE_PAGE_ID,
+      "@id": `${SITE.portfolio}/#webpage`,
       url: HOME_URL,
       name: HOME_TITLE,
       description: HOME_DESCRIPTION,
