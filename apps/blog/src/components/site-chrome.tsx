@@ -10,9 +10,9 @@ import { useActiveHeading } from "@/lib/use-post-enhancements";
 
 const FRAME = "mx-auto w-full max-w-[1440px] px-5 md:px-8";
 const RAIL_LABEL =
-  "mb-3 pl-3 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground/70 uppercase";
+  "mb-3 pl-3 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground uppercase";
 const SIDE_LABEL =
-  "mb-2 px-2 font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground/70 uppercase";
+  "mb-2 px-2 font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground uppercase";
 const SIDE_LINK =
   "block truncate rounded-[5px] px-2 py-[5px] text-[0.875rem] leading-snug text-muted-foreground transition-colors hover:bg-white/[0.045] hover:text-foreground";
 const SIDE_ACTIVE = "bg-white/[0.06] text-foreground";
@@ -27,7 +27,7 @@ export function BlogHeader() {
       >
         <Link
           to="/"
-          className="flex shrink-0 items-baseline gap-2 whitespace-nowrap transition-colors hover:text-foreground"
+          className="tap-area flex shrink-0 items-baseline gap-2 whitespace-nowrap transition-colors hover:text-foreground"
         >
           <span className="text-foreground">mathews shaji</span>
           <span className="hidden text-muted-foreground sm:inline">/ writing</span>
@@ -41,17 +41,14 @@ export function BlogHeader() {
   );
 }
 
-/**
- * Floating search button for screens without the left rail: bottom-right,
- * inside the thumb's reach for one-handed use.
- */
+/** Search button for the phone dock: bottom-right, in the thumb's reach. */
 function MobileSearchButton() {
   return (
     <button
       type="button"
       onClick={openSearch}
       aria-label="Search"
-      className="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 grid size-12 place-items-center rounded-full bg-[#262626]/95 text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-colors hover:bg-[#2c2c2c] lg:hidden"
+      className="pointer-events-auto absolute right-5 grid size-12 place-items-center rounded-full bg-[#13161d]/95 text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-[background-color,transform] hover:bg-[#171a22] active:scale-95 active:bg-[#171a22] lg:hidden"
     >
       <SearchIcon className="size-[18px]" />
     </button>
@@ -122,9 +119,7 @@ function BlogSidebar({ tag }: { tag?: string | undefined }) {
                     className={`${SIDE_LINK} flex justify-between gap-3 ${name === tag ? SIDE_ACTIVE : ""}`}
                   >
                     <span className="truncate">#{name}</span>
-                    <span className="font-mono text-[0.7rem] text-muted-foreground/60">
-                      {count}
-                    </span>
+                    <span className="font-mono text-[0.7rem] text-muted-foreground">{count}</span>
                   </Link>
                 </li>
               ))}
@@ -169,17 +164,17 @@ export function InlineToc({ toc }: { toc: Post["toc"] }) {
   if (toc.length < 2) return null;
 
   return (
-    <details className="group mt-8 rounded-md bg-white/[0.03] px-4 py-3 xl:hidden">
-      <summary className="cursor-pointer list-none font-mono text-[0.65rem] tracking-[0.2em] text-muted-foreground uppercase select-none">
+    <details className="group mt-8 rounded-md bg-white/[0.03] xl:hidden">
+      <summary className="cursor-pointer list-none px-4 py-3.5 font-mono text-[0.65rem] tracking-[0.2em] text-muted-foreground uppercase select-none">
         <span className="inline-block transition-transform group-open:rotate-90">›</span> On this
         page
       </summary>
-      <ul className="mt-3 space-y-1">
+      <ul className="px-4 pb-2">
         {toc.map((entry) => (
           <li key={entry.id} className={entry.depth === 3 ? "pl-4" : ""}>
             <a
               href={`#${entry.id}`}
-              className="text-[0.9rem] text-muted-foreground transition-colors hover:text-foreground"
+              className="block py-2 text-[0.9rem] text-muted-foreground transition-colors hover:text-foreground"
             >
               {entry.text}
             </a>
@@ -199,9 +194,12 @@ export function BlogShell({
   children,
   tag,
   toc,
+  pager,
 }: {
   children: ReactNode;
   tag?: string | undefined;
+  /** Phone pager pill, shown in the bottom dock on listing pages. */
+  pager?: ReactNode;
   /** Set on post pages: no sidebar or search, just the post and its outline. */
   toc?: Post["toc"] | undefined;
 }) {
@@ -223,16 +221,21 @@ export function BlogShell({
           className={`${FRAME} grid flex-1 grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-x-12`}
         >
           <BlogSidebar tag={tag} />
-          <main className="w-full max-w-[1000px] min-w-0">{children}</main>
+          <main className="flex w-full max-w-[1000px] min-w-0 flex-col">{children}</main>
         </div>
       )}
-      <BlogFooter roomForSearch={!isPost} />
       {!isPost && (
-        <>
-          <MobileSearchButton />
-          <SearchDialog />
-        </>
+        // Phone dock: sticky, so it floats at the bottom while scrolling and
+        // settles above the footer at the end instead of covering it.
+        <div className="pointer-events-none sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 mt-6 lg:hidden">
+          <div className={`${FRAME} relative flex h-12 items-center justify-center`}>
+            {pager}
+            <MobileSearchButton />
+          </div>
+        </div>
       )}
+      <BlogFooter />
+      {!isPost && <SearchDialog />}
     </div>
   );
 }
@@ -281,14 +284,14 @@ const SOCIAL_LINKS = [
 ];
 
 /** Site footer: full width, aligned with the header, pinned to the bottom. */
-export function BlogFooter({ roomForSearch = false }: { roomForSearch?: boolean }) {
+export function BlogFooter() {
   return (
     <footer className="mt-8">
       <div
-        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 ${roomForSearch ? "pb-20 lg:pb-5" : "pb-5"} font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
+        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
       >
         <span>© {new Date().getFullYear()} mathews shaji</span>
-        <nav aria-label="Elsewhere" className="flex items-center gap-5">
+        <nav aria-label="Elsewhere" className="flex items-center gap-6">
           <a href="https://mathewsshaji.com" className="site-nav-link">
             portfolio
           </a>
@@ -300,7 +303,7 @@ export function BlogFooter({ roomForSearch = false }: { roomForSearch?: boolean 
               rel="noopener noreferrer"
               aria-label={label}
               title={label}
-              className="text-muted-foreground transition-colors hover:text-foreground"
+              className="tap-area text-muted-foreground transition-colors hover:text-foreground"
             >
               <Logo />
             </a>

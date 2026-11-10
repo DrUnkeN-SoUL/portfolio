@@ -11,7 +11,7 @@ function TagBanner({ tag }: { tag: string | undefined }) {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-0 flex flex-col justify-between bg-[radial-gradient(110%_90%_at_100%_0%,rgba(224,163,58,0.16),transparent_55%),radial-gradient(80%_70%_at_0%_100%,rgba(255,255,255,0.04),transparent_60%),linear-gradient(160deg,#262626,#1a1a1a)] p-5 sm:p-6"
+      className="absolute inset-0 flex flex-col justify-between bg-[radial-gradient(110%_90%_at_100%_0%,rgba(150,165,220,0.09),transparent_55%),radial-gradient(80%_70%_at_0%_100%,rgba(255,255,255,0.04),transparent_60%),linear-gradient(160deg,#13161d,#0a0c12)] p-5 sm:p-6"
     >
       <span className="font-mono text-[0.6rem] tracking-[0.22em] text-muted-foreground/60">
         mathews shaji / writing
@@ -34,11 +34,9 @@ function PostCard({ post }: { post: Post }) {
       <Link
         to="/$slug"
         params={{ slug: post.slug }}
-        className="group row-span-4 grid grid-rows-subgrid gap-y-0 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/40"
+        className="group row-span-4 grid grid-rows-subgrid gap-y-0 rounded-xl transition-opacity active:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/40"
       >
-        <div
-          className={`relative aspect-[1200/630] overflow-hidden rounded-xl ${post.cover ? "" : "hidden sm:block"} bg-[#202020] ring-1 ring-white/[0.07] transition-[box-shadow] group-hover:ring-white/[0.16]`}
-        >
+        <div className="relative aspect-[1200/630] overflow-hidden rounded-xl bg-card ring-1 ring-white/[0.07] transition-[box-shadow] group-hover:ring-white/[0.16]">
           {post.cover ? (
             <img
               src={post.cover}
@@ -59,23 +57,16 @@ function PostCard({ post }: { post: Post }) {
           )}
         </div>
 
-        <h2
-          className={`${post.cover ? "mt-4" : "sm:mt-4"} text-[1.15rem] leading-snug font-semibold tracking-[-0.01em] text-foreground`}
-        >
+        <h2 className="mt-4 text-[1.15rem] leading-snug font-semibold tracking-[-0.01em] text-foreground">
           {post.title}
         </h2>
         <p className="mt-1.5 line-clamp-2 self-start text-[0.92rem] leading-relaxed text-muted-foreground">
           {post.description}
         </p>
-        <p className="mt-1.5 flex flex-wrap items-baseline self-start gap-x-3 gap-y-1 font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground/80">
-          {post.draft && !post.cover && <span className="text-amber sm:hidden">draft</span>}
+        <p className="mt-1.5 flex flex-wrap items-baseline self-start gap-x-3 gap-y-1 font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground">
           <time dateTime={post.date}>{formatPostDate(post.date)}</time>
           <span>{post.readingMinutes} min read</span>
-          {post.tags.length > 0 && (
-            <span className="text-muted-foreground/65">
-              {post.tags.map((tag) => `#${tag}`).join("  ")}
-            </span>
-          )}
+          {post.tags.length > 0 && <span>{post.tags.map((tag) => `#${tag}`).join("  ")}</span>}
         </p>
       </Link>
     </li>

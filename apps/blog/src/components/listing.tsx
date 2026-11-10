@@ -13,13 +13,20 @@ function pageLink(page: number) {
     : ({ to: "/page/$page", params: { page: String(page) } } as const);
 }
 
-/** Newer / page numbers / older. Hidden when everything fits on one page. */
+/**
+ * Newer / page numbers / older. Hidden when everything fits on one page.
+ * `mt-auto` rests it at the bottom of the column, so it sits in the same
+ * place on every page instead of floating wherever the posts end.
+ */
 function Pagination({ page }: { page: number }) {
   if (PAGE_COUNT <= 1) return null;
   const numbers = Array.from({ length: PAGE_COUNT }, (_, i) => i + 1);
 
   return (
-    <nav aria-label="Pagination" className="hidden items-center justify-center gap-1 lg:flex">
+    <nav
+      aria-label="Pagination"
+      className="mt-auto hidden items-center justify-center gap-1 pt-4 lg:flex"
+    >
       {page > 1 && (
         <Link {...pageLink(page - 1)} rel="prev" className={PAGER_LINK}>
           ← newer
@@ -48,18 +55,18 @@ function Pagination({ page }: { page: number }) {
 }
 
 /**
- * Phone pager: a compact pill pinned to the bottom centre, beside the search
- * button, so paging works one-handed. Larger screens use the inline pager.
+ * Phone pager: a compact pill for the bottom dock, beside the search button,
+ * so paging works one-handed. Larger screens use the inline pager.
  */
 function MobilePager({ page }: { page: number }) {
   if (PAGE_COUNT <= 1) return null;
   const arrow =
-    "grid size-10 place-items-center rounded-full text-[1.05rem] text-foreground transition-colors hover:bg-white/[0.06]";
+    "grid size-11 place-items-center rounded-full text-[1.05rem] text-foreground transition-colors hover:bg-white/[0.06] active:bg-white/[0.1]";
 
   return (
     <nav
       aria-label="Pagination"
-      className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-40 flex h-12 -translate-x-1/2 items-center gap-1 rounded-full bg-[#262626]/95 px-1 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
+      className="pointer-events-auto flex h-12 items-center gap-0.5 rounded-full bg-[#13161d]/95 px-0.5 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
     >
       {page > 1 ? (
         <Link {...pageLink(page - 1)} rel="prev" aria-label="Newer posts" className={arrow}>
@@ -92,7 +99,7 @@ export function Listing({ page }: { page: number }) {
   const pagePosts = getPage(page);
 
   return (
-    <BlogShell>
+    <BlogShell pager={<MobilePager page={page} />}>
       <section className="pt-8 pb-6 md:pt-10 md:pb-8">
         <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.2rem]">
           Writing
@@ -115,16 +122,16 @@ export function Listing({ page }: { page: number }) {
           <h2 className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
             tags
           </h2>
-          <ul className="mt-4 flex flex-wrap gap-2">
+          <ul className="mt-3 flex flex-wrap gap-2">
             {tags.map(({ tag, count }) => (
               <li key={tag}>
                 <Link
                   to="/tags/$tag"
                   params={{ tag }}
-                  className="inline-flex items-baseline gap-1.5 rounded-md bg-white/[0.04] px-2.5 py-1 font-mono text-[0.7rem] text-muted-foreground transition-colors hover:bg-white/[0.07] hover:text-foreground"
+                  className="inline-flex min-h-9 items-center gap-1.5 rounded-md bg-white/[0.04] px-3 font-mono text-[0.75rem] text-muted-foreground transition-colors hover:bg-white/[0.07] hover:text-foreground active:bg-white/[0.1]"
                 >
                   #{tag}
-                  <span className="text-[0.6rem] opacity-60">{count}</span>
+                  <span className="text-[0.65rem]">{count}</span>
                 </Link>
               </li>
             ))}
@@ -132,7 +139,6 @@ export function Listing({ page }: { page: number }) {
         </section>
       )}
       <Pagination page={page} />
-      <MobilePager page={page} />
     </BlogShell>
   );
 }

@@ -83,6 +83,9 @@ export const Route = createFileRoute("/$slug")({
   component: PostPage,
 });
 
+const BACK_LINK =
+  "tap-area font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground";
+
 function MetaDot() {
   return (
     <span aria-hidden="true" className="text-muted-foreground/50">
@@ -103,10 +106,7 @@ function PostPage() {
   return (
     <BlogShell toc={post.toc}>
       <article className="pt-6 md:pt-12">
-        <Link
-          to="/"
-          className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
-        >
+        <Link to="/" className={BACK_LINK}>
           ← all writing
         </Link>
 
@@ -117,7 +117,7 @@ function PostPage() {
           <p className="mt-4 text-[1.05rem] leading-[1.6] text-muted-foreground">
             {post.description}
           </p>
-          <div className="mt-5 flex flex-wrap items-center gap-x-2.5 gap-y-2 font-mono text-[0.7rem] text-muted-foreground">
+          <div className="mt-4 flex flex-wrap items-center gap-x-2.5 gap-y-0 font-mono text-[0.7rem] text-muted-foreground">
             <time dateTime={post.date}>{formatPostDate(post.date)}</time>
             <MetaDot />
             <span>{post.readingMinutes} min read</span>
@@ -133,7 +133,7 @@ function PostPage() {
                 <Link
                   to="/tags/$tag"
                   params={{ tag }}
-                  className="transition-colors hover:text-foreground"
+                  className="-mx-1.5 px-1.5 py-2.5 transition-colors hover:text-foreground"
                 >
                   #{tag}
                 </Link>
@@ -162,6 +162,12 @@ function PostPage() {
         <InlineToc toc={post.toc} />
 
         <div className="post-prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
+
+        <p className="mt-14">
+          <Link to="/" className={BACK_LINK}>
+            ← all writing
+          </Link>
+        </p>
       </article>
     </BlogShell>
   );

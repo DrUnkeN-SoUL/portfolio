@@ -49,7 +49,7 @@ function TagPage() {
       <div className="mt-12">
         <Link
           to="/"
-          className="font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
+          className="tap-area font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
         >
           ← all writing
         </Link>
