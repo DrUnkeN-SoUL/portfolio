@@ -14,6 +14,13 @@ and deployment; this file only adds what README does not cover.
 - Image filenames: lowercase kebab-case; prefer `.webp` or compressed `.png`.
 - Staging-only demo media must be named `staging-*`; production builds drop it.
 
+## Code style
+
+- Comment only what is ambiguous or non-obvious. Never restate what the code
+  does.
+- No function, constant or abstraction unless the logic is complex or the code
+  is reused a lot. Inline anything used once.
+
 ## Before committing
 
 1. Run `bun run check:content` and `bun run lint`.
