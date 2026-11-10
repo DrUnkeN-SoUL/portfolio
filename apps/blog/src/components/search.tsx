@@ -4,7 +4,7 @@ import { useNavigate } from "@tanstack/react-router";
 
 import { formatPostDate, posts } from "@/lib/posts";
 
-import { OPEN_SEARCH_EVENT as OPEN_EVENT } from "@/lib/search-events";
+import { OPEN_SEARCH_EVENT } from "@/lib/search-events";
 
 type Entry = {
   slug: string;
@@ -16,32 +16,6 @@ type Entry = {
   text: string;
 };
 
-function toText(html: string): string {
-  return html
-    .replace(/<pre[\s\S]*?<\/pre>/g, " ")
-    .replace(/<a [^>]*heading-anchor[^>]*>[\s\S]*?<\/a>/g, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&[a-z#0-9]+;/gi, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function buildIndex(): Entry[] {
-  return posts.map((post) => {
-    const text = toText(post.html);
-    return {
-      slug: post.slug,
-      title: post.title,
-      description: post.description,
-      date: post.date,
-      tags: post.tags,
-      text,
-      haystack: [post.title, post.description, post.tags.join(" "), text].join(" ").toLowerCase(),
-    };
-  });
-}
-
-/** Rank: every word must match; title hits beat tag hits beat body hits. */
 function search(index: Entry[], query: string): { entry: Entry; snippet: string }[] {
   const words = query.toLowerCase().split(/\s+/).filter(Boolean);
   if (words.length === 0) return index.map((entry) => ({ entry, snippet: entry.description }));
@@ -70,14 +44,38 @@ function search(index: Entry[], query: string): { entry: Entry; snippet: string 
     .map(({ entry, snippet }) => ({ entry, snippet }));
 }
 
-/** ⌘K / Ctrl+K / "/" command palette over every post's title, tags and text. */
 export function SearchDialog() {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
   const inputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const index = useMemo(() => (open ? buildIndex() : []), [open]);
+  const index = useMemo<Entry[]>(
+    () =>
+      open
+        ? posts.map((post) => {
+            const text = post.html
+              .replace(/<pre[\s\S]*?<\/pre>/g, " ")
+              .replace(/<a [^>]*heading-anchor[^>]*>[\s\S]*?<\/a>/g, " ")
+              .replace(/<[^>]+>/g, " ")
+              .replace(/&[a-z#0-9]+;/gi, " ")
+              .replace(/\s+/g, " ")
+              .trim();
+            return {
+              slug: post.slug,
+              title: post.title,
+              description: post.description,
+              date: post.date,
+              tags: post.tags,
+              text,
+              haystack: [post.title, post.description, post.tags.join(" "), text]
+                .join(" ")
+                .toLowerCase(),
+            };
+          })
+        : [],
+    [open],
+  );
   const results = useMemo(() => search(index, query), [index, query]);
 
   useEffect(() => {
@@ -95,10 +93,10 @@ export function SearchDialog() {
         setOpen(true);
       }
     };
-    window.addEventListener(OPEN_EVENT, show);
+    window.addEventListener(OPEN_SEARCH_EVENT, show);
     window.addEventListener("keydown", onKey);
     return () => {
-      window.removeEventListener(OPEN_EVENT, show);
+      window.removeEventListener(OPEN_SEARCH_EVENT, show);
       window.removeEventListener("keydown", onKey);
     };
   }, []);

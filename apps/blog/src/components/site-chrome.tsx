@@ -9,15 +9,11 @@ import { openSearch } from "@/lib/search-events";
 import { useActiveHeading } from "@/lib/use-post-enhancements";
 
 const FRAME = "mx-auto w-full max-w-[1440px] px-5 md:px-8";
-const RAIL_LABEL =
-  "mb-3 pl-3 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground uppercase";
 const SIDE_LABEL =
   "mb-2 px-2 font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground uppercase";
 const SIDE_LINK =
   "block truncate rounded-[5px] px-2 py-[5px] text-[0.875rem] leading-snug text-muted-foreground transition-colors hover:bg-white/[0.045] hover:text-foreground";
 const SIDE_ACTIVE = "bg-white/[0.06] text-foreground";
-/** The rail lists the newest posts; the rest are a page or a search away. */
-const SIDEBAR_POSTS = 8;
 
 export function BlogHeader() {
   return (
@@ -41,7 +37,6 @@ export function BlogHeader() {
   );
 }
 
-/** Search button for the phone dock: bottom-right, in the thumb's reach. */
 function MobileSearchButton() {
   return (
     <button
@@ -55,7 +50,6 @@ function MobileSearchButton() {
   );
 }
 
-/** Left rail (lg and up): search, every post and every tag. */
 function BlogSidebar({ tag }: { tag?: string | undefined }) {
   const tags = getAllTags();
   const [shortcut, setShortcut] = useState("Ctrl K");
@@ -93,7 +87,7 @@ function BlogSidebar({ tag }: { tag?: string | undefined }) {
       <div className="quiet-scroll -mr-3 min-h-0 flex-1 overflow-y-auto pr-3">
         <p className={SIDE_LABEL}>Recent</p>
         <ul className="mb-7 space-y-px">
-          {posts.slice(0, SIDEBAR_POSTS).map((post) => (
+          {posts.slice(0, 8).map((post) => (
             <li key={post.slug}>
               <Link
                 to="/$slug"
@@ -131,7 +125,6 @@ function BlogSidebar({ tag }: { tag?: string | undefined }) {
   );
 }
 
-/** Right rail: "on this page" outline for posts with sections (xl and up). */
 function TableOfContents({ toc }: { toc: Post["toc"] }) {
   const active = useActiveHeading(toc.map((entry) => entry.id));
   if (toc.length < 2) return null;
@@ -141,7 +134,9 @@ function TableOfContents({ toc }: { toc: Post["toc"] }) {
       aria-label="On this page"
       className="quiet-scroll sticky top-14 hidden max-h-[calc(100dvh-3.5rem)] w-[200px] self-start overflow-y-auto pt-[8.5rem] pb-6 xl:block"
     >
-      <p className={RAIL_LABEL}>On this page</p>
+      <p className="mb-3 pl-3 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground uppercase">
+        On this page
+      </p>
       <ul className="space-y-px border-l border-border">
         {toc.map((entry) => (
           <li key={entry.id}>
@@ -159,7 +154,6 @@ function TableOfContents({ toc }: { toc: Post["toc"] }) {
   );
 }
 
-/** Collapsible outline at the top of a post, for screens without the rail. */
 export function InlineToc({ toc }: { toc: Post["toc"] }) {
   if (toc.length < 2) return null;
 
@@ -185,11 +179,6 @@ export function InlineToc({ toc }: { toc: Post["toc"] }) {
   );
 }
 
-/**
- * Page frame shared by every blog route: header; a left rail with search,
- * posts and tags (lg+); the reading column; and an "on this page" outline on
- * the right for posts with sections (xl+).
- */
 export function BlogShell({
   children,
   tag,
@@ -198,7 +187,6 @@ export function BlogShell({
 }: {
   children: ReactNode;
   tag?: string | undefined;
-  /** Phone pager pill, shown in the bottom dock on listing pages. */
   pager?: ReactNode;
   /** Set on post pages: no sidebar or search, just the post and its outline. */
   toc?: Post["toc"] | undefined;
@@ -278,12 +266,6 @@ function LinkedInLogo() {
   );
 }
 
-const SOCIAL_LINKS = [
-  { label: "GitHub", href: "https://github.com/DrUnkeN-SoUL", Logo: GitHubLogo },
-  { label: "LinkedIn", href: "https://linkedin.com/in/mathews-shaji", Logo: LinkedInLogo },
-];
-
-/** Site footer: full width, aligned with the header, pinned to the bottom. */
 export function BlogFooter() {
   return (
     <footer className="mt-3 lg:mt-6">
@@ -295,7 +277,14 @@ export function BlogFooter() {
           <a href="https://mathewsshaji.com" className="site-nav-link">
             portfolio
           </a>
-          {SOCIAL_LINKS.map(({ label, href, Logo }) => (
+          {[
+            { label: "GitHub", href: "https://github.com/DrUnkeN-SoUL", Logo: GitHubLogo },
+            {
+              label: "LinkedIn",
+              href: "https://linkedin.com/in/mathews-shaji",
+              Logo: LinkedInLogo,
+            },
+          ].map(({ label, href, Logo }) => (
             <a
               key={label}
               href={href}

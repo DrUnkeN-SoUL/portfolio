@@ -1,9 +1,8 @@
 import { SITE } from "@mathews/ui";
 
 /**
- * Blog SEO defaults. Link-preview bots do not run JavaScript and do not resolve
- * relative URLs, so every URL here is absolute and the tags are prerendered
- * into the static HTML.
+ * Link-preview bots do not run JavaScript or resolve relative URLs, so every URL here is absolute
+ * and the tags are prerendered.
  */
 export const BLOG_NAME = "Mathews Shaji — writing";
 export const BLOG_URL = `${SITE.blog}/`;
@@ -20,17 +19,6 @@ export const BLOG_ID = `${SITE.blog}/#blog`;
 export type MetaTag =
   { title: string } | { name: string; content: string } | { property: string; content: string };
 
-type PageMetaInput = {
-  title: string;
-  description: string;
-  url: string;
-  image?: string;
-  imageAlt?: string;
-  /** The default card is exactly 1200x630; pass null when the image is a post cover. */
-  imageSize?: { width: number; height: number; type: string } | null;
-};
-
-/** Title, description and the full Open Graph + Twitter set for one page. */
 export function pageMeta({
   title,
   description,
@@ -38,7 +26,15 @@ export function pageMeta({
   image = OG_IMAGE,
   imageAlt = OG_IMAGE_ALT,
   imageSize = { width: 1200, height: 630, type: "image/png" },
-}: PageMetaInput): MetaTag[] {
+}: {
+  title: string;
+  description: string;
+  url: string;
+  image?: string;
+  imageAlt?: string;
+  /** The default card is exactly 1200x630; pass null when the image is a post cover. */
+  imageSize?: { width: number; height: number; type: string } | null;
+}): MetaTag[] {
   const tags: MetaTag[] = [
     { title },
     { name: "description", content: description },

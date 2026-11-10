@@ -31,27 +31,23 @@ export const Route = createFileRoute("/$slug")({
     }
 
     const url = `${SITE.blog}/${post.slug}`;
-    const hasCover = Boolean(post.cover);
     const image = post.cover ? `${SITE.blog}${post.cover}` : OG_IMAGE;
-    const imageAlt = hasCover ? `Cover image for ${post.title}` : OG_IMAGE_ALT;
-    const published = post.date;
     const modified = post.updated ?? post.date;
-    const title = `${post.title} — Mathews Shaji`;
 
     return {
       meta: [
         ...pageMeta({
-          title,
+          title: `${post.title} — Mathews Shaji`,
           description: post.description,
           url,
           image,
-          imageAlt,
+          imageAlt: post.cover ? `Cover image for ${post.title}` : OG_IMAGE_ALT,
           // Only the default card is a known 1200x630 PNG.
-          ...(hasCover ? { imageSize: null } : {}),
+          ...(post.cover ? { imageSize: null } : {}),
         }),
         { property: "og:type", content: "article" },
         ...(post.draft ? [{ name: "robots", content: "noindex, nofollow" }] : []),
-        { property: "article:published_time", content: published },
+        { property: "article:published_time", content: post.date },
         { property: "article:modified_time", content: modified },
         { property: "article:author", content: SITE.portfolio },
         ...post.tags.map((tag) => ({ property: "article:tag", content: tag })),
@@ -65,7 +61,7 @@ export const Route = createFileRoute("/$slug")({
             "@type": "BlogPosting",
             headline: post.title,
             description: post.description,
-            datePublished: published,
+            datePublished: post.date,
             dateModified: modified,
             url,
             mainEntityOfPage: { "@type": "WebPage", "@id": url },

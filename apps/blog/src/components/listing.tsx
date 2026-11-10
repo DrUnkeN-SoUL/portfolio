@@ -13,14 +13,9 @@ function pageLink(page: number) {
     : ({ to: "/page/$page", params: { page: String(page) } } as const);
 }
 
-/**
- * Newer / page numbers / older. Hidden when everything fits on one page.
- * `mt-auto` rests it at the bottom of the column, so it sits in the same
- * place on every page instead of floating wherever the posts end.
- */
+/** `mt-auto` rests it at the bottom of the column, so it sits in the same place on every page. */
 function Pagination({ page }: { page: number }) {
   if (PAGE_COUNT <= 1) return null;
-  const numbers = Array.from({ length: PAGE_COUNT }, (_, i) => i + 1);
 
   return (
     <nav
@@ -33,7 +28,7 @@ function Pagination({ page }: { page: number }) {
         </Link>
       )}
       <ol className="flex items-center gap-1 font-mono text-[0.7rem]">
-        {numbers.map((n) => (
+        {Array.from({ length: PAGE_COUNT }, (_, i) => i + 1).map((n) => (
           <li key={n}>
             <Link
               {...pageLink(n)}
@@ -55,8 +50,8 @@ function Pagination({ page }: { page: number }) {
 }
 
 /**
- * Phone pager: a compact pill for the bottom dock, beside the search button,
- * so paging works one-handed. Larger screens use the inline pager.
+ * Phones get this pill in the bottom dock so paging works one-handed; `Pagination` covers lg and
+ * up.
  */
 function MobilePager({ page }: { page: number }) {
   if (PAGE_COUNT <= 1) return null;
@@ -93,10 +88,8 @@ function MobilePager({ page }: { page: number }) {
   );
 }
 
-/** The post listing used by "/" (page 1) and "/page/N". */
 export function Listing({ page }: { page: number }) {
   const tags = getAllTags();
-  const pagePosts = getPage(page);
 
   return (
     <BlogShell pager={<MobilePager page={page} />}>
@@ -114,7 +107,7 @@ export function Listing({ page }: { page: number }) {
           Nothing published yet. Check back soon.
         </p>
       ) : (
-        <PostList posts={pagePosts} />
+        <PostList posts={getPage(page)} />
       )}
 
       {tags.length > 0 && (

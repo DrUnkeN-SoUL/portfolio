@@ -99,7 +99,7 @@ export const Route = createRootRoute({
       {
         rel: "alternate",
         type: "application/rss+xml",
-        title: "Mathews Shaji — writing",
+        title: BLOG_NAME,
         href: `${SITE.blog}/rss.xml`,
       },
       // Identity signals: the same person owns both sites.
@@ -130,7 +130,7 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-function useScrollIndicator() {
+function RootComponent() {
   useEffect(() => {
     const root = document.documentElement;
     let timer: number | undefined;
@@ -153,9 +153,6 @@ function useScrollIndicator() {
       root.classList.remove("is-scrolling");
     };
   }, []);
-}
 
-function RootComponent() {
-  useScrollIndicator();
   return <Outlet />;
 }

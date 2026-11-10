@@ -14,12 +14,14 @@ export const Route = createFileRoute("/tags/$tag")({
     return null;
   },
   head: ({ params }) => {
-    const title = `#${params.tag} — Writing — Mathews Shaji`;
-    const description = `Posts tagged #${params.tag} on Mathews Shaji's writing section.`;
     const url = `${SITE.blog}/tags/${encodeURIComponent(params.tag)}`;
 
     return {
-      meta: pageMeta({ title, description, url }),
+      meta: pageMeta({
+        title: `#${params.tag} — Writing — Mathews Shaji`,
+        description: `Posts tagged #${params.tag} on Mathews Shaji's writing section.`,
+        url,
+      }),
       links: [{ rel: "canonical", href: url }],
     };
   },

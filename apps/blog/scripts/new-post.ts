@@ -1,17 +1,6 @@
 import { access, mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-function slugify(input: string): string {
-  return input
-    .normalize("NFKD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "")
-    .slice(0, 80)
-    .replace(/-+$/g, "");
-}
-
 const title = process.argv.slice(2).join(" ").trim();
 
 if (!title) {
@@ -19,7 +8,14 @@ if (!title) {
   process.exit(1);
 }
 
-const slug = slugify(title);
+const slug = title
+  .normalize("NFKD")
+  .replace(/[\u0300-\u036f]/g, "")
+  .toLowerCase()
+  .replace(/[^a-z0-9]+/g, "-")
+  .replace(/^-+|-+$/g, "")
+  .slice(0, 80)
+  .replace(/-+$/g, "");
 
 if (!slug) {
   console.error(`Could not derive a slug from "${title}". Use letters or numbers in the title.`);
@@ -43,7 +39,9 @@ try {
 
 await mkdir(postsDir, { recursive: true });
 
-const frontMatter = `---
+await writeFile(
+  filePath,
+  `---
 title: ${JSON.stringify(title)}
 description: ${JSON.stringify(`A draft post about ${title}.`)}
 date: ${today}
@@ -55,9 +53,9 @@ Intro paragraph.
 
 ## First section
 
-`;
-
-await writeFile(filePath, frontMatter, "utf8");
+`,
+  "utf8",
+);
 
 console.log(`Created content/posts/${slug}.md`);
 console.log("Edit the post, then run `bun run check:content`.");

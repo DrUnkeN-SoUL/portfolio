@@ -2,11 +2,7 @@ import { Link } from "@tanstack/react-router";
 
 import { formatPostDate, type Post } from "@/lib/posts";
 
-/**
- * Generated artwork for posts without a cover: the post's first tag set large
- * over a soft gradient. It deliberately does not repeat the title, which sits
- * right below the banner.
- */
+/** Deliberately shows the first tag, not the title, which sits right below the banner. */
 function TagBanner({ tag }: { tag: string | undefined }) {
   return (
     <div
@@ -24,9 +20,8 @@ function TagBanner({ tag }: { tag: string | undefined }) {
 }
 
 /**
- * Card: a full-width banner (the cover, or a generated title banner), then
- * title, description and meta. Cards in a row share subgrid rows, so those
- * three line up even when one title or description wraps more than another.
+ * Cards in a row share subgrid rows, so title, description and meta line up even when one wraps
+ * more.
  */
 function PostCard({ post }: { post: Post }) {
   return (

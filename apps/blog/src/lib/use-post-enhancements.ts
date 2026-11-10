@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 
-/**
- * Render ```mermaid blocks in the browser. Mermaid is large, so it is
- * imported only on pages that actually contain a diagram.
- */
+/** Mermaid is large, so it is imported only on pages that contain a diagram. */
 export function useMermaid(slug: string) {
   useEffect(() => {
     const blocks = document.querySelectorAll<HTMLElement>(
@@ -74,7 +71,6 @@ export function useMermaid(slug: string) {
   }, [slug]);
 }
 
-/** Id of the section heading currently at the top of the viewport. */
 export function useActiveHeading(ids: string[]): string | null {
   const [active, setActive] = useState<string | null>(null);
   const key = ids.join("|");
