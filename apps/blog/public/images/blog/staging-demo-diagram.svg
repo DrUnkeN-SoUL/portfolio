@@ -1,14 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" font-family="system-ui, sans-serif">
-  <rect width="640" height="200" rx="12" fill="#0e1017"/>
-  <g fill="#13161d" stroke="#2d3039" stroke-width="1.5">
+  <rect width="640" height="200" rx="12" fill="#171a21"/>
+  <g fill="#1c2028" stroke="#343841" stroke-width="1.5">
     <rect x="40" y="70" width="140" height="60" rx="8"/>
     <rect x="250" y="70" width="140" height="60" rx="8"/>
     <rect x="460" y="70" width="140" height="60" rx="8" stroke="#e0a33a"/>
   </g>
-  <g stroke="#5d6068" stroke-width="1.5" fill="none" marker-end="url(#a)">
+  <g stroke="#60636b" stroke-width="1.5" fill="none" marker-end="url(#a)">
     <path d="M180 100h62"/><path d="M390 100h62"/>
   </g>
-  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#5d6068"/></marker></defs>
+  <defs><marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0 10 5 0 10z" fill="#60636b"/></marker></defs>
   <g fill="#d6d7db" font-size="15" text-anchor="middle">
     <text x="110" y="105">Markdown</text><text x="320" y="105">Build</text><text x="530" y="105">Static HTML</text>
   </g>

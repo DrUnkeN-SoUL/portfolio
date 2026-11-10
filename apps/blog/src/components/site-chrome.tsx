@@ -48,7 +48,7 @@ function MobileSearchButton() {
       type="button"
       onClick={openSearch}
       aria-label="Search"
-      className="pointer-events-auto absolute right-5 grid size-12 place-items-center rounded-full bg-[#13161d]/95 text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-[background-color,transform] hover:bg-[#171a22] active:scale-95 active:bg-[#171a22] lg:hidden"
+      className="pointer-events-auto absolute right-5 grid size-12 place-items-center rounded-full bg-[#1c2028]/95 text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-[background-color,transform] hover:bg-[#21242d] active:scale-95 active:bg-[#21242d] lg:hidden"
     >
       <SearchIcon className="size-[18px]" />
     </button>

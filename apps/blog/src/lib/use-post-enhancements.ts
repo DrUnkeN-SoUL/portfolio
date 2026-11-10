@@ -16,7 +16,7 @@ export function useMermaid(slug: string) {
       if (cancelled) return;
       const font = getComputedStyle(document.body).fontFamily;
       // "base" is the only theme whose variables fully apply; these mirror
-      // the blog tokens (#05060a page, #0a0c12 cards, soft blue-grey lines).
+      // the blog tokens (#0c0e14 page, #12151d cards, soft blue-grey lines).
       mermaid.initialize({
         startOnLoad: false,
         theme: "base",
@@ -28,40 +28,40 @@ export function useMermaid(slug: string) {
           darkMode: true,
           fontFamily: font,
           fontSize: "14px",
-          background: "#05060a",
-          primaryColor: "#13161d",
-          primaryBorderColor: "#2d3039",
+          background: "#0c0e14",
+          primaryColor: "#1c2028",
+          primaryBorderColor: "#343841",
           primaryTextColor: "#d6d7db",
-          secondaryColor: "#13161d",
-          secondaryBorderColor: "#2d3039",
-          tertiaryColor: "#0e1017",
-          tertiaryBorderColor: "#2d3039",
-          lineColor: "#5d6068",
+          secondaryColor: "#1c2028",
+          secondaryBorderColor: "#343841",
+          tertiaryColor: "#171a21",
+          tertiaryBorderColor: "#343841",
+          lineColor: "#60636b",
           textColor: "#d0d1d4",
-          edgeLabelBackground: "#05060a",
-          clusterBkg: "#0e1017",
-          clusterBorder: "#2d3039",
+          edgeLabelBackground: "#0c0e14",
+          clusterBkg: "#171a21",
+          clusterBorder: "#343841",
           nodeTextColor: "#d6d7db",
-          actorBkg: "#13161d",
-          actorBorder: "#2d3039",
+          actorBkg: "#1c2028",
+          actorBorder: "#343841",
           actorTextColor: "#d6d7db",
-          actorLineColor: "#2d3039",
-          signalColor: "#84868c",
+          actorLineColor: "#343841",
+          signalColor: "#8a8c92",
           signalTextColor: "#d0d1d4",
-          labelBoxBkgColor: "#13161d",
-          labelBoxBorderColor: "#2d3039",
+          labelBoxBkgColor: "#1c2028",
+          labelBoxBorderColor: "#343841",
           labelTextColor: "#d6d7db",
           noteBkgColor: "#2a2620",
           noteBorderColor: "#5a4a2a",
           noteTextColor: "#e0d6c2",
-          activationBkgColor: "#171a22",
-          activationBorderColor: "#3c4048",
+          activationBkgColor: "#21242d",
+          activationBorderColor: "#444851",
         },
         themeCSS: `
           .node rect, .node polygon, .actor, rect.actor { rx: 8px; ry: 8px; filter: none !important; }
           .node, .actor, g { filter: none !important; }
-          .edgeLabel, .edgeLabel p, .edgeLabel span { background-color: #05060a !important; color: #a3a4a9; }
-          .edgeLabel rect { fill: #05060a !important; opacity: 1; }
+          .edgeLabel, .edgeLabel p, .edgeLabel span { background-color: #0c0e14 !important; color: #a3a4a9; }
+          .edgeLabel rect { fill: #0c0e14 !important; opacity: 1; }
           .messageText { fill: #d0d1d4 !important; }
         `,
       });
