@@ -165,7 +165,7 @@ function PostPage() {
       </article>
 
       {/* `mt-auto` rests this at the bottom of the page on short posts. */}
-      <p className="mt-auto pt-14">
+      <p className="mt-auto pt-10">
         <Link to="/" className={BACK_LINK}>
           ← all writing
         </Link>

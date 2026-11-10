@@ -227,7 +227,7 @@ export function BlogShell({
       {!isPost && (
         // Phone dock: sticky, so it floats at the bottom while scrolling and
         // settles above the footer at the end instead of covering it.
-        <div className="pointer-events-none sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 mt-6 lg:hidden">
+        <div className="pointer-events-none sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 mt-2 lg:hidden">
           <div className={`${FRAME} relative flex h-12 items-center justify-center`}>
             {pager}
             <MobileSearchButton />
@@ -286,12 +286,12 @@ const SOCIAL_LINKS = [
 /** Site footer: full width, aligned with the header, pinned to the bottom. */
 export function BlogFooter() {
   return (
-    <footer className="mt-8">
+    <footer className="mt-3 lg:mt-6">
       <div
-        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
+        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-4 gap-y-3 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] font-mono text-[0.65rem] tracking-[0.1em] text-muted-foreground sm:tracking-[0.18em]`}
       >
         <span>© {new Date().getFullYear()} mathews shaji</span>
-        <nav aria-label="Elsewhere" className="flex items-center gap-6">
+        <nav aria-label="Elsewhere" className="flex items-center gap-5 sm:gap-6">
           <a href="https://mathewsshaji.com" className="site-nav-link">
             portfolio
           </a>

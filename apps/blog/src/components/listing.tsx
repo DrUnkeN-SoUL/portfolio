@@ -100,7 +100,7 @@ export function Listing({ page }: { page: number }) {
 
   return (
     <BlogShell pager={<MobilePager page={page} />}>
-      <section className="pt-8 pb-6 md:pt-10 md:pb-8">
+      <section className="pt-6 pb-5 md:pt-10 md:pb-6">
         <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.2rem]">
           Writing
         </h1>
@@ -118,7 +118,7 @@ export function Listing({ page }: { page: number }) {
       )}
 
       {tags.length > 0 && (
-        <section className="mb-8 lg:hidden">
+        <section className="mb-2 lg:hidden">
           <h2 className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
             tags
           </h2>
