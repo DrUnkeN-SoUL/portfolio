@@ -162,13 +162,14 @@ function PostPage() {
         <InlineToc toc={post.toc} />
 
         <div className="post-prose mt-10" dangerouslySetInnerHTML={{ __html: post.html }} />
-
-        <p className="mt-14">
-          <Link to="/" className={BACK_LINK}>
-            ← all writing
-          </Link>
-        </p>
       </article>
+
+      {/* `mt-auto` rests this at the bottom of the page on short posts. */}
+      <p className="mt-auto pt-14">
+        <Link to="/" className={BACK_LINK}>
+          ← all writing
+        </Link>
+      </p>
     </BlogShell>
   );
 }

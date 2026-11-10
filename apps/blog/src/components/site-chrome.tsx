@@ -213,7 +213,7 @@ export function BlogShell({
         <div
           className={`${FRAME} grid flex-1 grid-cols-1 ${hasToc ? "xl:grid-cols-[minmax(0,1000px)_200px] xl:justify-between xl:gap-x-14" : ""}`}
         >
-          <main className="w-full max-w-[1000px] min-w-0">{children}</main>
+          <main className="flex w-full max-w-[1000px] min-w-0 flex-col">{children}</main>
           {hasToc && toc && <TableOfContents toc={toc} />}
         </div>
       ) : (

@@ -46,7 +46,7 @@ function TagPage() {
 
       <PostList posts={posts} />
 
-      <div className="mt-12">
+      <div className="mt-auto pt-6">
         <Link
           to="/"
           className="tap-area font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"
