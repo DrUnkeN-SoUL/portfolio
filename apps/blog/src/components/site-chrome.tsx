@@ -221,7 +221,7 @@ export function BlogShell({
           className={`${FRAME} grid flex-1 grid-cols-1 lg:grid-cols-[220px_minmax(0,1fr)] lg:gap-x-12`}
         >
           <BlogSidebar tag={tag} />
-          <main className="w-full max-w-[1000px] min-w-0">{children}</main>
+          <main className="flex w-full max-w-[1000px] min-w-0 flex-col">{children}</main>
         </div>
       )}
       {!isPost && (

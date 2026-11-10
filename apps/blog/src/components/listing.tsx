@@ -13,13 +13,20 @@ function pageLink(page: number) {
     : ({ to: "/page/$page", params: { page: String(page) } } as const);
 }
 
-/** Newer / page numbers / older. Hidden when everything fits on one page. */
+/**
+ * Newer / page numbers / older. Hidden when everything fits on one page.
+ * `mt-auto` rests it at the bottom of the column, so it sits in the same
+ * place on every page instead of floating wherever the posts end.
+ */
 function Pagination({ page }: { page: number }) {
   if (PAGE_COUNT <= 1) return null;
   const numbers = Array.from({ length: PAGE_COUNT }, (_, i) => i + 1);
 
   return (
-    <nav aria-label="Pagination" className="hidden items-center justify-center gap-1 lg:flex">
+    <nav
+      aria-label="Pagination"
+      className="mt-auto hidden items-center justify-center gap-1 pt-4 lg:flex"
+    >
       {page > 1 && (
         <Link {...pageLink(page - 1)} rel="prev" className={PAGER_LINK}>
           ← newer
