@@ -362,19 +362,19 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
  * (bg-background, text-muted-foreground, ...) pick them up unchanged.
  */
 .blog-surface {
-  --background: oklch(0.165 0.0133 271); /* #0c0e14 */
+  --background: oklch(0.146 0.0122 271); /* #080a10 */
   --foreground: oklch(0.8608 0.0043 271); /* #d0d1d4 */
-  --card: oklch(0.197 0.016 270); /* #12151d, code blocks */
+  --card: oklch(0.178 0.0148 270); /* #0f1118, code blocks */
   --card-foreground: oklch(0.8608 0.0043 271);
-  --popover: oklch(0.197 0.016 270);
+  --popover: oklch(0.178 0.0148 270);
   --popover-foreground: oklch(0.8608 0.0043 271);
   --primary: oklch(0.8608 0.0043 271);
-  --primary-foreground: oklch(0.165 0.0133 271);
-  --secondary: oklch(0.217 0.016 268); /* #171a21 */
+  --primary-foreground: oklch(0.146 0.0122 271);
+  --secondary: oklch(0.198 0.015 268); /* #13151d */
   --secondary-foreground: oklch(0.8608 0.0043 271);
-  --muted: oklch(0.217 0.016 268);
-  --muted-foreground: oklch(0.64 0.009 268); /* #8a8c92 */
-  --accent: oklch(0.217 0.016 268);
+  --muted: oklch(0.198 0.015 268);
+  --muted-foreground: oklch(0.63 0.009 268); /* #87898f */
+  --accent: oklch(0.198 0.015 268);
   --accent-foreground: oklch(0.8608 0.0043 271);
   --border: oklch(0.85 0.02 270 / 9%);
   --input: oklch(0.85 0.02 270 / 12%);

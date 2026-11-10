@@ -66,7 +66,7 @@ function MobilePager({ page }: { page: number }) {
   return (
     <nav
       aria-label="Pagination"
-      className="pointer-events-auto flex h-12 items-center gap-0.5 rounded-full bg-[#1c2028]/95 px-0.5 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
+      className="pointer-events-auto flex h-12 items-center gap-0.5 rounded-full bg-[#181b23]/95 px-0.5 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
     >
       {page > 1 ? (
         <Link {...pageLink(page - 1)} rel="prev" aria-label="Newer posts" className={arrow}>
