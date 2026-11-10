@@ -59,7 +59,7 @@ function MobilePager({ page }: { page: number }) {
   return (
     <nav
       aria-label="Pagination"
-      className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-40 flex h-12 -translate-x-1/2 items-center gap-1 rounded-full bg-[#262626]/95 px-1 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
+      className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-40 flex h-12 -translate-x-1/2 items-center gap-1 rounded-full bg-[#0f1419]/95 px-1 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
     >
       {page > 1 ? (
         <Link {...pageLink(page - 1)} rel="prev" aria-label="Newer posts" className={arrow}>

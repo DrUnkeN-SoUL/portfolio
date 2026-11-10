@@ -16,7 +16,7 @@ export function useMermaid(slug: string) {
       if (cancelled) return;
       const font = getComputedStyle(document.body).fontFamily;
       // "base" is the only theme whose variables fully apply; these mirror
-      // the blog tokens (#191919 page, #202020 cards, soft grey lines).
+      // the blog tokens (#030507 page, #070b0f cards, soft blue-grey lines).
       mermaid.initialize({
         startOnLoad: false,
         theme: "base",
@@ -28,41 +28,41 @@ export function useMermaid(slug: string) {
           darkMode: true,
           fontFamily: font,
           fontSize: "14px",
-          background: "#191919",
-          primaryColor: "#232323",
-          primaryBorderColor: "#3d3d3d",
-          primaryTextColor: "#d6d6d6",
-          secondaryColor: "#232323",
-          secondaryBorderColor: "#3d3d3d",
-          tertiaryColor: "#1f1f1f",
-          tertiaryBorderColor: "#3d3d3d",
-          lineColor: "#6e6e6e",
-          textColor: "#bdbdbd",
-          edgeLabelBackground: "#191919",
-          clusterBkg: "#1f1f1f",
-          clusterBorder: "#333333",
-          nodeTextColor: "#d6d6d6",
-          actorBkg: "#232323",
-          actorBorder: "#3d3d3d",
-          actorTextColor: "#d6d6d6",
-          actorLineColor: "#3d3d3d",
-          signalColor: "#8a8a8a",
-          signalTextColor: "#bdbdbd",
-          labelBoxBkgColor: "#232323",
-          labelBoxBorderColor: "#3d3d3d",
-          labelTextColor: "#d6d6d6",
+          background: "#030507",
+          primaryColor: "#0f1419",
+          primaryBorderColor: "#282f35",
+          primaryTextColor: "#c8cbce",
+          secondaryColor: "#0f1419",
+          secondaryBorderColor: "#282f35",
+          tertiaryColor: "#0a0f13",
+          tertiaryBorderColor: "#282f35",
+          lineColor: "#585e64",
+          textColor: "#b7b9bb",
+          edgeLabelBackground: "#030507",
+          clusterBkg: "#0a0f13",
+          clusterBorder: "#282f35",
+          nodeTextColor: "#c8cbce",
+          actorBkg: "#0f1419",
+          actorBorder: "#282f35",
+          actorTextColor: "#c8cbce",
+          actorLineColor: "#282f35",
+          signalColor: "#777b7f",
+          signalTextColor: "#b7b9bb",
+          labelBoxBkgColor: "#0f1419",
+          labelBoxBorderColor: "#282f35",
+          labelTextColor: "#c8cbce",
           noteBkgColor: "#2a2620",
           noteBorderColor: "#5a4a2a",
           noteTextColor: "#e0d6c2",
-          activationBkgColor: "#2a2a2a",
-          activationBorderColor: "#4a4a4a",
+          activationBkgColor: "#13191e",
+          activationBorderColor: "#373e45",
         },
         themeCSS: `
           .node rect, .node polygon, .actor, rect.actor { rx: 8px; ry: 8px; filter: none !important; }
           .node, .actor, g { filter: none !important; }
-          .edgeLabel, .edgeLabel p, .edgeLabel span { background-color: #191919 !important; color: #9a9a9a; }
-          .edgeLabel rect { fill: #191919 !important; opacity: 1; }
-          .messageText { fill: #bdbdbd !important; }
+          .edgeLabel, .edgeLabel p, .edgeLabel span { background-color: #030507 !important; color: #9c9fa2; }
+          .edgeLabel rect { fill: #030507 !important; opacity: 1; }
+          .messageText { fill: #b7b9bb !important; }
         `,
       });
       void mermaid.run({ nodes: [...blocks] });

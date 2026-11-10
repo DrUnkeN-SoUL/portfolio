@@ -11,7 +11,7 @@ function TagBanner({ tag }: { tag: string | undefined }) {
   return (
     <div
       aria-hidden="true"
-      className="absolute inset-0 flex flex-col justify-between bg-[radial-gradient(110%_90%_at_100%_0%,rgba(224,163,58,0.16),transparent_55%),radial-gradient(80%_70%_at_0%_100%,rgba(255,255,255,0.04),transparent_60%),linear-gradient(160deg,#262626,#1a1a1a)] p-5 sm:p-6"
+      className="absolute inset-0 flex flex-col justify-between bg-[radial-gradient(110%_90%_at_100%_0%,rgba(224,163,58,0.16),transparent_55%),radial-gradient(80%_70%_at_0%_100%,rgba(255,255,255,0.04),transparent_60%),linear-gradient(160deg,#0f1419,#070b0f)] p-5 sm:p-6"
     >
       <span className="font-mono text-[0.6rem] tracking-[0.22em] text-muted-foreground/60">
         mathews shaji / writing
@@ -37,7 +37,7 @@ function PostCard({ post }: { post: Post }) {
         className="group row-span-4 grid grid-rows-subgrid gap-y-0 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/40"
       >
         <div
-          className={`relative aspect-[1200/630] overflow-hidden rounded-xl ${post.cover ? "" : "hidden sm:block"} bg-[#202020] ring-1 ring-white/[0.07] transition-[box-shadow] group-hover:ring-white/[0.16]`}
+          className={`relative aspect-[1200/630] overflow-hidden rounded-xl ${post.cover ? "" : "hidden sm:block"} bg-card ring-1 ring-white/[0.07] transition-[box-shadow] group-hover:ring-white/[0.16]`}
         >
           {post.cover ? (
             <img
