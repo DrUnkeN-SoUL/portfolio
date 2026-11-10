@@ -48,8 +48,8 @@ function Pagination({ page }: { page: number }) {
 }
 
 /**
- * Phone pager: a compact pill pinned to the bottom centre, beside the search
- * button, so paging works one-handed. Larger screens use the inline pager.
+ * Phone pager: a compact pill for the bottom dock, beside the search button,
+ * so paging works one-handed. Larger screens use the inline pager.
  */
 function MobilePager({ page }: { page: number }) {
   if (PAGE_COUNT <= 1) return null;
@@ -59,7 +59,7 @@ function MobilePager({ page }: { page: number }) {
   return (
     <nav
       aria-label="Pagination"
-      className="fixed bottom-[max(1rem,env(safe-area-inset-bottom))] left-1/2 z-40 flex h-12 -translate-x-1/2 items-center gap-1 rounded-full bg-[#13161d]/95 px-1 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
+      className="pointer-events-auto flex h-12 items-center gap-1 rounded-full bg-[#13161d]/95 px-1 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
     >
       {page > 1 ? (
         <Link {...pageLink(page - 1)} rel="prev" aria-label="Newer posts" className={arrow}>
@@ -92,7 +92,7 @@ export function Listing({ page }: { page: number }) {
   const pagePosts = getPage(page);
 
   return (
-    <BlogShell>
+    <BlogShell pager={<MobilePager page={page} />}>
       <section className="pt-8 pb-6 md:pt-10 md:pb-8">
         <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.2rem]">
           Writing
@@ -132,7 +132,6 @@ export function Listing({ page }: { page: number }) {
         </section>
       )}
       <Pagination page={page} />
-      <MobilePager page={page} />
     </BlogShell>
   );
 }

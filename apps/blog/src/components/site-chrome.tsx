@@ -41,17 +41,14 @@ export function BlogHeader() {
   );
 }
 
-/**
- * Floating search button for screens without the left rail: bottom-right,
- * inside the thumb's reach for one-handed use.
- */
+/** Search button for the phone dock: bottom-right, in the thumb's reach. */
 function MobileSearchButton() {
   return (
     <button
       type="button"
       onClick={openSearch}
       aria-label="Search"
-      className="fixed right-4 bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 grid size-12 place-items-center rounded-full bg-[#13161d]/95 text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-colors hover:bg-[#171a22] lg:hidden"
+      className="pointer-events-auto absolute right-5 grid size-12 place-items-center rounded-full bg-[#13161d]/95 text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-colors hover:bg-[#171a22] lg:hidden"
     >
       <SearchIcon className="size-[18px]" />
     </button>
@@ -199,9 +196,12 @@ export function BlogShell({
   children,
   tag,
   toc,
+  pager,
 }: {
   children: ReactNode;
   tag?: string | undefined;
+  /** Phone pager pill, shown in the bottom dock on listing pages. */
+  pager?: ReactNode;
   /** Set on post pages: no sidebar or search, just the post and its outline. */
   toc?: Post["toc"] | undefined;
 }) {
@@ -226,13 +226,18 @@ export function BlogShell({
           <main className="w-full max-w-[1000px] min-w-0">{children}</main>
         </div>
       )}
-      <BlogFooter roomForSearch={!isPost} />
       {!isPost && (
-        <>
-          <MobileSearchButton />
-          <SearchDialog />
-        </>
+        // Phone dock: sticky, so it floats at the bottom while scrolling and
+        // settles above the footer at the end instead of covering it.
+        <div className="pointer-events-none sticky bottom-[max(1rem,env(safe-area-inset-bottom))] z-40 mt-6 lg:hidden">
+          <div className={`${FRAME} relative flex h-12 items-center justify-center`}>
+            {pager}
+            <MobileSearchButton />
+          </div>
+        </div>
       )}
+      <BlogFooter />
+      {!isPost && <SearchDialog />}
     </div>
   );
 }
@@ -281,11 +286,11 @@ const SOCIAL_LINKS = [
 ];
 
 /** Site footer: full width, aligned with the header, pinned to the bottom. */
-export function BlogFooter({ roomForSearch = false }: { roomForSearch?: boolean }) {
+export function BlogFooter() {
   return (
     <footer className="mt-8">
       <div
-        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 ${roomForSearch ? "pb-20 lg:pb-5" : "pb-5"} font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
+        className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
       >
         <span>© {new Date().getFullYear()} mathews shaji</span>
         <nav aria-label="Elsewhere" className="flex items-center gap-5">
