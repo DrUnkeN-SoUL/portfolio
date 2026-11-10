@@ -54,12 +54,12 @@ function Pagination({ page }: { page: number }) {
 function MobilePager({ page }: { page: number }) {
   if (PAGE_COUNT <= 1) return null;
   const arrow =
-    "grid size-10 place-items-center rounded-full text-[1.05rem] text-foreground transition-colors hover:bg-white/[0.06]";
+    "grid size-11 place-items-center rounded-full text-[1.05rem] text-foreground transition-colors hover:bg-white/[0.06] active:bg-white/[0.1]";
 
   return (
     <nav
       aria-label="Pagination"
-      className="pointer-events-auto flex h-12 items-center gap-1 rounded-full bg-[#13161d]/95 px-1 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
+      className="pointer-events-auto flex h-12 items-center gap-0.5 rounded-full bg-[#13161d]/95 px-0.5 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
     >
       {page > 1 ? (
         <Link {...pageLink(page - 1)} rel="prev" aria-label="Newer posts" className={arrow}>
@@ -115,16 +115,16 @@ export function Listing({ page }: { page: number }) {
           <h2 className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
             tags
           </h2>
-          <ul className="mt-4 flex flex-wrap gap-2">
+          <ul className="mt-3 flex flex-wrap gap-2">
             {tags.map(({ tag, count }) => (
               <li key={tag}>
                 <Link
                   to="/tags/$tag"
                   params={{ tag }}
-                  className="inline-flex items-baseline gap-1.5 rounded-md bg-white/[0.04] px-2.5 py-1 font-mono text-[0.7rem] text-muted-foreground transition-colors hover:bg-white/[0.07] hover:text-foreground"
+                  className="inline-flex min-h-9 items-center gap-1.5 rounded-md bg-white/[0.04] px-3 font-mono text-[0.75rem] text-muted-foreground transition-colors hover:bg-white/[0.07] hover:text-foreground active:bg-white/[0.1]"
                 >
                   #{tag}
-                  <span className="text-[0.6rem] opacity-60">{count}</span>
+                  <span className="text-[0.65rem]">{count}</span>
                 </Link>
               </li>
             ))}

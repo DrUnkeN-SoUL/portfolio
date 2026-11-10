@@ -118,6 +118,23 @@ export function SearchDialog() {
 
   useEffect(() => setActive(0), [query]);
 
+  // Phones: keep the sheet inside the visible area, so the on-screen keyboard
+  // pushes it up instead of covering the search field.
+  const [frame, setFrame] = useState<{ top: number; height: number } | null>(null);
+  useEffect(() => {
+    const viewport = window.visualViewport;
+    if (!open || !viewport) return;
+    const fit = () => setFrame({ top: viewport.offsetTop, height: viewport.height });
+    fit();
+    viewport.addEventListener("resize", fit);
+    viewport.addEventListener("scroll", fit);
+    return () => {
+      viewport.removeEventListener("resize", fit);
+      viewport.removeEventListener("scroll", fit);
+      setFrame(null);
+    };
+  }, [open]);
+
   if (!open) return null;
 
   const go = (slug: string) => {
@@ -127,7 +144,8 @@ export function SearchDialog() {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/55 px-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-[2px] sm:items-start sm:px-4 sm:pt-[12vh] sm:pb-0"
+      className="fixed inset-x-0 top-0 z-50 flex h-dvh items-end justify-center bg-black/55 px-3 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur-[2px] sm:items-start sm:px-4 sm:pt-[12vh] sm:pb-0"
+      style={frame ? { top: frame.top, height: frame.height } : undefined}
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) setOpen(false);
       }}
@@ -136,9 +154,9 @@ export function SearchDialog() {
         role="dialog"
         aria-modal="true"
         aria-label="Search writing"
-        className="flex w-full max-w-[600px] flex-col-reverse overflow-hidden rounded-xl border border-border bg-card shadow-2xl shadow-black/50 sm:flex-col"
+        className="flex max-h-full w-full max-w-[600px] flex-col-reverse overflow-hidden rounded-xl border border-border bg-card shadow-2xl shadow-black/50 sm:flex-col"
       >
-        <div className="flex items-center gap-3 border-t border-border px-4 sm:border-t-0 sm:border-b">
+        <div className="flex shrink-0 items-center gap-3 border-t border-border pr-1 pl-4 sm:border-t-0 sm:border-b sm:pr-4">
           <SearchIcon className="size-4 shrink-0 text-muted-foreground" />
           <input
             ref={inputRef}
@@ -159,15 +177,22 @@ export function SearchDialog() {
             }}
             placeholder="Search posts, tags and text…"
             aria-label="Search"
-            className="h-12 w-full bg-transparent text-[0.95rem] text-foreground outline-none placeholder:text-muted-foreground/70"
+            className="h-12 w-full min-w-0 bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground/70 sm:text-[0.95rem]"
           />
           <kbd className="hidden rounded border border-border px-1.5 py-0.5 font-mono text-[0.6rem] text-muted-foreground sm:block">
             esc
           </kbd>
+          <button
+            type="button"
+            onClick={() => setOpen(false)}
+            className="h-11 shrink-0 rounded-lg px-3 text-[0.85rem] text-muted-foreground transition-colors active:bg-white/[0.06] sm:hidden"
+          >
+            Close
+          </button>
         </div>
 
         <ul
-          className="max-h-[60dvh] overflow-y-auto p-2 sm:max-h-[55vh]"
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-2 sm:max-h-[55vh]"
           role="listbox"
           aria-label="Results"
         >
@@ -190,7 +215,7 @@ export function SearchDialog() {
                 <span className="mt-0.5 line-clamp-1 block text-[0.825rem] text-muted-foreground">
                   {snippet}
                 </span>
-                <span className="mt-1 block font-mono text-[0.62rem] tracking-[0.06em] text-muted-foreground/70">
+                <span className="mt-1 block font-mono text-[0.62rem] tracking-[0.06em] text-muted-foreground">
                   {formatPostDate(entry.date)}
                   {entry.tags.length > 0 && `  ${entry.tags.map((tag) => `#${tag}`).join(" ")}`}
                 </span>

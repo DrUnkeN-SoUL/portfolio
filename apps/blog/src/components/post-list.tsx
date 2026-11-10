@@ -34,7 +34,7 @@ function PostCard({ post }: { post: Post }) {
       <Link
         to="/$slug"
         params={{ slug: post.slug }}
-        className="group row-span-4 grid grid-rows-subgrid gap-y-0 rounded-xl focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/40"
+        className="group row-span-4 grid grid-rows-subgrid gap-y-0 rounded-xl transition-opacity active:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/40"
       >
         <div
           className={`relative aspect-[1200/630] overflow-hidden rounded-xl ${post.cover ? "" : "hidden sm:block"} bg-card ring-1 ring-white/[0.07] transition-[box-shadow] group-hover:ring-white/[0.16]`}
@@ -67,15 +67,11 @@ function PostCard({ post }: { post: Post }) {
         <p className="mt-1.5 line-clamp-2 self-start text-[0.92rem] leading-relaxed text-muted-foreground">
           {post.description}
         </p>
-        <p className="mt-1.5 flex flex-wrap items-baseline self-start gap-x-3 gap-y-1 font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground/80">
+        <p className="mt-1.5 flex flex-wrap items-baseline self-start gap-x-3 gap-y-1 font-mono text-[0.6875rem] tracking-[0.06em] text-muted-foreground">
           {post.draft && !post.cover && <span className="text-amber sm:hidden">draft</span>}
           <time dateTime={post.date}>{formatPostDate(post.date)}</time>
           <span>{post.readingMinutes} min read</span>
-          {post.tags.length > 0 && (
-            <span className="text-muted-foreground/65">
-              {post.tags.map((tag) => `#${tag}`).join("  ")}
-            </span>
-          )}
+          {post.tags.length > 0 && <span>{post.tags.map((tag) => `#${tag}`).join("  ")}</span>}
         </p>
       </Link>
     </li>

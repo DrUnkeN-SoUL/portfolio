@@ -10,9 +10,9 @@ import { useActiveHeading } from "@/lib/use-post-enhancements";
 
 const FRAME = "mx-auto w-full max-w-[1440px] px-5 md:px-8";
 const RAIL_LABEL =
-  "mb-3 pl-3 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground/70 uppercase";
+  "mb-3 pl-3 whitespace-nowrap font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground uppercase";
 const SIDE_LABEL =
-  "mb-2 px-2 font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground/70 uppercase";
+  "mb-2 px-2 font-mono text-[0.6rem] tracking-[0.2em] text-muted-foreground uppercase";
 const SIDE_LINK =
   "block truncate rounded-[5px] px-2 py-[5px] text-[0.875rem] leading-snug text-muted-foreground transition-colors hover:bg-white/[0.045] hover:text-foreground";
 const SIDE_ACTIVE = "bg-white/[0.06] text-foreground";
@@ -27,7 +27,7 @@ export function BlogHeader() {
       >
         <Link
           to="/"
-          className="flex shrink-0 items-baseline gap-2 whitespace-nowrap transition-colors hover:text-foreground"
+          className="tap-area flex shrink-0 items-baseline gap-2 whitespace-nowrap transition-colors hover:text-foreground"
         >
           <span className="text-foreground">mathews shaji</span>
           <span className="hidden text-muted-foreground sm:inline">/ writing</span>
@@ -48,7 +48,7 @@ function MobileSearchButton() {
       type="button"
       onClick={openSearch}
       aria-label="Search"
-      className="pointer-events-auto absolute right-5 grid size-12 place-items-center rounded-full bg-[#13161d]/95 text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-colors hover:bg-[#171a22] lg:hidden"
+      className="pointer-events-auto absolute right-5 grid size-12 place-items-center rounded-full bg-[#13161d]/95 text-foreground shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur transition-[background-color,transform] hover:bg-[#171a22] active:scale-95 active:bg-[#171a22] lg:hidden"
     >
       <SearchIcon className="size-[18px]" />
     </button>
@@ -119,9 +119,7 @@ function BlogSidebar({ tag }: { tag?: string | undefined }) {
                     className={`${SIDE_LINK} flex justify-between gap-3 ${name === tag ? SIDE_ACTIVE : ""}`}
                   >
                     <span className="truncate">#{name}</span>
-                    <span className="font-mono text-[0.7rem] text-muted-foreground/60">
-                      {count}
-                    </span>
+                    <span className="font-mono text-[0.7rem] text-muted-foreground">{count}</span>
                   </Link>
                 </li>
               ))}
@@ -166,17 +164,17 @@ export function InlineToc({ toc }: { toc: Post["toc"] }) {
   if (toc.length < 2) return null;
 
   return (
-    <details className="group mt-8 rounded-md bg-white/[0.03] px-4 py-3 xl:hidden">
-      <summary className="cursor-pointer list-none font-mono text-[0.65rem] tracking-[0.2em] text-muted-foreground uppercase select-none">
+    <details className="group mt-8 rounded-md bg-white/[0.03] xl:hidden">
+      <summary className="cursor-pointer list-none px-4 py-3.5 font-mono text-[0.65rem] tracking-[0.2em] text-muted-foreground uppercase select-none">
         <span className="inline-block transition-transform group-open:rotate-90">›</span> On this
         page
       </summary>
-      <ul className="mt-3 space-y-1">
+      <ul className="px-4 pb-2">
         {toc.map((entry) => (
           <li key={entry.id} className={entry.depth === 3 ? "pl-4" : ""}>
             <a
               href={`#${entry.id}`}
-              className="text-[0.9rem] text-muted-foreground transition-colors hover:text-foreground"
+              className="block py-2 text-[0.9rem] text-muted-foreground transition-colors hover:text-foreground"
             >
               {entry.text}
             </a>
@@ -293,7 +291,7 @@ export function BlogFooter() {
         className={`${FRAME} flex flex-wrap items-center justify-between gap-x-6 gap-y-3 pt-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] font-mono text-[0.65rem] tracking-[0.18em] text-muted-foreground`}
       >
         <span>© {new Date().getFullYear()} mathews shaji</span>
-        <nav aria-label="Elsewhere" className="flex items-center gap-5">
+        <nav aria-label="Elsewhere" className="flex items-center gap-6">
           <a href="https://mathewsshaji.com" className="site-nav-link">
             portfolio
           </a>
@@ -305,7 +303,7 @@ export function BlogFooter() {
               rel="noopener noreferrer"
               aria-label={label}
               title={label}
-              className="text-muted-foreground transition-colors hover:text-foreground"
+              className="tap-area text-muted-foreground transition-colors hover:text-foreground"
             >
               <Logo />
             </a>

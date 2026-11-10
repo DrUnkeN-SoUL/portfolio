@@ -403,6 +403,24 @@ html.is-scrolling *::-webkit-scrollbar-thumb {
   color: var(--amber);
 }
 
+/* Touch area: small text links and icons keep their look but answer taps
+   across 44px of height (and at least 40px of width), the size a thumb needs. */
+.tap-area,
+.blog-surface .site-nav-link {
+  position: relative;
+}
+
+.tap-area::after,
+.blog-surface .site-nav-link::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: max(100%, 2.5rem);
+  height: 2.75rem;
+  transform: translate(-50%, -50%);
+}
+
 /* ------------------------------------------------------------------ */
 /* Long-form Markdown (blog)                                          */
 /* ------------------------------------------------------------------ */
