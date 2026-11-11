@@ -1,16 +1,6 @@
 /**
- * Small rehype transforms for blog posts. They run at build time, after
- * rehype-slug (so headings have ids) and before Shiki (so mermaid blocks are
- * pulled out before highlighting).
- *
- * - Images whose URL is a video file become <video>; YouTube / Vimeo URLs
- *   become a privacy-friendly embed. Syntax: ![caption](url "optional title").
- * - An image or video alone in a paragraph becomes a <figure>; its title (or
- *   alt text for videos) becomes the caption.
- * - ```mermaid blocks become <pre class="mermaid">, rendered in the browser.
- * - External links open in a new tab; in-page (#...) and same-site links
- *   do not. Prefix a link title with "newtab:" / "sametab:" to override.
- * - h2/h3 get a hover "#" anchor so any section can be linked.
+ * Runs after rehype-slug (headings need ids) and before Shiki (mermaid blocks
+ * are pulled out before highlighting). Authoring syntax: see README.md.
  */
 
 type Text = { type: "text"; value: string };
@@ -22,9 +12,6 @@ type Element = {
 };
 type Node = Text | Element | { type: string; children?: Node[] };
 type Root = { type: "root"; children: Node[] };
-
-const SITE_HOSTS = new Set(["blog.mathewsshaji.com", "mathewsshaji.com", "www.mathewsshaji.com"]);
-const VIDEO_EXT = /\.(mp4|webm|mov|m4v)(\?.*)?$/i;
 
 const isElement = (node: Node | undefined, tag?: string): node is Element =>
   node?.type === "element" && (tag === undefined || (node as Element).tagName === tag);
@@ -71,12 +58,12 @@ function embedUrl(src: string): string | null {
   return null;
 }
 
-/** Turn an <img> into the right media element; null means "leave as image". */
+/** null means "leave it as an image". */
 function toMedia(img: Element): Element | null {
   const src = String(img.properties["src"] ?? "");
   const label = String(img.properties["alt"] ?? "");
 
-  if (VIDEO_EXT.test(src)) {
+  if (/\.(mp4|webm|mov|m4v)(\?.*)?$/i.test(src)) {
     return el(
       "video",
       {
@@ -124,7 +111,11 @@ function transformLink(link: Element) {
   } else {
     try {
       const url = new URL(href);
-      newTab = /^https?:$/.test(url.protocol) && !SITE_HOSTS.has(url.hostname);
+      newTab =
+        /^https?:$/.test(url.protocol) &&
+        !["blog.mathewsshaji.com", "mathewsshaji.com", "www.mathewsshaji.com"].includes(
+          url.hostname,
+        );
     } catch {
       newTab = false;
     }
@@ -141,7 +132,6 @@ function walk(parent: Root | Element) {
   parent.children = parent.children.map((child) => {
     if (!isElement(child)) return child;
 
-    // ```mermaid → <pre class="mermaid">source</pre>
     if (child.tagName === "pre" && isElement(child.children[0], "code")) {
       const code = child.children[0];
       const classes = (code.properties["className"] as string[] | undefined) ?? [];
@@ -153,7 +143,6 @@ function walk(parent: Root | Element) {
       return child;
     }
 
-    // Paragraph holding a single image/video → <figure> with caption.
     if (child.tagName === "p") {
       const meaningful = child.children.filter(
         (node) => !(node.type === "text" && !(node as Text).value.trim()),

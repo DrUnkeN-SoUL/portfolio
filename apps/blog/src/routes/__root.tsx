@@ -77,7 +77,7 @@ export const Route = createRootRoute({
       { title: BLOG_NAME },
       { name: "description", content: BLOG_DESCRIPTION },
       { name: "author", content: "Mathews Shaji" },
-      { name: "theme-color", content: "#05060a" },
+      { name: "theme-color", content: "#080a10" },
       { name: "robots", content: "index, follow, max-image-preview:large" },
       { property: "og:site_name", content: "Mathews Shaji" },
       { property: "og:type", content: "website" },
@@ -99,7 +99,7 @@ export const Route = createRootRoute({
       {
         rel: "alternate",
         type: "application/rss+xml",
-        title: "Mathews Shaji — writing",
+        title: BLOG_NAME,
         href: `${SITE.blog}/rss.xml`,
       },
       // Identity signals: the same person owns both sites.
@@ -130,7 +130,7 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
-function useScrollIndicator() {
+function RootComponent() {
   useEffect(() => {
     const root = document.documentElement;
     let timer: number | undefined;
@@ -153,9 +153,6 @@ function useScrollIndicator() {
       root.classList.remove("is-scrolling");
     };
   }, []);
-}
 
-function RootComponent() {
-  useScrollIndicator();
   return <Outlet />;
 }

@@ -3,11 +3,7 @@ import path from "node:path";
 
 import { includeDrafts } from "./content.ts";
 
-/**
- * Production builds drop staging-only demo media (`staging-*` files used by
- * the draft kitchen-sink post), so they are never served on the live site.
- * Preview and local draft builds keep them.
- */
+/** Production builds drop the `staging-*` demo media; preview and local draft builds keep it. */
 if (!includeDrafts()) {
   const dir = path.join(process.cwd(), "dist", "client", "images", "blog");
   const files = await readdir(dir).catch(() => [] as string[]);

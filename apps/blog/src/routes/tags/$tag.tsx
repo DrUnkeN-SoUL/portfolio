@@ -14,12 +14,14 @@ export const Route = createFileRoute("/tags/$tag")({
     return null;
   },
   head: ({ params }) => {
-    const title = `#${params.tag} — Writing — Mathews Shaji`;
-    const description = `Posts tagged #${params.tag} on Mathews Shaji's writing section.`;
     const url = `${SITE.blog}/tags/${encodeURIComponent(params.tag)}`;
 
     return {
-      meta: pageMeta({ title, description, url }),
+      meta: pageMeta({
+        title: `#${params.tag} — Writing — Mathews Shaji`,
+        description: `Posts tagged #${params.tag} on Mathews Shaji's writing section.`,
+        url,
+      }),
       links: [{ rel: "canonical", href: url }],
     };
   },
@@ -32,7 +34,7 @@ function TagPage() {
 
   return (
     <BlogShell tag={tag}>
-      <section className="pt-8 pb-6 md:pt-10 md:pb-8">
+      <section className="pt-6 pb-5 md:pt-10 md:pb-6">
         <p className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
           tag
         </p>
@@ -46,7 +48,7 @@ function TagPage() {
 
       <PostList posts={posts} />
 
-      <div className="mt-12">
+      <div className="mt-auto pt-6">
         <Link
           to="/"
           className="tap-area font-mono text-[0.65rem] tracking-[0.14em] text-muted-foreground transition-colors hover:text-foreground"

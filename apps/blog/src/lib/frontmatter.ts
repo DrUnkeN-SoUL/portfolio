@@ -19,70 +19,40 @@ function normalizeDate(value: unknown): unknown {
 
 const dateString = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "must be a date in YYYY-MM-DD format");
 
-const dateField = z.preprocess(normalizeDate, dateString);
-const optionalDateField = z.preprocess(normalizeDate, dateString.optional());
-
-const optionalString = z.preprocess(
-  (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
-  z.string().trim().min(1).optional(),
-);
-
-/**
- * The front matter contract shared by the build, the runtime and
- * `bun run check:content`. Keep this in sync with `.pages.yml`.
- */
+/** Keep in sync with `.pages.yml`. */
 export const postFrontMatterSchema = z
   .object({
     title: z.string().trim().min(1, "is required"),
     description: z.string().trim().min(1, "is required"),
-    date: dateField,
-    updated: optionalDateField,
+    date: z.preprocess(normalizeDate, dateString),
+    updated: z.preprocess(normalizeDate, dateString.optional()),
     tags: z.preprocess(
       (value) => (value === undefined || value === null ? [] : value),
       z.array(z.string().trim().min(1)),
     ),
     draft: z.preprocess((value) => value ?? false, z.boolean()),
-    cover: optionalString,
+    cover: z.preprocess(
+      (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+      z.string().trim().min(1).optional(),
+    ),
   })
   .strict();
 
-export type PostFrontMatter = z.infer<typeof postFrontMatterSchema>;
+export type Post = z.infer<typeof postFrontMatterSchema> & { slug: string; body: string };
 
-export type Post = PostFrontMatter & {
-  /** Derived from the Markdown filename. */
-  slug: string;
-  /** Markdown body, with front matter removed. */
-  body: string;
-};
-
-const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-
-export function slugFromFilename(fileName: string): string {
+/**
+ * Throws on an invalid filename or front matter, so a bad post fails the build instead of being
+ * dropped.
+ */
+export function parsePost(raw: string, fileName: string): Post {
   const slug = fileName.replace(/\.md$/i, "");
-  if (!SLUG_RE.test(slug)) {
+
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) {
     throw new Error(
       `"${fileName}" must be kebab-case (lowercase letters, numbers and single hyphens), e.g. "hello-world.md".`,
     );
   }
-  return slug;
-}
 
-function formatIssues(error: z.ZodError): string {
-  return error.issues
-    .map(
-      (issue) =>
-        `  - ${issue.path.length > 0 ? issue.path.join(".") : "(front matter)"}: ${issue.message}`,
-    )
-    .join("\n");
-}
-
-/**
- * Parse one Markdown file. Throws with a useful message when the front matter
- * or filename is invalid, so a bad post fails the build instead of being
- * silently dropped.
- */
-export function parsePost(raw: string, fileName: string): Post {
-  const slug = slugFromFilename(fileName);
   let parsed: matter.GrayMatterFile<string>;
 
   try {
@@ -99,7 +69,12 @@ export function parsePost(raw: string, fileName: string): Post {
 
   if (!result.success) {
     throw new Error(
-      `[blog] Invalid front matter in content/posts/${fileName}:\n${formatIssues(result.error)}`,
+      `[blog] Invalid front matter in content/posts/${fileName}:\n${result.error.issues
+        .map(
+          (issue) =>
+            `  - ${issue.path.length > 0 ? issue.path.join(".") : "(front matter)"}: ${issue.message}`,
+        )
+        .join("\n")}`,
     );
   }
 
@@ -118,7 +93,7 @@ export function parsePost(raw: string, fileName: string): Post {
   };
 }
 
-/** True when the Markdown body has an ATX level-1 heading outside fenced code. */
+/** Ignores "# " lines inside fenced code. */
 function hasLevelOneHeading(body: string): boolean {
   let fence: string | null = null;
   for (const line of body.split("\n")) {

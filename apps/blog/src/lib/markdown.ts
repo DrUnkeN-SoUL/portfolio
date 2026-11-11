@@ -38,11 +38,6 @@ const processor = unified()
   })
   .use(rehypeStringify, { allowDangerousHtml: false });
 
-/**
- * Render Markdown to HTML. In a static build this runs at build time; client
- * navigations load this module lazily, so Shiki is not part of the entry chunk.
- */
 export async function renderMarkdown(markdown: string): Promise<string> {
-  const file = await processor.process(markdown);
-  return String(file);
+  return String(await processor.process(markdown));
 }

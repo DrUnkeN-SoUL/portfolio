@@ -1,18 +1,13 @@
 import { SITE } from "./fonts";
 
-type Site = "portfolio" | "blog";
-
-const LINKS: Array<{ site: Site; label: string; href: string }> = [
-  { site: "portfolio", label: "portfolio", href: SITE.portfolio },
-  { site: "blog", label: "writing", href: SITE.blog },
-];
-
-/**
- * Cross-site navigation. The current site is plain, brightest text; the other
- * site is a link in the same style as the rest of the nav, tinted amber on
- * hover/focus. No arrows: the two labels read as one flat nav either way.
- */
-export function SiteNav({ current, className }: { current: Site; className?: string }) {
+/** No arrows: the two labels read as one flat nav. */
+export function SiteNav({
+  current,
+  className,
+}: {
+  current: "portfolio" | "blog";
+  className?: string;
+}) {
   return (
     <nav
       aria-label="Sites"
@@ -21,7 +16,10 @@ export function SiteNav({ current, className }: { current: Site; className?: str
         "flex items-baseline gap-4 text-[0.65rem] tracking-[0.3em] text-muted-foreground"
       }
     >
-      {LINKS.map((link) =>
+      {[
+        { site: "portfolio", label: "portfolio", href: SITE.portfolio },
+        { site: "blog", label: "writing", href: SITE.blog },
+      ].map((link) =>
         link.site === current ? (
           <span key={link.site} aria-current="page" className="text-foreground">
             {link.label}

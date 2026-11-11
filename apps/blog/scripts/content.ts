@@ -3,12 +3,6 @@ import path from "node:path";
 
 import { parsePost, type Post } from "../src/lib/frontmatter.ts";
 
-export type LoadedPosts = {
-  posts: Post[];
-  errors: string[];
-  files: string[];
-};
-
 /**
  * Whether a build includes drafts: yes on Vercel preview (staging)
  * deployments, never on production. Locally, `BLOG_DRAFTS=1 bun run build`
@@ -30,14 +24,10 @@ export function postsPerPage(): number {
   return process.env["VERCEL_ENV"] === "preview" ? 1 : 10;
 }
 
-/**
- * Read posts straight from disk (no Vite). Used by `check:content`,
- * `new-post` and the Vite config that builds the prerender page list.
- */
 export async function loadPostsFromDisk(
   root: string,
   options: { includeDrafts?: boolean } = {},
-): Promise<LoadedPosts> {
+): Promise<{ posts: Post[]; errors: string[]; files: string[] }> {
   const postsDir = path.join(root, "content", "posts");
   const entries = await readdir(postsDir).catch((error: unknown) => {
     throw new Error(

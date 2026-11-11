@@ -2,21 +2,17 @@ import { Link } from "@tanstack/react-router";
 
 import { formatPostDate, type Post } from "@/lib/posts";
 
-/**
- * Generated artwork for posts without a cover: the post's first tag set large
- * over a soft gradient. It deliberately does not repeat the title, which sits
- * right below the banner.
- */
+/** Deliberately shows the first tag, not the title, which sits right below the banner. */
 function TagBanner({ tag }: { tag: string | undefined }) {
   return (
     <div
       aria-hidden="true"
       className="absolute inset-0 flex flex-col justify-between bg-[radial-gradient(110%_90%_at_100%_0%,rgba(150,165,220,0.09),transparent_55%),radial-gradient(80%_70%_at_0%_100%,rgba(255,255,255,0.04),transparent_60%),linear-gradient(160deg,#13161d,#0a0c12)] p-5 sm:p-6"
     >
-      <span className="font-mono text-[0.6rem] tracking-[0.22em] text-muted-foreground/60">
+      <span className="font-mono text-[0.6rem] tracking-[0.22em] text-muted-foreground/85">
         mathews shaji / writing
       </span>
-      <span className="font-mono text-[2.4rem] leading-none tracking-[-0.03em] text-white/[0.13]">
+      <span className="font-mono text-[2.4rem] leading-none tracking-[-0.03em] text-white/[0.24]">
         #{tag ?? "notes"}
       </span>
     </div>
@@ -24,19 +20,20 @@ function TagBanner({ tag }: { tag: string | undefined }) {
 }
 
 /**
- * Card: a full-width banner (the cover, or a generated title banner), then
- * title, description and meta. Cards in a row share subgrid rows, so those
- * three line up even when one title or description wraps more than another.
+ * Cards in a row share subgrid rows, so title, description and meta line up even when one wraps
+ * more.
  */
 function PostCard({ post }: { post: Post }) {
   return (
-    <li className="row-span-4 mb-8 grid sm:mb-10 grid-rows-subgrid gap-y-0">
+    <li className="row-span-4 mb-8 grid grid-rows-subgrid gap-y-0">
       <Link
         to="/$slug"
         params={{ slug: post.slug }}
         className="group row-span-4 grid grid-rows-subgrid gap-y-0 rounded-xl transition-opacity active:opacity-70 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white/40"
       >
-        <div className="relative aspect-[1200/630] overflow-hidden rounded-xl bg-card ring-1 ring-white/[0.07] transition-[box-shadow] group-hover:ring-white/[0.16]">
+        <div
+          className={`relative ${post.cover ? "aspect-[1200/630]" : "aspect-[2.4/1] sm:aspect-[1200/630]"} overflow-hidden rounded-xl bg-card ring-1 ring-white/[0.07] transition-[box-shadow] group-hover:ring-white/[0.16]`}
+        >
           {post.cover ? (
             <img
               src={post.cover}

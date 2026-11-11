@@ -13,14 +13,9 @@ function pageLink(page: number) {
     : ({ to: "/page/$page", params: { page: String(page) } } as const);
 }
 
-/**
- * Newer / page numbers / older. Hidden when everything fits on one page.
- * `mt-auto` rests it at the bottom of the column, so it sits in the same
- * place on every page instead of floating wherever the posts end.
- */
+/** `mt-auto` rests it at the bottom of the column, so it sits in the same place on every page. */
 function Pagination({ page }: { page: number }) {
   if (PAGE_COUNT <= 1) return null;
-  const numbers = Array.from({ length: PAGE_COUNT }, (_, i) => i + 1);
 
   return (
     <nav
@@ -33,7 +28,7 @@ function Pagination({ page }: { page: number }) {
         </Link>
       )}
       <ol className="flex items-center gap-1 font-mono text-[0.7rem]">
-        {numbers.map((n) => (
+        {Array.from({ length: PAGE_COUNT }, (_, i) => i + 1).map((n) => (
           <li key={n}>
             <Link
               {...pageLink(n)}
@@ -55,8 +50,8 @@ function Pagination({ page }: { page: number }) {
 }
 
 /**
- * Phone pager: a compact pill for the bottom dock, beside the search button,
- * so paging works one-handed. Larger screens use the inline pager.
+ * Phones get this pill in the bottom dock so paging works one-handed; `Pagination` covers lg and
+ * up.
  */
 function MobilePager({ page }: { page: number }) {
   if (PAGE_COUNT <= 1) return null;
@@ -66,7 +61,7 @@ function MobilePager({ page }: { page: number }) {
   return (
     <nav
       aria-label="Pagination"
-      className="pointer-events-auto flex h-12 items-center gap-0.5 rounded-full bg-[#13161d]/95 px-0.5 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
+      className="pointer-events-auto flex h-12 items-center gap-0.5 rounded-full bg-[#181b23]/95 px-0.5 shadow-lg ring-1 shadow-black/40 ring-white/[0.1] backdrop-blur lg:hidden"
     >
       {page > 1 ? (
         <Link {...pageLink(page - 1)} rel="prev" aria-label="Newer posts" className={arrow}>
@@ -93,14 +88,12 @@ function MobilePager({ page }: { page: number }) {
   );
 }
 
-/** The post listing used by "/" (page 1) and "/page/N". */
 export function Listing({ page }: { page: number }) {
   const tags = getAllTags();
-  const pagePosts = getPage(page);
 
   return (
     <BlogShell pager={<MobilePager page={page} />}>
-      <section className="pt-8 pb-6 md:pt-10 md:pb-8">
+      <section className="pt-6 pb-5 md:pt-10 md:pb-6">
         <h1 className="text-[1.9rem] leading-[1.15] font-semibold tracking-[-0.02em] md:text-[2.2rem]">
           Writing
         </h1>
@@ -114,11 +107,11 @@ export function Listing({ page }: { page: number }) {
           Nothing published yet. Check back soon.
         </p>
       ) : (
-        <PostList posts={pagePosts} />
+        <PostList posts={getPage(page)} />
       )}
 
       {tags.length > 0 && (
-        <section className="mb-8 lg:hidden">
+        <section className="mb-2 lg:hidden">
           <h2 className="font-mono text-[0.65rem] tracking-[0.24em] text-muted-foreground uppercase">
             tags
           </h2>
