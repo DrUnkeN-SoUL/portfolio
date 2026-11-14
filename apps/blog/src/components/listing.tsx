@@ -98,7 +98,8 @@ export function Listing({ page }: { page: number }) {
           Writing
         </h1>
         <p className="mt-3 max-w-xl text-[0.975rem] leading-relaxed text-muted-foreground">
-          Notes on backends, infrastructure and the details worth keeping.
+          Random stuff I come across, things I try out, and me yapping about whatever I find
+          interesting at the moment.
         </p>
       </section>
 
