@@ -4,10 +4,10 @@ import { SITE } from "@mathews/ui";
  * Link-preview bots do not run JavaScript or resolve relative URLs, so every URL here is absolute
  * and the tags are prerendered.
  */
-export const BLOG_NAME = "Mathews Shaji — Blog";
+export const BLOG_NAME = "Mathews Shaji — Blog & Writing";
 export const BLOG_URL = `${SITE.blog}/`;
 export const BLOG_DESCRIPTION =
-  "Random stuff I come across, things I try out, and yapping about whatever I find interesting.";
+  "My blog: random stuff I come across, things I try out, and yapping about whatever I find interesting.";
 
 export const OG_IMAGE = `${SITE.blog}/og-blog.png`;
 export const OG_IMAGE_ALT = "Mathews Shaji — notes from the backend, dark monospace card";
