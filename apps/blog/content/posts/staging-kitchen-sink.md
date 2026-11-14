@@ -119,6 +119,7 @@ sequenceDiagram
 - Same site: [all writing](/) and [the hello post](/hello-world) open in the same tab.
 - Portfolio: [mathewsshaji.com](https://mathewsshaji.com) opens in the same tab.
 - External: [MDN](https://developer.mozilla.org) opens in a new tab.
+- Brand logos: [GitHub](https://github.com/DrUnkeN-SoUL), [LinkedIn](https://linkedin.com/in/mathews-shaji), [YouTube](https://www.youtube.com), [X](https://x.com), [Stack Overflow](https://stackoverflow.com), [Reddit](https://www.reddit.com) and [Hacker News](https://news.ycombinator.com) get their logo.
 - Force a new tab: [all writing in a new tab](/ "newtab:")
 - Force the same tab: [GitHub in this tab](https://github.com "sametab:")
 
