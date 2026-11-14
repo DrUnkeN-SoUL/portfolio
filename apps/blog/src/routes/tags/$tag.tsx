@@ -18,8 +18,8 @@ export const Route = createFileRoute("/tags/$tag")({
 
     return {
       meta: pageMeta({
-        title: `#${params.tag} — Writing — Mathews Shaji`,
-        description: `Posts tagged #${params.tag} on Mathews Shaji's writing section.`,
+        title: `#${params.tag} — Blog & Writing — Mathews Shaji`,
+        description: `Posts tagged #${params.tag} on Mathews Shaji's blog and writing.`,
         url,
       }),
       links: [{ rel: "canonical", href: url }],
