@@ -8,7 +8,7 @@ export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
       GET: () => {
-        const newest = posts[0]?.date ?? new Date().toISOString().slice(0, 10);
+        const newest = posts[0]?.updated ?? posts[0]?.date ?? new Date().toISOString().slice(0, 10);
 
         const entries = [
           { loc: `${SITE.blog}/`, lastmod: newest },

@@ -2,6 +2,7 @@
 title: "Hello, world"
 description: "A short hello, and what I plan to write about here."
 date: 2026-11-09
+updated: 2026-11-15
 tags:
   - meta
 draft: false
