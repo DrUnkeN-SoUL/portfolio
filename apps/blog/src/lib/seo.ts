@@ -7,7 +7,7 @@ import { SITE } from "@mathews/ui";
 export const BLOG_NAME = "Mathews Shaji — writing";
 export const BLOG_URL = `${SITE.blog}/`;
 export const BLOG_DESCRIPTION =
-  "Notes on backend systems, data pipelines, cloud infrastructure and the occasional side project.";
+  "Random stuff I come across, things I try out, and yapping about whatever I find interesting.";
 
 export const OG_IMAGE = `${SITE.blog}/og-blog.png`;
 export const OG_IMAGE_ALT = "Mathews Shaji — notes from the backend, dark monospace card";
